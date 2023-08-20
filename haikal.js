@@ -4197,7 +4197,7 @@ break
 case 'linkgroup': case 'linkgc': {
 if (!isCreator) return m.reply('*Special Premium*')
 if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AIN'T ADMIN')
+if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
 await loading()
 let response = await haikal.groupInviteCode(from)
 haikal.sendText(from, `https://chat.whatsapp.com/${response}\n\nLink Group : ${groupMetadata.subject}`, m, { detectLink: true })
@@ -4207,7 +4207,7 @@ break
 case 'resetlinkgc':
 if (!isCreator) return m.reply('*Special Premium*')
 if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AIN'T ADMIN')
+if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
 await loading()
 haikal.groupRevokeInvite(from)
 break
@@ -4215,7 +4215,7 @@ break
 case 'sendlinkgc': {
 if (!isCreator) return m.reply('*Special Premium*')
 if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AIN'T ADMIN')
+if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
 await loading()
 if (!args[0]) return m.reply(`Usersan ${prefix+command} nomor\nContoh ${prefix+command} 2347082252014`)
 bnnd = text.split("|")[0]+'@s.whatsapp.net'
@@ -4228,7 +4228,7 @@ break
 case 'kick': {
 if (!isCreator) return m.reply('*Special Premium*')
 if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AIN'T ADMIN')
+if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
 if (!isAdmins) return m.reply('ONLY Group Admin')
 await loading()
 let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
@@ -4239,7 +4239,7 @@ break
 case 'add': {
 if (!isCreator) return m.reply('*Special Premium*')
 if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AIN'T ADMIN')
+if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
 if (!isAdmins) return m.reply('ONLY Group Admin')
 await loading()
 let users = m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
@@ -4250,7 +4250,7 @@ break
 case 'promote': {
 if (!isCreator) return m.reply('*Special Premium*')
 if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AIN'T ADMIN')
+if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
 if (!isAdmins) return m.reply('ONLY Group Admin')
 await loading()
 let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
@@ -4261,7 +4261,7 @@ break
 case 'demote': {
 if (!isCreator) return m.reply('*Special Premium*')
 if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AIN'T ADMIN')
+if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
 if (!isAdmins) return m.reply('ONLY Group Admin')
 await loading()
 let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
@@ -4338,7 +4338,7 @@ break
 case 'editsubject': {
 if (!isCreator) return m.reply('*Special Premium*')
 if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AIN'T ADMIN')
+if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
 if (!isAdmins) return m.reply('ONLY Group Admin')
 if (!text) throw 'Text nya ?'
 await loading()
@@ -4349,7 +4349,7 @@ break
 case 'editdesk':{
 if (!isCreator) return m.reply('*Special Premium*')
 if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AIN'T ADMIN')
+if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
 if (!isAdmins) return m.reply('ONLY Group Admin')
 if (!text) throw 'Text Nya ?'
 await loading()
@@ -4372,7 +4372,7 @@ break
 case'demoteall':
 if (!isCreator) return m.reply('*Special Premium*')
 if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AIN'T ADMIN')
+if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
 if (!isAdmins) return m.reply('ONLY Group Admin')
 await loading()
 var groupe = await haikal.groupMetadata(from)
@@ -4387,7 +4387,7 @@ break
 case'promoteall':
 if (!isCreator) return m.reply('*Special Premium*')
 if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AIN'T ADMIN')
+if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
 if (!isAdmins) return m.reply('ONLY Group Admin')
 await loading()
 var groupe = await haikal.groupMetadata(from)
@@ -4544,7 +4544,7 @@ break
 case 'antilink': {
 if (!isCreator) return m.reply('*Special Premium*')
 if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AIN'T ADMIN')
+if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
 if (!isAdmins) return m.reply('ONLY Group Admin')
 await loading()
 if (args.length < 1) return m.reply('ketik on untuk mengaktifkan\nketik off untuk menonaktifkan')
@@ -4582,7 +4582,7 @@ case "antitoxic":
 {
 if (!isCreator) return m.reply('*Special Premium*')
 if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AIN'T ADMIN')
+if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
 if (!isAdmins) return m.reply('ONLY Group Admin')
 await loading()
 if (args.length < 1) return m.reply('ketik on untuk mengaktifkan\nketik off untuk menonaktifkan')
