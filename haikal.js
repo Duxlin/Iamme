@@ -960,7 +960,7 @@ ${prefix} unbannedv5 (234xx)`)
 break
 //=================================================//
 case 'textmaker':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 let foottggkzo = `Runtime : ⏳ ${runtime(process.uptime())}
 Jam : ${time}`
@@ -1019,7 +1019,7 @@ mentionedJid:[sender],
 break
 //=================================================//
 case 'listmusik':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 let footgkzoo = `Runtime : ⏳ ${runtime(process.uptime())}
 Jam : ${time}`
@@ -1207,7 +1207,7 @@ mentionedJid:[sender],
 break
 //=================================================//
 case 'addmenu':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 var resio = await Quotes()
 teks = `\nAuthor: ${resio.author}\n`
 teks = `\nQuotes:\n`
@@ -1268,7 +1268,7 @@ mentionedJid:[sender],
 break
 //=================================================//
 case 'cucimata':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
  await loading()
 let footgkzo = `Runtime : ⏳ ${runtime(process.uptime())}
 Jam : ${time}`
@@ -1344,7 +1344,7 @@ mentionedJid:[sender],
 break
 //=================================================//
 case 'beritamenu':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 let foottgkzo = `Runtime : ⏳ ${runtime(process.uptime())}
 Jam : ${time}`
@@ -1389,7 +1389,7 @@ mentionedJid:[sender],
 break
 //=================================================//
 case 'asupan':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 let foottgkkzjo = `Runtime : ⏳ ${runtime(process.uptime())}
 Jam : ${time}`
@@ -1436,7 +1436,7 @@ mentionedJid:[sender],
 break
 //=================================================//
 case 'funmenu':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 let fooutgkzz = `Runtime : ⏳ ${runtime(process.uptime())}
 Jam : ${time}`
 sendGeekzMessage(from, { 
@@ -1488,7 +1488,7 @@ mentionedJid:[sender],
 })
 break
 case 'gamemenu':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 let fooutgdhsikzz = `Runtime : ⏳ ${runtime(process.uptime())}
 Jam : ${time}`
 sendGeekzMessage(from, { 
@@ -4802,7 +4802,7 @@ case 'igvideo': case 'igreels':
 			break
 //=================================================//
 case 'wm': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 let teks = `${text}`
 {
@@ -4817,7 +4817,7 @@ await fs.unlinkSync(encmedia)
 break
 //=================================================//
 case 'wmvideo':{
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 let teks = `${text}`
 {
@@ -5032,7 +5032,7 @@ case 'sound158':
 case 'sound159':
 case 'sound160':
 case 'sound161':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  haikalgans = await getBuffer(`https://github.com/DGXeon/Tiktokmusic-API/raw/master/tiktokmusic/${command}.mp3`)
 await haikal.sendMessage(from, { audio: haikalgans, mimetype: 'audio/mp4', ptt: true, contextInfo:{  externalAdReply: { showAdAttribution: true,
@@ -5046,7 +5046,7 @@ thumbnail: thumb
 break
 //=================================================//
 case 'gambar': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 let { pinterest } = require('./lib/scraper')
 anu = await pinterest(text)
@@ -5056,7 +5056,7 @@ haikal.sendMessage(from, {image: { url: result }, caption: 'SUKSES'},{quoted:m})
 break
 //=================================================
 case 'cecanindo': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 let { pinterest } = require('./lib/scraper')
 anu = await pinterest(`cecan indo`)
@@ -5066,7 +5066,7 @@ haikal.sendMessage(from, {image: { url: result }, caption: 'SUKSES'},{quoted:m})
 break
 //=================================================
 case 'cecanjepan': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 let { pinterest } = require('./lib/scraper')
 anu = await pinterest(`cecan jepang`)
@@ -5076,7 +5076,7 @@ haikal.sendMessage(from, {image: { url: result }, caption: 'SUKSES'},{quoted:m})
 break
 //=================================================
 case 'cecanmalaysia': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 let { pinterest } = require('./lib/scraper')
 anu = await pinterest(`cecan malaysia`)
@@ -5086,7 +5086,7 @@ haikal.sendMessage(from, {image: { url: result }, caption: 'SUKSES'},{quoted:m})
 break
 //=================================================
 case 'cecanhijaber': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 let { pinterest } = require('./lib/scraper')
 anu = await pinterest(`cecan hijaber`)
@@ -5096,7 +5096,7 @@ haikal.sendMessage(from, {image: { url: result }, caption: 'SUKSES'},{quoted:m})
 break
 //=================================================
 case 'cecanchina': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 let { pinterest } = require('./lib/scraper')
 anu = await pinterest(`cecan china`)
@@ -5106,7 +5106,7 @@ haikal.sendMessage(from, {image: { url: result }, caption: 'SUKSES'},{quoted:m})
 break
 //=================================================
 case 'cecanvietnam': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 let { pinterest } = require('./lib/scraper')
 anu = await pinterest(`cecan vietnam`)
@@ -5116,7 +5116,7 @@ haikal.sendMessage(from, {image: { url: result }, caption: 'SUKSES'},{quoted:m})
 break
 //=================================================
 case 'cecankorea': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 let { pinterest } = require('./lib/scraper')
 anu = await pinterest(`cecan korea`)
@@ -5126,7 +5126,7 @@ haikal.sendMessage(from, {image: { url: result }, caption: 'SUKSES'},{quoted:m})
 break
 //=================================================
 case 'cecan': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 let { pinterest } = require('./lib/scraper')
 anu = await pinterest(`cecan`)
@@ -5159,7 +5159,7 @@ haikal.sendMessage(from, { image: { url: `https://api.lolhuman.xyz/api/random/${
 break
 //=================================================//
 case 'neko' :
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 waifudd = await axios.get(`https://waifu.pics/api/nsfw/neko`)
 haikal.sendMessage(from, {image: {url:waifudd.data.url},caption:`Ah Sayang 🥺🥺`},{ quoted:m }).catch(err => {
@@ -5168,7 +5168,7 @@ haikal.sendMessage(from, {image: {url:waifudd.data.url},caption:`Ah Sayang 🥺�
 break
 //=================================================//
 case 'waifu' :
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 waifudd = await axios.get(`https://waifu.pics/api/nsfw/waifu`) 
 haikal.sendMessage(from, {image: {url:waifudd.data.url},caption:`Ahh Sayang 🥺🙏`}, { quoted:m }).catch(err => {
@@ -5177,7 +5177,7 @@ haikal.sendMessage(from, {image: {url:waifudd.data.url},caption:`Ahh Sayang 🥺
 break
 //=================================================//
 case 'kill':case 'pat':case 'lick':case 'bite':case 'yeet':case 'bonk':case 'wink':case 'poke':case 'nom':case 'slap':case 'smile':case 'wave':case 'blush':case 'smug':case 'glomp':case 'happy':case 'dance':case 'cringe':case 'highfive':case 'handhold':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  axios.get(`https://api.waifu.pics/sfw/${command}`)
 .then(({data}) => {
@@ -5186,7 +5186,7 @@ haikal.sendImage(from, data.url, 'Success Coy', m)
 break
 //=================================================//
 case 'fajar':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 FajarNews().then(async(res) => {
 console.log(res) 
@@ -5206,7 +5206,7 @@ reply(teks)
 break
 //=================================================//
 case 'cnn':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 CNNNews().then(res => {
 no = 0
@@ -5223,7 +5223,7 @@ reply(teks)
 break
 //=================================================//
 case 'layarkaca':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 if (!q) return reply('Judul') 
 LayarKaca21(q).then(async(res) => {
@@ -5241,7 +5241,7 @@ reply(teks)
 break
 //=================================================//
 case 'cnbc':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 CNBCNews().then(async(res) => {
 no = 0
@@ -5259,7 +5259,7 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 break
 //=================================================//
 case 'tribun':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 TribunNews().then(async(res) => {
 no = 0
@@ -5278,7 +5278,7 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 break
 //=================================================//
 case 'indozone':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 IndozoneNews().then(async(res) => {
 no = 0
@@ -5297,7 +5297,7 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 break
 //=================================================//
 case 'kompas':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 KompasNews().then(async(res) => {
 no = 0
@@ -5316,7 +5316,7 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 break
 //=================================================//
 case 'detik':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 DetikNews().then(async(res) => {
 no = 0
@@ -5334,7 +5334,7 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 break
 //=================================================//
 case 'daily':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 DailyNews().then(async(res) => {
 no = 0
@@ -5351,7 +5351,7 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 break
 //=================================================//
 case 'inews':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 iNews().then(async(res) => {
 no = 0
@@ -5370,7 +5370,7 @@ reply(teks)
 break
 //=================================================//
 case 'okezone':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 OkezoneNews().then(async(res) => {
 no = 0
@@ -5388,7 +5388,7 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 break
 //=================================================//
 case 'sindo':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 SindoNews().then(async(res) => {
 no = 0
@@ -5406,7 +5406,7 @@ reply(teks)
 break
 //=================================================//
 case 'tempo':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 TempoNews().then(async(res) => {
 no = 0
@@ -5424,7 +5424,7 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 break
 //=================================================//
 case 'antara':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 AntaraNews().then(async(res) => {
 no = 0
@@ -5443,7 +5443,7 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 break
 //=================================================//
 case "kontan":
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 KontanNews().then(async (res) => {
 teks = ""
@@ -5462,7 +5462,7 @@ haikal.sendMessage(m.chat, { image : { url : res[0].berita_thumb }, caption: tek
 break
 //=================================================//
 case "merdeka":
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 MerdekaNews().then(async (res) => {
 teks = ""
@@ -5513,7 +5513,7 @@ reply(text)
 break
 //=================================================
 case 'alquran':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 if (args.length < 1) return reply(`Example: ${prefix + command} 18 or ${prefix + command} 18/10 or ${prefix + command} 18/1-10`)
 axios
@@ -5532,14 +5532,14 @@ reply(text)
 break
 //=================================================
 case 'alquranaudio':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 if (args.length == 0) return reply(`Example: ${prefix + command} 18 or ${prefix + command} 18/10`)
 haikal.sendMessage(from, { audio: { url: `https://api.lolhuman.xyz/api/quran/audio/${args[0]}?apikey=${apikey}` }, mimetype: 'audio/mp4' })
 break
 //=================================================
 case 'asmaulhusna':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 axios
 .get(`https://api.lolhuman.xyz/api/asmaulhusna?apikey=${apikey}`)
@@ -5555,7 +5555,7 @@ reply(text)
 break
 //=================================================
 case 'kisahnabi':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 if (args.length == 0) return reply(`Example: ${prefix + command} Muhammad`)
 axios
@@ -5572,7 +5572,7 @@ reply(text)
 break
 //=================================================
 case 'jadwalsholat':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 if (args.length == 0) return reply(`Example: ${prefix + command} Yogyakarta`)
 axios
@@ -5595,7 +5595,7 @@ reply(text)
 break
 //=================================================
 case 'smeme':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Balas Image Dengan Caption ${prefix + command}`
 if (!quoted) throw `Balas Image Dengan Caption ${prefix + command}`
@@ -5609,7 +5609,7 @@ haikal.sendImageAsSticker(m.chat, kaytid, m, { packname: global.packname, author
 break
 //=================================================
 case 'toimage': case 'toimg': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 if (!quoted) throw 'Reply Image'
 if (!/webp/.test(mime)) throw `Balas sticker dengan caption *${prefix + command}*`
@@ -5626,7 +5626,7 @@ fs.unlinkSync(ran)
 break
 //=================================================//
 case 'tomp4': case 'tovideo': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 if (!quoted) throw `Balas sticker video Dengan Caption ${prefix + command}`
 if (/video/.test(mime)) {
@@ -5650,7 +5650,7 @@ haikal.sendMessage(m.chat, {document: audio, mimetype: 'audio/mpeg', fileName: `
 break
 //=================================================//
 case 'toaudio': case 'audio': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 if (!/video/.test(mime) && !/audio/.test(mime)) throw `*Send/Reply the Video/Audio You Want to Use as Audio With Caption* ${prefix + command}`
 if (!quoted) throw `*Send/Reply the Video/Audio You Want to Use as Audio With Caption* ${prefix + command}`
@@ -5662,7 +5662,7 @@ haikal.sendMessage(m.chat, {audio: audio, mimetype: 'audio/mpeg'}, { quoted : m 
 break
 //=================================================//
 case 'tovn': case 'voice': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 if (!/video/.test(mime) && !/audio/.test(mime)) throw `*Reply Video/Audio That You Want To Be VN With Caption* ${prefix + command}`
 if (!quoted) throw `*Reply Video/Audio That You Want To Be VN With Caption* ${prefix + command}`
@@ -5682,7 +5682,7 @@ thumbnail: thumb
 break
 //=================================================//
 case 'togif': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 if (!quoted) throw 'Reply Image'
 if (!/webp/.test(mime)) throw `*reply sticker with caption* *${prefix + command}*`
@@ -5695,7 +5695,7 @@ await fs.unlinkSync(media)
 break
 //=================================================//
 case 'tourl': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 if (!/video/.test(mime) && !/image/.test(mime)) throw `*Send/Reply the Video/Image With Caption* ${prefix + command}`
 if (!quoted) throw `*Send/Reply the Video/Image Caption* ${prefix + command}`
@@ -5713,7 +5713,7 @@ await fs.unlinkSync(media)
 break
 //=================================================//
 case "quotes":
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  var resi = await Quotes()
 teks = `\nAuthor: ${resi.author}\n`
@@ -5723,7 +5723,7 @@ reply(teks)
 break
 //=================================================//
 case 'asupan1':
-	if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 	await loading()
 	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83Ytq5b/`).then(({ data }) => {
 haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
@@ -5731,7 +5731,7 @@ haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp
 	break
 	//=================================================//
 case 'asupan2':
-	if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 	await loading()
 	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83Y9a9d/`).then(({ data }) => {
 haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
@@ -5739,7 +5739,7 @@ haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp
 	break
 //=================================================//
 case 'asupan3':
-	if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 	await loading()
 	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83YpRr4/`).then(({ data }) => {
 haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
@@ -5747,7 +5747,7 @@ haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp
 	break
 //=================================================//
 case 'asupan4':
-	if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 	await loading()
 	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83YfoYm/`).then(({ data }) => {
 haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
@@ -5755,7 +5755,7 @@ haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp
 	break
 //=================================================//
 case 'asupan5':
-	if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 	await loading()
 	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://www.tiktok.com/@menantu_idamannnn/video/7211912588366548251?_r=1&u_code=dgc2fmm4i3k9b1&region=ID&mid=7211912606574627610&preview_pb=0&sharer_language=id&_d=d9iga21gg7d358&share_item_id=7211912588366548251&source=h5_t&timestamp=1682941528&user_id=6914652081950639106&sec_user_id=MS4wLjABAAAABSJMM2SSvwkONssmfetetURo2KRIL-wv22KQFCPh-ARQ0bEMn7lZ3gkjm6BhZdlm&social_share_type=0&utm_source=copy&utm_campaign=client_share&utm_medium=android&share_iid=7227953970441242394&share_link_id=5530f877-35fd-4db3-9b7c-d0c8e7e749ed&share_app_id=1180&ugbiz_name=Main&ug_btm=b6880%2Cb2878`).then(({ data }) => {
 haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
@@ -5763,7 +5763,7 @@ haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp
 	break
 //=================================================//
 case 'asupan6':
-	if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 	await loading()
 	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83YyKm7/`).then(({ data }) => {
 haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
@@ -5771,7 +5771,7 @@ haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp
 	break
 //=================================================//
 case 'asupan7':
-	if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 	await loading()
 	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS8wpweu7/`).then(({ data }) => {
 haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
@@ -5779,7 +5779,7 @@ haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp
 	break
 //=================================================//
 case 'asupan8':
-	if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 	await loading()
 	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83Y9Y2p/`).then(({ data }) => {
 haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
@@ -5787,7 +5787,7 @@ haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp
 	break
 //=================================================//
 case 'asupan9':
-	if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 	await loading()
 	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83Ygms3/`).then(({ data }) => {
 haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
@@ -5795,7 +5795,7 @@ haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp
 	break
 //=================================================//
 case 'asupan10':
-	if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 	await loading()
 	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83YsuNQ/`).then(({ data }) => {
 haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
@@ -5803,7 +5803,7 @@ haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp
 	break
 //=================================================//
 case 'asupan11':
-	if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 	await loading()
 	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83YtYaQ/`).then(({ data }) => {
 haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
@@ -5811,7 +5811,7 @@ haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp
 	break
 //=================================================//
 case 'asupan12':
-	if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 	await loading()
 	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83YbpvJ/`).then(({ data }) => {
 haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
@@ -5819,7 +5819,7 @@ haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp
 	break
 //=================================================//
 case 'asupan13':
-	if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 	await loading()
 	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83Y9FaD/`).then(({ data }) => {
 haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
@@ -5827,7 +5827,7 @@ haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp
 	break
 //=================================================//
 case 'asupan14':
-	if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 	await loading()
 	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS8wpXDPm/`).then(({ data }) => {
 haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
@@ -5835,7 +5835,7 @@ haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp
 	break
 //=================================================//
 case 'asupan15':
-	if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 	await loading()
 	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS8wpvaTV/`).then(({ data }) => {
 haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
@@ -5843,7 +5843,7 @@ haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp
 	break
 //=================================================//
 case 'asupan16':
-	if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 	await loading()
 	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83YaXCU/`).then(({ data }) => {
 haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
@@ -5851,7 +5851,7 @@ haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp
 	break
 //=================================================//
 case 'asupan17':
-	if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 	await loading()
 	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83EKHja/`).then(({ data }) => {
 haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
@@ -5859,7 +5859,7 @@ haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp
 	break
 //=================================================//
 case 'asupan18':
-	if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 	await loading()
 	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83Yyk6y/`).then(({ data }) => {
 haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
@@ -5867,7 +5867,7 @@ haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp
 	break
 //=================================================//
 case 'asupan19':
-	if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+	if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 	await loading()
 	axios.get(`https://api.lolhuman.xyz/api/tiktok?apikey=${apikey}&url=https://vt.tiktok.com/ZS83Yb7GX/`).then(({ data }) => {
 haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp4', caption:`¥ Ah Sayang 🤤` })
@@ -5875,7 +5875,7 @@ haikal.sendMessage(from, { video: { url: data.result.link }, mimetype: 'video/mp
 	break
 //=================================================//
 case "asupan20":{
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 m.reply('*Ah Males Sangean*')
 }
@@ -5889,7 +5889,7 @@ haikal.sendMessage(m.chat, { image : { url : ress }, caption: teks }, { quoted:m
 break
 //=================================================//
 case 'emojimix': { 
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  let [emoji1, emoji2] = text.split`+`
 if (!emoji1) throw `Example : ${prefix + command} 😅+🤔`
@@ -5903,7 +5903,7 @@ await fs.unlinkSync(encmedia)
 break
 //=================================================//
 case 'emojimix2': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 😅`
 let anu = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(text)}`)
@@ -5915,7 +5915,7 @@ await fs.unlinkSync(encmedia)
 break
 //=================================================//
 case 'artimimpi': case 'tafsirmimpi': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} belanja`
  let anu = await primbon.tafsir_mimpi(text)
@@ -5925,7 +5925,7 @@ await loading()
 break
 //=================================================//
 case 'ramalanjodoh': case 'ramaljodoh': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} DUX BOT, 7, 7, 2005, Putri, 16, 11, 2004`
  let [nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2] = text.split`,`
@@ -5936,7 +5936,7 @@ await loading()
 break
 //=================================================//
 case 'artinama': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} DUX BOT Hw`
  let anu = await primbon.arti_nama(text)
@@ -5946,7 +5946,7 @@ await loading()
 break
 //=================================================//
 case 'kecocokannama': case 'cocoknama': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} DUX BOT, 7, 7, 2005`
  let [nama, tgl, bln, thn] = text.split`,`
@@ -5957,7 +5957,7 @@ await loading()
 break
 //=================================================//
 case 'kecocokanpasangan': case 'cocokpasangan': case 'pasangan': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} DUX BOT|Putri`
  let [nama1, nama2] = text.split`|`
@@ -5968,7 +5968,7 @@ await loading()
 break
 //=================================================//
 case 'jadianpernikahan': case 'jadiannikah': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 6, 12, 2020`
  let [tgl, bln, thn] = text.split`,`
@@ -5979,7 +5979,7 @@ await loading()
 break
 //=================================================//
 case 'sifatusaha': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!ext)throw `Example : ${prefix+ command} 28, 12, 2021`
  let [tgl, bln, thn] = text.split`,`
@@ -5990,7 +5990,7 @@ await loading()
 break
 //=================================================//
 case 'rejeki': case 'rezeki': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6001,7 +6001,7 @@ await loading()
 break
 //=================================================//
 case 'pekerjaan': case 'kerja': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6012,7 +6012,7 @@ await loading()
 break
 //=================================================//
 case 'ramalannasib': case 'ramalnasib': case 'nasib': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6023,7 +6023,7 @@ await loading()
 break
 //=================================================//
 case 'potensipenyakit': case 'penyakit': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6034,7 +6034,7 @@ await loading()
 break
 //=================================================//
 case 'artitarot': case 'tarot': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6045,7 +6045,7 @@ await loading()
 break
 //=================================================//
 case 'fengshui': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} DUX BOT, 1, 2005\n\nNote : ${prefix + command} Nama, gender, tahun lahir\nGender : 1 untuk laki-laki & 2 untuk perempuan`
  let [nama, gender, tahun] = text.split`,`
@@ -6056,7 +6056,7 @@ await loading()
 break
 //=================================================//
 case 'haribaik': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6067,7 +6067,7 @@ await loading()
 break
 //=================================================//
 case 'harisangar': case 'taliwangke': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6078,7 +6078,7 @@ await loading()
 break
 //=================================================//
 case 'harinaas': case 'harisial': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6089,7 +6089,7 @@ await loading()
 break
 //=================================================//
 case 'nagahari': case 'harinaga': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6100,7 +6100,7 @@ await loading()
 break
 //=================================================//
 case 'arahrejeki': case 'arahrezeki': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6111,7 +6111,7 @@ await loading()
 break
 //=================================================//
 case 'peruntungan': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} DUX BOT, 7, 7, 2005, 2022\n\nNote : ${prefix + command} Nama, tanggal lahir, bulan lahir, tahun lahir, untuk tahun`
  let [nama, tgl, bln, thn, untuk] = text.split`,`
@@ -6122,7 +6122,7 @@ await loading()
 break
 //=================================================//
 case 'weton': case 'wetonjawa': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 7, 7, 2005`
  let [tgl, bln, thn] = text.split`,`
@@ -6133,7 +6133,7 @@ await loading()
 break
 //=================================================//
 case 'sifat': case 'karakter': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} DUX BOT, 7, 7, 2005`
  let [nama, tgl, bln, thn] = text.split`,`
@@ -6144,7 +6144,7 @@ await loading()
 break
 //=================================================//
 case 'keberuntungan': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} DUX BOT, 7, 7, 2005`
  let [nama, tgl, bln, thn] = text.split`,`
@@ -6155,7 +6155,7 @@ await loading()
 break
 //=================================================//
 case 'memancing': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 12, 1, 2022`
  let [tgl, bln, thn] = text.split`,`
@@ -6166,7 +6166,7 @@ await loading()
 break
 //=================================================//
 case 'masasubur': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} 12, 1, 2022, 28\n\nNote : ${prefix + command} hari pertama menstruasi, siklus`
  let [tgl, bln, thn, siklus] = text.split`,`
@@ -6177,7 +6177,7 @@ await loading()
 break
 //=================================================//
 case 'zodiak': case 'zodiac': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix+ command} 7 7 2005`
  let zodiak = [
@@ -6213,7 +6213,7 @@ await loading()
 break
 //=================================================//
 case 'shio': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} tikus\n\nNote : For Detail https://primbon.com/shio.htm`
  let anu = await primbon.shio(text)
@@ -6254,7 +6254,7 @@ m.reply(`Done!`)
 break
 //=================================================//
 case 'listcmd': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 let teks = `
 *List Cmd Sticker*
@@ -6495,7 +6495,7 @@ reply(`Sukses delete vn ${text}`)
 break
 //=================================================//
 case 'listvn':{
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  let teksooo = '┌──⭓「 *LIST VN* 」\n│\n'
 for (let x of vnnye) {
@@ -6533,7 +6533,7 @@ await loading()
 break
 //=================================================//
 case 'listmsg': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  let msgs = global.db.data.database
 let seplit = Object.entries(global.db.data.database).map(([nama, isi]) => { return { nama, ...isi } })
@@ -6556,7 +6556,7 @@ m.reply(`Berhasil menghapus '${text}' dari list pesan`)
 break
 //=================================================//
 case 'getmsg': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
  if (!text) throw `Example : ${prefix + command} file name\n\nLihat list pesan dengan ${prefix}listmsg`
  let msgs = global.db.data.database
@@ -6681,7 +6681,7 @@ await haikal.updateBlockStatus(users, 'unblock').then((res) => m.reply(jsonforma
 break
 //=================================================//
 case 'stalktiktok':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 await loading()
 if (args.length == 0) return reply(`Example: ${prefix + command} bulansutena`)
 axios.get(`https://api.lolhuman.xyz/api/stalktiktok/${args[0]}?apikey=${apikey}`).then(({ data }) => {
@@ -6697,7 +6697,7 @@ haikal.sendMessage(from, { image: { url: data.result.user_picture }, caption })
 break
 //=================================================//
 case 'listpanel': case 'panel':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
  var resio = await Quotes()
 teks = `\nAuthor: ${resio.author}\n`
 teks = `\nQuotes:\n`
@@ -6797,7 +6797,7 @@ reply(txtayajas)
 break
 //=================================================
 case 'cerpen':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 var { data } = await axios.get(`https://api.lolhuman.xyz/api/cerpen?apikey=${apikey}`)
 var textpp = `Title : ${data.result.title}\n`
 textpp += `Creator : ${data.result.creator}\n`
@@ -6806,7 +6806,7 @@ reply(textpp)
 break
 //=================================================
 case 'ceritahoror':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 var { data } = await axios.get(`https://api.lolhuman.xyz/api/ceritahoror?apikey=${apikey}`)
 var caption = `Title : ${data.result.title}\n`
 caption += `Desc : ${data.result.desc}\n`
@@ -6815,7 +6815,7 @@ haikal.sendMessage(from, { image: { url: data.result.thumbnail }, caption })
 break
 //=================================================
 case 'cuaca':
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 if (args.length == 0) return reply(`Example: ${prefix + command} Yogyakarta`)
 var { data } = await axios.get(`https://api.lolhuman.xyz/api/cuaca/${args[0]}?apikey=${apikey}`)
 var textppp = `Tempat : ${data.result.tempat}\n`
@@ -6831,7 +6831,7 @@ reply(textppp)
 break
 //=================================================
 case 'afk': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 let user = global.db.data.users[m.sender]
 user.afkTime = + new Date
 user.afkReason = text
@@ -7049,7 +7049,7 @@ case 'family100': {
 break
 //=================================================//
 case 'tebak': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
  if (!text) throw `Example : ${prefix + command} lagu\n\nOption : \n1. lagu\n2. gambar\n3. kata\n4. kalimat\n5. lirik\n6.lontong`
  if (args[0] === "lagu") {
  if (tebaklagu.hasOwnProperty(m.sender.split('@')[0])) throw "Masih Ada Sesi Yang Belum Diselesaikan!"
@@ -7137,7 +7137,7 @@ delete caklontong_desk[m.sender.split('@')[0]]
 break
 //=================================================//
 case 'kuismath': case 'math': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
  if (kuismath.hasOwnProperty(m.sender.split('@')[0])) throw "Masih Ada Sesi Yang Belum Diselesaikan!"
  let { genMath, modes } = require('./src/math')
  if (!text) throw `Mode: ${Object.keys(modes).join(' | ')}\nContoh Usersan: ${prefix}math medium`
@@ -7155,7 +7155,7 @@ if (isBan) return m.reply('*You're banned by the owner, you don't have to preten
 break
 //=================================================//
 case 'ttc': case 'ttt': case 'tictactoe': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
  let TicTacToe = require("./lib/tictactoe")
 this.game = this.game ? this.game : {}
 if (Object.values(this.game).find(room => room.id.startsWith('tictactoe') && [room.game.playerX, room.game.playerO].includes(m.sender))) throw 'Kamu masih didalam game'
@@ -7207,7 +7207,7 @@ this.game[room.id] = room
 break
 //=================================================//
 case 'delttc': case 'delttt': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
  let roomnya = Object.values(this.game).find(room => room.id.startsWith('tictactoe') && [room.game.playerX, room.game.playerO].includes(m.sender))
 if (!roomnya) throw `Kamu sedang tidak berada di room tictactoe !`
 delete this.game[roomnya.id]
@@ -7216,7 +7216,7 @@ m.reply(`Berhasil delete session room tictactoe !`)
 break
 //=================================================//
 case 'suitpvp': case 'suit': {
-if (isBan) return m.reply('*You're banned by the owner, you don't have to pretend*')
+if (isBan) return m.reply('*You are banned by the owner, you do not have to pretend*')
 this.suit = this.suit ? this.suit : {}
 let poin = 10
 let poin_lose = 10
