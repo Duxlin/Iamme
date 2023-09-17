@@ -5,40 +5,32 @@
 
 const fs = require('fs')
 const chalk = require('chalk')
-const tiktok = require("./baseikal/download/tiktok")
-const facebook = require("./baseikal/download/facebook")
-const instagram = require("./baseikal/download/instagram")
-const twitter = require("./baseikal/download/twitter")
 
-
-//MODULNYA BY HW
-global.baileys = require('@whiskeysockets/baileys') 
-global.adiwajshing = require('@adiwajshing/baileys') 
-
-global.gr = 'https://chat.whatsapp.com/CeXB13i3F2MKwXa4c7tB9o'
-global.ig = '@official_quadhir' // ubah aja
+global.gr = 'https://chat.whatsapp.com/GzT2sSzrl0kG4ehd5w1Cnf'
+global.ig = '@DUX' // ubah aja
 global.email = 'botdux@gmail.com' //serah
-global.region = 'nigeria' // serah
+global.region = 'Alien Realm' // serah
 //—————「 Set Nama Own & Bot 」—————//
 global.ownername = 'Dux' //ubah jadi nama mu, note tanda ' gausah di hapus!
 //=================================================//
 global.owner = ['2347082252014'] // ubah aja pake nomor lu
 //==========================BY Hw Mods=======================//
-global.keyopenai = `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`
+global.keyopenai = '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'
 //====================BY Hw Mods=============================//
-global.botname = 'DUX' //ubah jadi nama bot mu, note tanda ' gausah di hapus!
-global.packname = 'DUX' // ubah aja ini nama sticker
-global.author = 'DUX' // ubah aja ini nama sticker
+global.botname = 'Dux Bot' //ubah jadi nama bot mu, note tanda ' gausah di hapus!
+global.packname = 'Dux Bot' // ubah aja ini nama sticker
+global.author = 'Dux' // ubah aja ini nama sticker
 global.prefa = ['','!','.',',','🐤','🗿']
 global.sessionName = 'haikal' //Gausah Juga
 global.sp = '⭔' // Gausah Juga
 global.wlcm = []
 global.wlcmm = []
+global.anticall = true
 //=================================================//
 //Gausah Juga
 global.limitawal = {
     premium: "Infinity",
-    free: 10
+    free: 100
 }
 //=================================================//
 let file = require.resolve(__filename)
